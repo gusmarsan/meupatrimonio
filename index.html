@@ -74,7 +74,7 @@ nav{position:fixed;z-index:40;left:50%;bottom:0;transform:translateX(-50%);width
 <div id="toast" class="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>
-const CATS=["Cripto","Offshore","Investimentos BTG","Investimentos BB","Trader BTG","Brasilprev + TDs 2029 e 2033"],DB="patrimonio-db",STORE="closings";
+const CATS=["Cripto","Offshore","Investimentos BTG (sem ações)","Investimentos BB","Trader BTG (ações)","Brasilprev + TDs 2029 e 2033 (líquidos)"],DB="patrimonio-db",STORE="closings";
 let db,closings=[],draft=[],editing=null,worker=null,timer,pendingCategory=null,selectedHomeCategory=null;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const el={title:$("#title"),homeEmpty:$("#homeEmpty"),homeContent:$("#homeContent"),latestLabel:$("#latestLabel"),latestTotal:$("#latestTotal"),latestDelta:$("#latestDelta"),cats:$("#cats"),month:$("#month"),files:$("#files"),reviewList:$("#reviewList"),reviewMonth:$("#reviewMonth"),reviewTotal:$("#reviewTotal"),categorySummary:$("#categorySummary"),entryCount:$("#entryCount"),warnings:$("#warnings"),save:$("#save"),chartEmpty:$("#chartEmpty"),chartBox:$("#chartBox"),chart:$("#chart"),history:$("#history"),backupFile:$("#backupFile"),backupMonths:$("#backupMonths"),backupUpdated:$("#backupUpdated"),backupStatus:$("#backupStatus"),categorySheet:$("#categorySheet"),sheetTitle:$("#sheetTitle"),sheetValue:$("#sheetValue"),sheetCopy:$("#sheetCopy"),overlay:$("#overlay"),status:$("#status"),bar:$("#bar"),toast:$("#toast")};
