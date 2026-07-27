@@ -27,6 +27,10 @@ nav{position:fixed;z-index:40;left:50%;bottom:0;transform:translateX(-50%);width
 .auth-card .field{margin-bottom:12px}.auth-error{min-height:20px;margin:11px 0 0;color:#ffaaaa;font-size:.73rem;line-height:1.4}.auth-error.success{color:#8ee0bf}.auth-help{margin:15px 0 0;color:var(--mut);font-size:.68rem;line-height:1.45;text-align:center}.auth-links{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px}.auth-link{padding:3px 0;border:0;background:none;color:var(--green);font-size:.72rem;font-weight:800;text-decoration:underline;text-underline-offset:3px}.auth-link.muted{color:var(--mut)}.auth-password-note{margin:-3px 0 13px;color:var(--mut);font-size:.65rem;line-height:1.4}.verification-panel{text-align:center}.verification-icon{width:58px;height:58px;display:grid;place-items:center;margin:0 auto 17px;border-radius:19px;background:#59d0a51a;color:var(--green);font-size:1.7rem}.verification-panel h1{font-size:1.35rem}.verification-panel>p{margin:9px 0;color:var(--mut);font-size:.75rem;line-height:1.5}.verification-email{display:block;margin:15px 0 18px;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#0d1d28;color:var(--txt);font-size:.76rem;overflow-wrap:anywhere}.verification-actions{display:grid;gap:9px}.verification-message{min-height:20px;margin:12px 0 0;color:var(--mut);font-size:.7rem;line-height:1.4}.verification-message.success{color:#8ee0bf}.verification-message.error{color:#ffaaaa}
 .account-row{display:flex;justify-content:space-between;align-items:center;gap:12px}.account-copy{min-width:0}.account-copy b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sync-status{display:flex;align-items:center;gap:7px;margin-top:6px;color:var(--mut);font-size:.69rem}.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--yellow)}.sync-status.synced{color:#8ee0bf}.sync-status.synced .sync-dot{background:var(--green)}.sync-status.error{color:#ffaaaa}.sync-status.error .sync-dot{background:var(--red)}.sync-status.offline{color:#efd390}.account-actions{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:15px}.logout{min-width:82px}
 
+
+.category-onboarding{text-align:center;padding:25px 20px}.category-onboarding .onboarding-icon{width:54px;height:54px;display:grid;place-items:center;margin:0 auto 15px;border-radius:18px;background:#59d0a516;color:var(--green);font-size:1.55rem}.category-onboarding h2{margin:0 0 8px}.category-onboarding p{margin:0 0 17px;color:var(--mut);font-size:.78rem;line-height:1.5}.empty .btn{margin:16px auto 0;width:min(100%,240px)}
+.investment-list{display:grid;gap:8px;margin:14px 0}.investment-empty{padding:15px;border:1px dashed var(--line);border-radius:14px;color:var(--mut);font-size:.73rem;line-height:1.45;text-align:center}.investment-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 12px;border:1px solid var(--line);border-radius:13px;background:#0d1d28}.investment-row b{min-width:0;font-size:.76rem;overflow-wrap:anywhere}.investment-remove{flex:0 0 auto;width:31px;height:31px;border:1px solid #ff7b7b38;border-radius:9px;background:#ff7b7b0d;color:#ffaaaa;font-size:1rem}.investment-note{margin:10px 0 0;color:var(--mut);font-size:.68rem;line-height:1.45}.investment-sheet-copy{margin:-2px 0 15px;color:var(--mut);font-size:.74rem;line-height:1.45}
+
 </style>
 </head>
 <body>
@@ -41,11 +45,19 @@ nav{position:fixed;z-index:40;left:50%;bottom:0;transform:translateX(-50%);width
 </div>
 </section>
 <section id="new" class="view">
+<div id="categoryOnboarding" class="card category-onboarding hidden">
+<div class="onboarding-icon">＋</div>
+<h2>Crie seu primeiro investimento</h2>
+<p>Antes de montar um fechamento, dê um nome ao primeiro investimento da sua carteira. Nenhuma categoria é criada automaticamente.</p>
+<button id="firstInvestment" class="btn primary full" type="button">Criar investimento</button>
+</div>
+<div id="closingBuilder">
 <div class="card"><div class="field"><label for="month">Mês do fechamento</label><input id="month" type="month"></div></div>
 <label id="uploadLabel" for="files" class="upload"><div><strong>Adicionar prints</strong><span>Selecione vários prints ou fotos da tela. O app tentará encontrar os valores.</span></div></label>
 <input id="files" type="file" accept="image/*" multiple hidden>
 <div class="note"><span>◉</span><span>Os prints são usados apenas durante a conferência. O histórico guarda os números confirmados.</span></div>
 <button id="manual" class="btn secondary full">Adicionar valor manualmente</button>
+</div>
 </section>
 <section id="review" class="view">
 <div class="head"><div><p class="eyebrow">Mesmo mês</p><h2>Montar fechamento</h2></div><button id="more" class="mini">Adicionar prints</button></div>
@@ -78,7 +90,7 @@ nav{position:fixed;z-index:40;left:50%;bottom:0;transform:translateX(-50%);width
 <article class="wealth-card">
 <span class="wealth-label">Aposentadoria</span>
 <strong id="retirementValue" class="wealth-value"></strong>
-<p class="wealth-detail">Brasilprev + TDs: <b id="retirementBase"></b><br>CDBs adicionados: <b id="retirementCdbValue"></b></p>
+<p class="wealth-detail"><span id="retirementBaseLabel">Investimentos de aposentadoria</span>: <b id="retirementBase"></b><br>CDBs adicionados: <b id="retirementCdbValue"></b></p>
 <button id="addRetirementCdb" class="wealth-cta" type="button">Adicionar CDBs</button>
 </article>
 <article class="wealth-card">
@@ -104,6 +116,15 @@ nav{position:fixed;z-index:40;left:50%;bottom:0;transform:translateX(-50%);width
 <div class="account-actions"><button id="syncNow" class="btn secondary full">Sincronizar agora</button><button id="logout" class="btn danger logout">Sair</button></div>
 <p class="settings-note">Os fechamentos ficam salvos neste aparelho e também no Firebase. Ao entrar em outro dispositivo com a mesma conta, o histórico é carregado automaticamente.</p>
 </div>
+<div class="card">
+<p class="eyebrow">Organização da carteira</p>
+<h2>Meus investimentos</h2>
+<p class="settings-copy">Estes nomes pertencem somente à sua conta e aparecem na seleção dos fechamentos.</p>
+<div id="investmentList" class="investment-list"></div>
+<button id="addInvestment" class="btn primary full" type="button">Adicionar investimento</button>
+<p class="investment-note">Um investimento que já aparece no histórico não pode ser excluído.</p>
+</div>
+
 
 <div class="card restore-card">
 <p class="eyebrow">Recuperar histórico</p>
@@ -128,6 +149,16 @@ nav{position:fixed;z-index:40;left:50%;bottom:0;transform:translateX(-50%);width
 </section>
 </main>
 <nav><button class="nav" data-view="new"><span>＋</span><small>Fechamento</small></button><button class="nav" data-view="settings"><span>⚙</span><small>Configurações</small></button><button class="nav active" data-view="home"><span>▣</span><small>Carteira</small></button><button class="nav" data-view="evolution"><span>⌁</span><small>Evolução</small></button><button class="nav" data-view="projections"><span>↗</span><small>Projeções</small></button></nav>
+</div>
+<div id="investmentSheet" class="sheet hidden" aria-hidden="true">
+<div class="sheet-card">
+<button id="investmentSheetClose" class="sheet-close" aria-label="Fechar">×</button>
+<p class="eyebrow">Sua carteira</p>
+<h2>Novo investimento</h2>
+<p class="investment-sheet-copy">Crie o nome que será usado para organizar os valores nos fechamentos.</p>
+<div class="field"><label for="investmentName">Nome do investimento</label><input id="investmentName" type="text" maxlength="60" autocomplete="off" placeholder="Ex.: Renda fixa"></div>
+<div class="sheet-actions"><button id="saveInvestment" class="btn primary full" type="button">Criar investimento</button><button id="cancelInvestment" class="btn secondary full" type="button">Cancelar</button></div>
+</div>
 </div>
 <div id="categorySheet" class="sheet hidden" aria-hidden="true"><div class="sheet-card"><button id="sheetClose" class="sheet-close" aria-label="Fechar">×</button><p class="eyebrow">Adicionar investimento</p><h2 id="sheetTitle"></h2><div class="sheet-value"><span>Valor no último fechamento</span><b id="sheetValue"></b></div><p id="sheetCopy" class="sheet-copy"></p><div class="sheet-actions"><button id="sheetManual" class="btn primary full">Inserir manualmente</button><button id="sheetPrint" class="btn secondary full">Adicionar por print</button></div></div></div>
 <div id="retirementSheet" class="sheet hidden" aria-hidden="true">
@@ -193,12 +224,13 @@ auth.languageCode="pt-BR";
 const cloudDb = getFirestore(firebaseApp);
 const emailActionSettings={url:location.origin+location.pathname,handleCodeInApp:false};
 
-const CATS=["Cripto","Offshore","Investimentos BTG","Investimentos BB","Trader BTG","Brasilprev + TDs 2029 e 2033"],DB="patrimonio-db",STORE="closings";
-let db,closings=[],draft=[],editing=null,worker=null,timer,pendingCategory=null,selectedHomeCategory=null,retirementClosingId=null;
+const DB="patrimonio-db",STORE="closings",RETIREMENT_CATEGORY="Brasilprev + TDs 2029 e 2033",CATEGORY_KEY_PREFIX="patrimonio-categories-";
+const LEGACY_OWNER_CATEGORIES=["Cripto","Offshore","Investimentos BTG","Investimentos BB","Trader BTG","Brasilprev + TDs 2029 e 2033"];
+let db,closings=[],categories=[],draft=[],editing=null,worker=null,timer,pendingCategory=null,selectedHomeCategory=null,retirementClosingId=null,categoryCreationOrigin="settings";
 let currentUser=null,cloudRef=null,unsubscribeCloud=null,syncTimer=null,lastPushedVersion=0,appInitialized=false,authMode="login";
 const OWNER_KEY="patrimonio-firebase-owner";
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-const el={title:$("#title"),homeEmpty:$("#homeEmpty"),homeContent:$("#homeContent"),latestLabel:$("#latestLabel"),latestTotal:$("#latestTotal"),latestDelta:$("#latestDelta"),cats:$("#cats"),month:$("#month"),files:$("#files"),reviewList:$("#reviewList"),reviewMonth:$("#reviewMonth"),reviewTotal:$("#reviewTotal"),categorySummary:$("#categorySummary"),entryCount:$("#entryCount"),warnings:$("#warnings"),save:$("#save"),chartEmpty:$("#chartEmpty"),chartBox:$("#chartBox"),chart:$("#chart"),history:$("#history"),backupFile:$("#backupFile"),csvFile:$("#csvFile"),csvStatus:$("#csvStatus"),backupMonths:$("#backupMonths"),backupUpdated:$("#backupUpdated"),backupStatus:$("#backupStatus"),projectionEmpty:$("#projectionEmpty"),projectionContent:$("#projectionContent"),projectionCurrentLabel:$("#projectionCurrentLabel"),projectionCurrent:$("#projectionCurrent"),projectionLastRate:$("#projectionLastRate"),projectionLastDate:$("#projectionLastDate"),projectionLastPrevious:$("#projectionLastPrevious"),projection08Date:$("#projection08Date"),projection08Previous:$("#projection08Previous"),projection10Date:$("#projection10Date"),projection10Previous:$("#projection10Previous"),retirementValue:$("#retirementValue"),retirementBase:$("#retirementBase"),retirementCdbValue:$("#retirementCdbValue"),myMoneyValue:$("#myMoneyValue"),wealthSplitTotal:$("#wealthSplitTotal"),wealthSplitWarning:$("#wealthSplitWarning"),retirementSheet:$("#retirementSheet"),retirementCdbInput:$("#retirementCdbInput"),categorySheet:$("#categorySheet"),sheetTitle:$("#sheetTitle"),sheetValue:$("#sheetValue"),sheetCopy:$("#sheetCopy"),loginGate:$("#loginGate"),loginForm:$("#loginForm"),authTitle:$("#authTitle"),authSubtitle:$("#authSubtitle"),authHelp:$("#authHelp"),loginEmail:$("#loginEmail"),passwordField:$("#passwordField"),loginPassword:$("#loginPassword"),confirmPasswordField:$("#confirmPasswordField"),loginConfirmPassword:$("#loginConfirmPassword"),passwordNote:$("#passwordNote"),loginButton:$("#loginButton"),loginError:$("#loginError"),loginLinks:$("#loginLinks"),backLoginWrap:$("#backLoginWrap"),verificationPanel:$("#verificationPanel"),verificationEmail:$("#verificationEmail"),verificationMessage:$("#verificationMessage"),accountEmail:$("#accountEmail"),cloudStatus:$("#cloudStatus"),cloudStatusText:$("#cloudStatusText"),overlay:$("#overlay"),status:$("#status"),bar:$("#bar"),toast:$("#toast")};
+const el={title:$("#title"),homeEmpty:$("#homeEmpty"),homeContent:$("#homeContent"),categoryOnboarding:$("#categoryOnboarding"),closingBuilder:$("#closingBuilder"),investmentList:$("#investmentList"),investmentSheet:$("#investmentSheet"),investmentName:$("#investmentName"),latestLabel:$("#latestLabel"),latestTotal:$("#latestTotal"),latestDelta:$("#latestDelta"),cats:$("#cats"),month:$("#month"),files:$("#files"),reviewList:$("#reviewList"),reviewMonth:$("#reviewMonth"),reviewTotal:$("#reviewTotal"),categorySummary:$("#categorySummary"),entryCount:$("#entryCount"),warnings:$("#warnings"),save:$("#save"),chartEmpty:$("#chartEmpty"),chartBox:$("#chartBox"),chart:$("#chart"),history:$("#history"),backupFile:$("#backupFile"),csvFile:$("#csvFile"),csvStatus:$("#csvStatus"),backupMonths:$("#backupMonths"),backupUpdated:$("#backupUpdated"),backupStatus:$("#backupStatus"),projectionEmpty:$("#projectionEmpty"),projectionContent:$("#projectionContent"),projectionCurrentLabel:$("#projectionCurrentLabel"),projectionCurrent:$("#projectionCurrent"),projectionLastRate:$("#projectionLastRate"),projectionLastDate:$("#projectionLastDate"),projectionLastPrevious:$("#projectionLastPrevious"),projection08Date:$("#projection08Date"),projection08Previous:$("#projection08Previous"),projection10Date:$("#projection10Date"),projection10Previous:$("#projection10Previous"),retirementValue:$("#retirementValue"),retirementBase:$("#retirementBase"),retirementBaseLabel:$("#retirementBaseLabel"),retirementCdbValue:$("#retirementCdbValue"),myMoneyValue:$("#myMoneyValue"),wealthSplitTotal:$("#wealthSplitTotal"),wealthSplitWarning:$("#wealthSplitWarning"),retirementSheet:$("#retirementSheet"),retirementCdbInput:$("#retirementCdbInput"),categorySheet:$("#categorySheet"),sheetTitle:$("#sheetTitle"),sheetValue:$("#sheetValue"),sheetCopy:$("#sheetCopy"),loginGate:$("#loginGate"),loginForm:$("#loginForm"),authTitle:$("#authTitle"),authSubtitle:$("#authSubtitle"),authHelp:$("#authHelp"),loginEmail:$("#loginEmail"),passwordField:$("#passwordField"),loginPassword:$("#loginPassword"),confirmPasswordField:$("#confirmPasswordField"),loginConfirmPassword:$("#loginConfirmPassword"),passwordNote:$("#passwordNote"),loginButton:$("#loginButton"),loginError:$("#loginError"),loginLinks:$("#loginLinks"),backLoginWrap:$("#backLoginWrap"),verificationPanel:$("#verificationPanel"),verificationEmail:$("#verificationEmail"),verificationMessage:$("#verificationMessage"),accountEmail:$("#accountEmail"),cloudStatus:$("#cloudStatus"),cloudStatusText:$("#cloudStatusText"),overlay:$("#overlay"),status:$("#status"),bar:$("#bar"),toast:$("#toast")};
 const brl=n=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(+n||0);
 const pct=n=>new Intl.NumberFormat("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2}).format(n)+"%";
 const parse=s=>{let v=String(s??"").replace(/[^\d,.-]/g,"").replace(/\.(?=\d{3}(?:\D|$))/g,"").replace(",",".");return Number.isFinite(+v)?+v:0};
@@ -215,6 +247,47 @@ function put(x){return new Promise((ok,no)=>{let t=db.transaction(STORE,"readwri
 function del(id){return new Promise((ok,no)=>{let t=db.transaction(STORE,"readwrite");t.objectStore(STORE).delete(id);t.oncomplete=ok;t.onerror=()=>no(t.error)})}
 
 function clearLocal(){return new Promise((ok,no)=>{let t=db.transaction(STORE,"readwrite");t.objectStore(STORE).clear();t.oncomplete=ok;t.onerror=()=>no(t.error)})}
+
+function cleanCategoryName(value){
+  return String(value??"").replace(/\s+/g," ").trim().slice(0,60);
+}
+function uniqueCategories(list){
+  let seen=new Set(),result=[];
+  for(const raw of list||[]){
+    let name=cleanCategoryName(raw),key=name.toLocaleLowerCase("pt-BR");
+    if(!name||seen.has(key))continue;
+    seen.add(key);
+    result.push(name);
+  }
+  return result;
+}
+function categoriesFromClosings(items=closings){
+  return uniqueCategories((items||[]).flatMap(c=>(c?.entries||[]).map(entry=>entry?.category)));
+}
+function categoryStorageKey(uid=currentUser?.uid||localStorage.getItem(OWNER_KEY)){
+  return uid?CATEGORY_KEY_PREFIX+uid:"";
+}
+function loadLocalCategories(uid){
+  try{
+    let key=categoryStorageKey(uid);
+    return key?uniqueCategories(JSON.parse(localStorage.getItem(key)||"[]")):[];
+  }catch{
+    return[];
+  }
+}
+function saveLocalCategories(){
+  let key=categoryStorageKey();
+  if(key)localStorage.setItem(key,JSON.stringify(categories));
+}
+function applyCategories(list,{persist=true,render=false}={}){
+  categories=uniqueCategories(list);
+  if(persist)saveLocalCategories();
+  if(render){
+    renderAll();
+    renderReview();
+  }
+}
+
 
 function setCloudStatus(kind,text){
   el.cloudStatus.className="sync-status"+(kind?" "+kind:"");
@@ -245,9 +318,10 @@ async function replaceLocalClosings(items){
 
 function cloudPayload(version=Date.now()){
   return{
-    formatVersion:3,
+    formatVersion:4,
     clientUpdatedAt:version,
     updatedAt:serverTimestamp(),
+    categories:[...categories],
     closings:ordered()
   };
 }
@@ -288,14 +362,22 @@ async function startCloudSync(user){
   if(owner&&owner!==user.uid){
     await clearLocal();
     closings=[];
+    categories=loadLocalCategories(user.uid);
+  }else{
+    categories=uniqueCategories([...loadLocalCategories(user.uid),...categoriesFromClosings(closings)]);
   }
   localStorage.setItem(OWNER_KEY,user.uid);
+  saveLocalCategories();
 
   setCloudStatus("","Carregando dados da nuvem...");
   try{
     const snapshot=await getDoc(cloudRef);
-    const remoteRaw=snapshot.exists()&&Array.isArray(snapshot.data()?.closings)?snapshot.data().closings:[];
+    const data=snapshot.exists()?snapshot.data()||{}:{};
+    const remoteRaw=Array.isArray(data.closings)?data.closings:[];
+    const legacyOwnerDocument=snapshot.exists()&&!Array.isArray(data.categories)&&remoteRaw.length>0;
+    const remoteCategories=Array.isArray(data.categories)?data.categories:uniqueCategories([...(legacyOwnerDocument?LEGACY_OWNER_CATEGORIES:[]),...categoriesFromClosings(remoteRaw)]);
     const merged=mergeClosingSets(closings,remoteRaw);
+    applyCategories([...categories,...remoteCategories,...categoriesFromClosings(merged)],{persist:true});
     await replaceLocalClosings(merged);
     await syncCloudNow();
 
@@ -307,6 +389,8 @@ async function startCloudSync(user){
         return;
       }
       const remote=Array.isArray(data.closings)?data.closings.map(cleanCloudClosing).filter(Boolean):[];
+      const remoteCategories=Array.isArray(data.categories)?data.categories:categoriesFromClosings(remote);
+      applyCategories([...remoteCategories,...categoriesFromClosings(remote)],{persist:true});
       await replaceLocalClosings(remote);
       setCloudStatus("synced","Atualizações recebidas da nuvem.");
     },error=>{
@@ -387,8 +471,9 @@ async function enterVerifiedAccount(user){
 
 const ordered=()=>[...closings].sort((a,b)=>a.month.localeCompare(b.month));
 const sum=e=>e.reduce((s,x)=>s+(+x.value||0),0);
-const byCat=e=>CATS.map(category=>({category,value:e.filter(x=>x.category===category).reduce((s,x)=>s+(+x.value||0),0)}));
-const catValue=(closing,category)=>closing?(byCat(closing.entries).find(x=>x.category===category)?.value||0):0;
+const categoryNames=e=>uniqueCategories([...categories,...((e||[]).map(x=>x?.category))]);
+const byCat=e=>categoryNames(e).map(category=>({category,value:(e||[]).filter(x=>x.category===category).reduce((s,x)=>s+(+x.value||0),0)}));
+const catValue=(closing,category)=>closing?(closing.entries||[]).filter(x=>x.category===category).reduce((s,x)=>s+(+x.value||0),0):0;
 const changePct=(current,previous)=>previous?((current-previous)/previous*100):(current?100:0);
 const signedPct=n=>(n>0?"+":"")+pct(n);
 const changeClass=n=>n>0?"up":n<0?"down":"";
@@ -396,17 +481,130 @@ const previousClosing=month=>ordered().filter(c=>c.month<month).at(-1)||null;
 function view(id){$$(".view").forEach(v=>v.classList.toggle("active",v.id===id));$$(".nav").forEach(n=>n.classList.toggle("active",n.dataset.view===id));el.title.textContent={home:"Meu patrimônio",new:editing?"Editar fechamento":"Adicionar fechamento",review:"Conferência",evolution:"Evolução",settings:"Configurações",projections:"Projeções"}[id];if(id==="evolution")requestAnimationFrame(renderEvolution);if(id==="settings")renderSettings();if(id==="projections")renderProjections();scrollTo({top:0,behavior:"instant"})}
 function reset(){draft.forEach(x=>x.url?.startsWith("blob:")&&URL.revokeObjectURL(x.url));draft=[];editing=null;pendingCategory=null;el.month.value=currentMonth();el.files.value="";renderReview()}
 function start(){reset();view("new")}
+function renderCategorySetup(){
+  const empty=!categories.length;
+  el.categoryOnboarding.classList.toggle("hidden",!empty);
+  el.closingBuilder.classList.toggle("hidden",empty);
+}
+function openInvestmentSheet(origin="settings"){
+  categoryCreationOrigin=origin;
+  el.investmentName.value="";
+  el.investmentSheet.classList.remove("hidden");
+  el.investmentSheet.setAttribute("aria-hidden","false");
+  document.body.style.overflow="hidden";
+  setTimeout(()=>el.investmentName.focus(),50);
+}
+function closeInvestmentSheet(){
+  el.investmentSheet.classList.add("hidden");
+  el.investmentSheet.setAttribute("aria-hidden","true");
+  document.body.style.overflow="";
+}
+async function saveInvestment(){
+  const name=cleanCategoryName(el.investmentName.value);
+  if(!name)return toast("Digite o nome do investimento.");
+  if(categories.some(item=>item.toLocaleLowerCase("pt-BR")===name.toLocaleLowerCase("pt-BR")))return toast("Este investimento já existe.");
+  categories.push(name);
+  saveLocalCategories();
+  closeInvestmentSheet();
+  renderAll();
+  renderReview();
+  queueCloudSync();
+  toast("Investimento criado.");
+  if(categoryCreationOrigin==="first"||categoryCreationOrigin==="home")view("new");
+}
+async function removeInvestment(name){
+  const used=closings.some(c=>(c.entries||[]).some(entry=>entry.category===name))||draft.some(entry=>entry.category===name);
+  if(used)return toast("Este investimento já aparece no histórico.");
+  if(!confirm(`Excluir o investimento “${name}”?`))return;
+  categories=categories.filter(item=>item!==name);
+  saveLocalCategories();
+  renderAll();
+  renderReview();
+  queueCloudSync();
+  toast("Investimento excluído.");
+}
+function renderInvestmentList(){
+  el.investmentList.innerHTML="";
+  if(!categories.length){
+    el.investmentList.innerHTML='<div class="investment-empty">Nenhum investimento criado nesta conta.</div>';
+    return;
+  }
+  categories.forEach(name=>{
+    const row=document.createElement("div"),label=document.createElement("b"),remove=document.createElement("button");
+    row.className="investment-row";
+    label.textContent=name;
+    remove.type="button";
+    remove.className="investment-remove";
+    remove.textContent="×";
+    remove.setAttribute("aria-label",`Excluir ${name}`);
+    remove.onclick=()=>removeInvestment(name);
+    row.append(label,remove);
+    el.investmentList.appendChild(row);
+  });
+}
 function prepareDraftForMonth(month){reset();let existing=closings.find(c=>c.month===month);if(existing){editing=existing.id;el.month.value=existing.month;draft=existing.entries.map(x=>({...x,key:"saved-"+x.id,name:x.sourceName,url:"",text:"",candidates:[]}))}else el.month.value=month;renderReview()}
 function closeCategorySheet(){el.categorySheet.classList.add("hidden");el.categorySheet.setAttribute("aria-hidden","true");document.body.style.overflow=""}
 function openCategorySheet(category){let o=ordered(),last=o.at(-1),target=currentMonth(),exists=closings.some(c=>c.month===target);selectedHomeCategory=category;el.sheetTitle.textContent=category;el.sheetValue.textContent=brl(catValue(last,category));el.sheetCopy.innerHTML=`Escolha como adicionar este tipo ao fechamento de <b>${mlabel(target)}</b>. ${exists?"O mês já existe e será aberto para edição.":"Um novo fechamento será preparado."}`;el.categorySheet.classList.remove("hidden");el.categorySheet.setAttribute("aria-hidden","false");document.body.style.overflow="hidden"}
-function renderHome(){let o=ordered(),last=o.at(-1),prev=o.at(-2);el.homeEmpty.classList.toggle("hidden",!!last);el.homeContent.classList.toggle("hidden",!last);if(!last)return;el.latestLabel.textContent="Patrimônio total · "+mshort(last.month);el.latestTotal.textContent=brl(last.total);if(!prev){el.latestDelta.textContent=updateLabel(last.updatedAt);el.latestDelta.className="delta"}else{let d=last.total-prev.total,p=prev.total?d/prev.total*100:0,s=d>0?"+":"";el.latestDelta.textContent=s+brl(d)+" · "+s+pct(p)+" em relação ao mês anterior";el.latestDelta.className="delta "+(d>0?"up":d<0?"down":"")}el.cats.innerHTML="";byCat(last.entries).forEach(x=>{let share=last.total?x.value/last.total*100:0,previous=catValue(prev,x.category),variation=changePct(x.value,previous),variationClass=changeClass(variation),r=document.createElement("button");r.type="button";r.className="cat";r.dataset.category=x.category;r.setAttribute("aria-label",`${x.category}: ${brl(x.value)}. ${pct(share)} do patrimônio e ${signedPct(variation)} em relação ao mês anterior. Adicionar valor.`);r.innerHTML=`<div><b>${x.category}</b><span class="tap">Inserir manualmente ou por print</span></div><div><div class="v">${brl(x.value)}</div><div class="s"><span>${pct(share)}</span><span class="sep"> | </span><span class="${variationClass}">${signedPct(variation)}</span></div></div><span class="chev">›</span>`;el.cats.appendChild(r)})}
+function renderHome(){
+  let o=ordered(),last=o.at(-1),prev=o.at(-2);
+  if(!categories.length){
+    el.homeEmpty.classList.remove("hidden");
+    el.homeContent.classList.add("hidden");
+    el.homeEmpty.innerHTML='Você ainda não criou investimentos.<br>Comece dando um nome ao primeiro.<button id="homeCreateInvestment" class="btn primary" type="button">Criar investimento</button>';
+    $("#homeCreateInvestment").onclick=()=>openInvestmentSheet("home");
+    return;
+  }
+  if(!last){
+    el.homeEmpty.classList.remove("hidden");
+    el.homeContent.classList.add("hidden");
+    el.homeEmpty.innerHTML='Nenhum fechamento salvo.<br>Adicione os valores do primeiro mês.<button id="homeFirstClosing" class="btn primary" type="button">Adicionar fechamento</button>';
+    $("#homeFirstClosing").onclick=start;
+    return;
+  }
+  el.homeEmpty.classList.add("hidden");
+  el.homeContent.classList.remove("hidden");
+  el.latestLabel.textContent="Patrimônio total · "+mshort(last.month);
+  el.latestTotal.textContent=brl(last.total);
+  if(!prev){
+    el.latestDelta.textContent=updateLabel(last.updatedAt);
+    el.latestDelta.className="delta";
+  }else{
+    let d=last.total-prev.total,p=prev.total?d/prev.total*100:0,s=d>0?"+":"";
+    el.latestDelta.textContent=s+brl(d)+" · "+s+pct(p)+" em relação ao mês anterior";
+    el.latestDelta.className="delta "+(d>0?"up":d<0?"down":"");
+  }
+  el.cats.innerHTML="";
+  byCat(last.entries).forEach(x=>{
+    let share=last.total?x.value/last.total*100:0,previous=catValue(prev,x.category),variation=changePct(x.value,previous),variationClass=changeClass(variation),r=document.createElement("button");
+    r.type="button";
+    r.className="cat";
+    r.dataset.category=x.category;
+    r.setAttribute("aria-label",`${x.category}: ${brl(x.value)}. ${pct(share)} do patrimônio e ${signedPct(variation)} em relação ao mês anterior. Adicionar valor.`);
+    r.innerHTML=`<div><b>${esc(x.category)}</b><span class="tap">Inserir manualmente ou por print</span></div><div><div class="v">${brl(x.value)}</div><div class="s"><span>${pct(share)}</span><span class="sep"> | </span><span class="${variationClass}">${signedPct(variation)}</span></div></div><span class="chev">›</span>`;
+    el.cats.appendChild(r);
+  });
+}
 function candidates(t){let a=(String(t).match(/(?:R\$\s*)?-?\d{1,3}(?:\.\d{3})*,\d{2}|(?:R\$\s*)?-?\d+,\d{2}/g)||[]).map(raw=>({raw,value:parse(raw)})).filter(x=>x.value>=.01&&x.value<1e9).sort((a,b)=>b.value-a.value),seen=new Set;return a.filter(x=>{let k=x.value.toFixed(2);if(seen.has(k))return false;seen.add(k);return true}).slice(0,8)}
-function guess(t,f=""){let h=(f+" "+t).toLowerCase(),rules=[["Cripto",["cripto","mynt","bitcoin","ethereum","btc","eth","usdc"]],["Trader BTG",["trader","home broker","ações","acoes","bolsa","b3","renda variável","renda variavel"]],["Brasilprev + TDs 2029 e 2033",["brasilprev","previdência","previdencia","2029","2033","ipca+"]],["Investimentos BB",["banco do brasil","bb investimentos","bb renda","bb rf"]],["Offshore",["offshore","international","global","conta internacional","usd","dólar","dolar","dollar"]],["Investimentos BTG",["btg","cdb","lci","lca","fundo","renda fixa","tesouro"]]];for(let[r,k]of rules)if(k.some(x=>h.includes(x)))return r;return"Investimentos BTG"}
+function guess(t,f=""){
+  let h=(f+" "+t).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("pt-BR"),best=categories[0]||"",bestScore=0;
+  categories.forEach(category=>{
+    let tokens=category.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("pt-BR").split(/[^a-z0-9]+/).filter(token=>token.length>=3),score=tokens.filter(token=>h.includes(token)).length;
+    if(score>bestScore){best=category;bestScore=score}
+  });
+  return best;
+}
 function conf(c,a){return !a.length||c<55?["bad","Revisar valor"]:c<78?["med","Conferir leitura"]:["good","Boa leitura"]}
 async function getWorker(){if(worker)return worker;if(!window.Tesseract)throw Error("A leitura não carregou. Verifique a internet.");worker=await Tesseract.createWorker("por",1,{logger:m=>{if(m.status==="recognizing text"){let p=Math.round((m.progress||0)*100);el.bar.style.width=p+"%";el.status.textContent="Reconhecendo texto: "+p+"%"}else if(m.status)el.status.textContent=m.status}});return worker}
-async function process(list){let forcedCategory=pendingCategory,files=[...list].filter(f=>f.type.startsWith("image/")),keys=new Set(draft.map(x=>x.key));files=files.filter(f=>{let k=f.name+"-"+f.size+"-"+f.lastModified;if(keys.has(k))return false;keys.add(k);return true});if(!files.length){pendingCategory=null;return toast("Esses prints já estão na conferência.")}el.overlay.classList.remove("hidden");try{let w=await getWorker();for(let i=0;i<files.length;i++){let f=files[i],text="",confidence=0;el.status.textContent=`Lendo ${i+1} de ${files.length}: ${f.name}`;el.bar.style.width="0%";try{let r=await w.recognize(f);text=r.data.text||"";confidence=+r.data.confidence||0}catch(e){console.error(e)}let c=candidates(text);draft.push({id:mid(),key:f.name+"-"+f.size+"-"+f.lastModified,name:f.name,url:URL.createObjectURL(f),text,confidence,candidates:c,category:forcedCategory||guess(text,f.name),value:c[0]?.value||0})}renderReview();view("review")}catch(e){console.error(e);toast(e.message||"Não foi possível ler os prints.")}finally{pendingCategory=null;el.overlay.classList.add("hidden");el.files.value=""}}
-function manual(preferredCategory){let category=preferredCategory||CATS.find(c=>!draft.some(x=>x.category===c))||"Investimentos BTG",id=mid();draft.push({id,key:"manual-"+Date.now(),name:"Valor manual",url:"",text:"",confidence:100,candidates:[],category,value:0,manual:true});renderReview();view("review");requestAnimationFrame(()=>{let cards=[...el.reviewList.querySelectorAll(".item")],card=cards.at(-1),input=card?.querySelector(".val");input?.focus()})}
-const opts=s=>CATS.map(c=>`<option ${c===s?"selected":""}>${c}</option>`).join("");
+async function process(list){if(!categories.length){pendingCategory=null;openInvestmentSheet("first");return toast("Crie um investimento antes de adicionar valores.")}let forcedCategory=pendingCategory,files=[...list].filter(f=>f.type.startsWith("image/")),keys=new Set(draft.map(x=>x.key));files=files.filter(f=>{let k=f.name+"-"+f.size+"-"+f.lastModified;if(keys.has(k))return false;keys.add(k);return true});if(!files.length){pendingCategory=null;return toast("Esses prints já estão na conferência.")}el.overlay.classList.remove("hidden");try{let w=await getWorker();for(let i=0;i<files.length;i++){let f=files[i],text="",confidence=0;el.status.textContent=`Lendo ${i+1} de ${files.length}: ${f.name}`;el.bar.style.width="0%";try{let r=await w.recognize(f);text=r.data.text||"";confidence=+r.data.confidence||0}catch(e){console.error(e)}let c=candidates(text);draft.push({id:mid(),key:f.name+"-"+f.size+"-"+f.lastModified,name:f.name,url:URL.createObjectURL(f),text,confidence,candidates:c,category:forcedCategory||guess(text,f.name),value:c[0]?.value||0})}renderReview();view("review")}catch(e){console.error(e);toast(e.message||"Não foi possível ler os prints.")}finally{pendingCategory=null;el.overlay.classList.add("hidden");el.files.value=""}}
+function manual(preferredCategory){
+  if(!categories.length){openInvestmentSheet("first");return toast("Crie um investimento antes de adicionar valores.")}
+  let category=preferredCategory&&categories.includes(preferredCategory)?preferredCategory:categories.find(c=>!draft.some(x=>x.category===c))||categories[0],id=mid();
+  draft.push({id,key:"manual-"+Date.now(),name:"Valor manual",url:"",text:"",confidence:100,candidates:[],category,value:0,manual:true});
+  renderReview();
+  view("review");
+  requestAnimationFrame(()=>{let cards=[...el.reviewList.querySelectorAll(".item")],card=cards.at(-1),input=card?.querySelector(".val");input?.focus()});
+}
+const opts=s=>uniqueCategories([...categories,s]).map(c=>`<option ${c===s?"selected":""}>${esc(c)}</option>`).join("");
 const esc=s=>{let d=document.createElement("div");d.textContent=s;return d.innerHTML};
 function renderReview(){el.reviewList.innerHTML="";draft.forEach(x=>{let [cl,lab]=x.manual?["good","Entrada manual"]:conf(x.confidence,x.candidates),a=document.createElement("article");a.className="item";a.innerHTML=`<div class="itop">${x.url?`<img class="thumb" src="${x.url}" alt="">`:`<div class="thumb" style="display:grid;place-items:center;color:var(--mut)">＋</div>`}<div><p class="fname">${x.name}</p><span class="badge ${cl}">${lab}</span></div><button class="x">×</button></div><div class="fields"><div class="field"><label>Categoria</label><select class="sel">${opts(x.category)}</select></div><div class="field"><label>Valor</label><input class="val" type="text" inputmode="decimal" value="${brl(x.value)}"></div></div>${x.candidates.length?`<div class="candlabel">Valores encontrados no print</div><div class="cands">${x.candidates.map(c=>`<button class="chip" data-v="${c.value}">${brl(c.value)}</button>`).join("")}</div>`:""}${x.text?`<details><summary>Consultar texto reconhecido</summary><pre>${esc(x.text)}</pre></details>`:""}`;let sel=a.querySelector(".sel"),val=a.querySelector(".val");sel.onchange=e=>{x.category=e.target.value;summary()};val.onfocus=e=>e.target.value=x.value?x.value.toFixed(2).replace(".",","):"";val.onblur=e=>{x.value=parse(e.target.value);e.target.value=brl(x.value);summary()};val.oninput=e=>{x.value=parse(e.target.value);summary()};a.querySelector(".x").onclick=()=>{x.url?.startsWith("blob:")&&URL.revokeObjectURL(x.url);draft=draft.filter(y=>y.id!==x.id);renderReview();if(!draft.length)view("new")};a.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{x.value=+b.dataset.v;val.value=brl(x.value);summary()});el.reviewList.appendChild(a)});summary()}
 function summary(){
@@ -426,7 +624,7 @@ function summary(){
   el.save.disabled=!draft.length||invalid.length>0||!el.month.value;
   el.save.style.opacity=el.save.disabled?".45":"1";
 }
-async function save(){let month=el.month.value;if(!month||!draft.length)return;if(!confirm(`Salvar ${mlabel(month)} com ${draft.length} investimento${draft.length===1?"":"s"} e total de ${brl(sum(draft))}?`))return;let original=closings.find(c=>c.id===editing),dup=closings.find(c=>c.month===month&&c.id!==editing),carriedCdb=Number(original?.retirementCdb??dup?.retirementCdb)||0;if(dup){if(!confirm(`Já existe um fechamento para ${mlabel(month)}. Substituir?`))return;await del(dup.id);closings=closings.filter(c=>c.id!==dup.id)}let entries=draft.map(x=>({id:x.id,sourceName:x.name,category:x.category,value:+x.value||0,confidence:x.confidence,manual:!!x.manual})),total=sum(entries),baseRetirement=catValue({entries},"Brasilprev + TDs 2029 e 2033"),retirementCdb=Math.min(Math.max(0,carriedCdb),Math.max(0,total-baseRetirement)),c={id:editing||mid(),month,total,entries,retirementCdb,updatedAt:Date.now()};await put(c);closings=closings.filter(x=>x.id!==c.id);closings.push(c);reset();renderAll();view("home");queueCloudSync();toast("Fechamento salvo.")}
+async function save(){let month=el.month.value;if(!month||!draft.length)return;if(!confirm(`Salvar ${mlabel(month)} com ${draft.length} investimento${draft.length===1?"":"s"} e total de ${brl(sum(draft))}?`))return;let original=closings.find(c=>c.id===editing),dup=closings.find(c=>c.month===month&&c.id!==editing),carriedCdb=Number(original?.retirementCdb??dup?.retirementCdb)||0;if(dup){if(!confirm(`Já existe um fechamento para ${mlabel(month)}. Substituir?`))return;await del(dup.id);closings=closings.filter(c=>c.id!==dup.id)}let entries=draft.map(x=>({id:x.id,sourceName:x.name,category:x.category,value:+x.value||0,confidence:x.confidence,manual:!!x.manual})),total=sum(entries),baseRetirement=catValue({entries},RETIREMENT_CATEGORY),retirementCdb=Math.min(Math.max(0,carriedCdb),Math.max(0,total-baseRetirement)),c={id:editing||mid(),month,total,entries,retirementCdb,updatedAt:Date.now()};await put(c);closings=closings.filter(x=>x.id!==c.id);closings.push(c);reset();renderAll();view("home");queueCloudSync();toast("Fechamento salvo.")}
 function edit(id){let c=closings.find(x=>x.id===id);if(!c)return;reset();editing=c.id;el.month.value=c.month;draft=c.entries.map(x=>({...x,key:"saved-"+x.id,name:x.sourceName,url:"",text:"",candidates:[]}));renderReview();view("review")}
 async function remove(id){let c=closings.find(x=>x.id===id);if(!c||!confirm(`Excluir ${mlabel(c.month)}?`))return;await del(id);closings=closings.filter(x=>x.id!==id);renderAll();queueCloudSync();toast("Fechamento excluído.")}
 function renderEvolution(){let o=ordered();el.chartEmpty.classList.toggle("hidden",o.length>=2);el.chartBox.classList.toggle("hidden",o.length<2);if(o.length>=2)draw(o);el.history.innerHTML="";[...o].reverse().forEach(c=>{let i=o.findIndex(x=>x.id===c.id),p=i>0?o[i-1]:null,d=p?c.total-p.total:null,pc=p&&p.total?d/p.total*100:null,r=document.createElement("article");r.className="hrow";r.innerHTML=`<div><div class="hm">${mlabel(c.month)}</div><div class="meta">${p?`${d>=0?"+":""}${brl(d)} · ${d>=0?"+":""}${pct(pc)}`:updateLabel(c.updatedAt)}</div></div><div><div class="hv">${brl(c.total)}</div><div class="rowact"><button class="mini edit">Editar</button><button class="mini del">Excluir</button></div></div>`;r.querySelector(".edit").onclick=()=>edit(c.id);r.querySelector(".del").onclick=()=>remove(c.id);el.history.appendChild(r)})}
@@ -537,7 +735,8 @@ function renderProjections(){
 }
 
 function renderWealthSplit(last){
-  let base=catValue(last,"Brasilprev + TDs 2029 e 2033"),cdb=Math.max(0,Number(last?.retirementCdb)||0),retirement=base+cdb,myMoney=last.total-retirement,combined=retirement+myMoney,mismatch=Math.abs(combined-last.total)>.01;
+  let hasBaseCategory=categories.includes(RETIREMENT_CATEGORY),base=hasBaseCategory?catValue(last,RETIREMENT_CATEGORY):0,cdb=Math.max(0,Number(last?.retirementCdb)||0),retirement=base+cdb,myMoney=last.total-retirement,combined=retirement+myMoney,mismatch=Math.abs(combined-last.total)>.01;
+  el.retirementBaseLabel.textContent=hasBaseCategory?RETIREMENT_CATEGORY:"Investimentos de aposentadoria";
   el.retirementBase.textContent=brl(base);
   el.retirementCdbValue.textContent=brl(cdb);
   el.retirementValue.textContent=brl(retirement);
@@ -566,7 +765,7 @@ function closeRetirementSheet(){
 async function saveRetirementCdb(){
   let closing=closings.find(c=>c.id===retirementClosingId);
   if(!closing)return closeRetirementSheet();
-  let value=parse(el.retirementCdbInput.value),base=catValue(closing,"Brasilprev + TDs 2029 e 2033"),available=Math.max(0,closing.total-base);
+  let value=parse(el.retirementCdbInput.value),base=categories.includes(RETIREMENT_CATEGORY)?catValue(closing,RETIREMENT_CATEGORY):0,available=Math.max(0,closing.total-base);
   if(value<0)return toast("Informe um valor válido.");
   if(value>available+.01)return toast(`O valor em CDBs não pode superar ${brl(available)}.`);
   closing={...closing,retirementCdb:value,updatedAt:Date.now()};
@@ -579,12 +778,12 @@ async function saveRetirementCdb(){
 }
 
 function formatBackupDate(ts){if(!ts)return "—";return new Intl.DateTimeFormat("pt-BR",{day:"2-digit",month:"2-digit",year:"2-digit"}).format(new Date(ts))}
-function renderSettings(){let o=ordered(),updated=o.length?Math.max(...o.map(c=>+c.updatedAt||0)):0;el.backupMonths.textContent=String(o.length);el.backupUpdated.textContent=formatBackupDate(updated)}
+function renderSettings(){let o=ordered(),updated=o.length?Math.max(...o.map(c=>+c.updatedAt||0)):0;el.backupMonths.textContent=String(o.length);el.backupUpdated.textContent=formatBackupDate(updated);renderInvestmentList()}
 function downloadFile(blob,name){let url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
-function exportBackup(){let data={app:"Meu patrimônio",formatVersion:1,exportedAt:new Date().toISOString(),closings:ordered()};let stamp=new Date().toISOString().slice(0,10),blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"});downloadFile(blob,`meu-patrimonio-backup-${stamp}.json`);el.backupStatus.className="backup-status success";el.backupStatus.textContent=`Backup com ${closings.length} mês${closings.length===1?"":"es"} exportado.`}
-function normalizeImportedClosing(c){if(!c||typeof c!=="object"||typeof c.month!=="string"||!/^[0-9]{4}-(0[1-9]|1[0-2])$/.test(c.month)||!Array.isArray(c.entries))return null;let entries=c.entries.map(x=>({id:typeof x?.id==="string"?x.id:mid(),sourceName:typeof x?.sourceName==="string"?x.sourceName:"Backup",category:CATS.includes(x?.category)?x.category:"Investimentos BTG",value:Number(x?.value),confidence:Number.isFinite(Number(x?.confidence))?Number(x.confidence):100,manual:!!x?.manual})).filter(x=>Number.isFinite(x.value)&&x.value>0);if(!entries.length)return null;let total=sum(entries),base=catValue({entries},"Brasilprev + TDs 2029 e 2033"),retirementCdb=Math.min(Math.max(0,Number(c.retirementCdb)||0),Math.max(0,total-base));return{id:typeof c.id==="string"?c.id:mid(),month:c.month,total,entries,retirementCdb,updatedAt:Number.isFinite(Number(c.updatedAt))?Number(c.updatedAt):Date.now()}}
-async function mergeBackupFile(file){el.backupStatus.className="backup-status";el.backupStatus.textContent="Lendo o backup...";try{let raw=await file.text(),parsed=JSON.parse(raw),source=Array.isArray(parsed)?parsed:parsed?.closings;if(!Array.isArray(source))throw Error("O arquivo não contém um backup reconhecido.");let imported=source.map(normalizeImportedClosing).filter(Boolean);if(!imported.length)throw Error("Nenhum mês válido foi encontrado no arquivo.");let existingByMonth=new Map(closings.map(c=>[c.month,c])),added=0,updated=0,kept=0;for(let incoming of imported){let current=existingByMonth.get(incoming.month);if(!current){incoming.id=incoming.id||mid();await put(incoming);existingByMonth.set(incoming.month,incoming);added++;continue}if((+incoming.updatedAt||0)>(+current.updatedAt||0)){incoming.id=current.id;await put(incoming);existingByMonth.set(incoming.month,incoming);updated++}else kept++}closings=await getAll();closings.sort((a,b)=>a.month.localeCompare(b.month));renderAll();renderSettings();queueCloudSync();el.backupStatus.className="backup-status success";el.backupStatus.textContent=`Mesclagem concluída: ${added} mês${added===1?"":"es"} adicionado${added===1?"":"s"}, ${updated} atualizado${updated===1?"":"s"} e ${kept} mantido${kept===1?"":"s"}.`;toast("Dados mesclados e salvos neste aparelho.")}catch(e){console.error(e);el.backupStatus.className="backup-status error";el.backupStatus.textContent=e.message||"Não foi possível importar o backup."}finally{el.backupFile.value=""}}
-function exportCSV(){let o=ordered();if(!o.length)return toast("Não há dados para exportar.");let rows=[["Mês",...CATS,"CDBs da aposentadoria","Patrimônio total"],...o.map(c=>{let t=byCat(c.entries);return[c.month,...CATS.map(k=>t.find(x=>x.category===k)?.value||0),Number(c.retirementCdb)||0,c.total]})],csv=rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(";")).join("\n"),blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"});downloadFile(blob,"historico-patrimonio.csv")}
+function exportBackup(){let data={app:"Meu patrimônio",formatVersion:2,exportedAt:new Date().toISOString(),categories:[...categories],closings:ordered()};let stamp=new Date().toISOString().slice(0,10),blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"});downloadFile(blob,`meu-patrimonio-backup-${stamp}.json`);el.backupStatus.className="backup-status success";el.backupStatus.textContent=`Backup com ${closings.length} mês${closings.length===1?"":"es"} exportado.`}
+function normalizeImportedClosing(c){if(!c||typeof c!=="object"||typeof c.month!=="string"||!/^[0-9]{4}-(0[1-9]|1[0-2])$/.test(c.month)||!Array.isArray(c.entries))return null;let entries=c.entries.map(x=>({id:typeof x?.id==="string"?x.id:mid(),sourceName:typeof x?.sourceName==="string"?x.sourceName:"Backup",category:cleanCategoryName(x?.category),value:Number(x?.value),confidence:Number.isFinite(Number(x?.confidence))?Number(x.confidence):100,manual:!!x?.manual})).filter(x=>x.category&&Number.isFinite(x.value)&&x.value>0);if(!entries.length)return null;let total=sum(entries),base=entries.filter(x=>x.category===RETIREMENT_CATEGORY).reduce((s,x)=>s+x.value,0),retirementCdb=Math.min(Math.max(0,Number(c.retirementCdb)||0),Math.max(0,total-base));return{id:typeof c.id==="string"?c.id:mid(),month:c.month,total,entries,retirementCdb,updatedAt:Number.isFinite(Number(c.updatedAt))?Number(c.updatedAt):Date.now()}}
+async function mergeBackupFile(file){el.backupStatus.className="backup-status";el.backupStatus.textContent="Lendo o backup...";try{let raw=await file.text(),parsed=JSON.parse(raw),source=Array.isArray(parsed)?parsed:parsed?.closings;if(!Array.isArray(source))throw Error("O arquivo não contém um backup reconhecido.");let imported=source.map(normalizeImportedClosing).filter(Boolean);if(!imported.length)throw Error("Nenhum mês válido foi encontrado no arquivo.");let importedCategories=Array.isArray(parsed?.categories)?parsed.categories:categoriesFromClosings(imported);applyCategories([...categories,...importedCategories,...categoriesFromClosings(imported)],{persist:true});let existingByMonth=new Map(closings.map(c=>[c.month,c])),added=0,updated=0,kept=0;for(let incoming of imported){let current=existingByMonth.get(incoming.month);if(!current){incoming.id=incoming.id||mid();await put(incoming);existingByMonth.set(incoming.month,incoming);added++;continue}if((+incoming.updatedAt||0)>(+current.updatedAt||0)){incoming.id=current.id;await put(incoming);existingByMonth.set(incoming.month,incoming);updated++}else kept++}closings=await getAll();closings.sort((a,b)=>a.month.localeCompare(b.month));renderAll();renderSettings();queueCloudSync();el.backupStatus.className="backup-status success";el.backupStatus.textContent=`Mesclagem concluída: ${added} mês${added===1?"":"es"} adicionado${added===1?"":"s"}, ${updated} atualizado${updated===1?"":"s"} e ${kept} mantido${kept===1?"":"s"}.`;toast("Dados mesclados e salvos neste aparelho.")}catch(e){console.error(e);el.backupStatus.className="backup-status error";el.backupStatus.textContent=e.message||"Não foi possível importar o backup."}finally{el.backupFile.value=""}}
+function exportCSV(){let o=ordered();if(!o.length)return toast("Não há dados para exportar.");let exportCategories=uniqueCategories([...categories,...categoriesFromClosings(o)]),rows=[["Mês",...exportCategories,"CDBs da aposentadoria","Patrimônio total"],...o.map(c=>{let t=byCat(c.entries);return[c.month,...exportCategories.map(k=>t.find(x=>x.category===k)?.value||0),Number(c.retirementCdb)||0,c.total]})],csv=rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(";")).join("\n"),blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"});downloadFile(blob,"historico-patrimonio.csv")}
 
 function normalizedCsvHeader(value){
   return String(value??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLowerCase();
@@ -646,14 +845,14 @@ async function importCSVFile(file){
     if(rows.length<2)throw Error("O CSV não contém linhas suficientes.");
     let headers=rows[0].map(normalizedCsvHeader),monthIndex=headers.findIndex(h=>h==="mes"||h==="mês");
     if(monthIndex<0)throw Error('A coluna "Mês" não foi encontrada.');
-    let categoryIndexes=new Map(CATS.map(category=>[category,headers.indexOf(normalizedCsvHeader(category))])),recognized=[...categoryIndexes.values()].filter(i=>i>=0).length;
-    if(!recognized)throw Error("Nenhuma categoria de investimento reconhecida foi encontrada.");
-    let cdbIndex=headers.findIndex(h=>h==="cdbs da aposentadoria"||h==="cdbs aposentadoria"),totalIndex=headers.findIndex(h=>h==="patrimonio total"||h==="patrimônio total"),hasCdbColumn=cdbIndex>=0,byMonth=new Map(),recalculated=0;
+    let cdbIndex=headers.findIndex(h=>h==="cdbs da aposentadoria"||h==="cdbs aposentadoria"),totalIndex=headers.findIndex(h=>h==="patrimonio total"||h==="patrimônio total"),reserved=new Set([monthIndex,cdbIndex,totalIndex]),detectedCategories=uniqueCategories(rows[0].map((name,index)=>reserved.has(index)?"":name)),categoryIndexes=new Map(detectedCategories.map(category=>[category,headers.indexOf(normalizedCsvHeader(category))]));
+    if(!detectedCategories.length)throw Error("Nenhum investimento foi encontrado no cabeçalho do CSV.");
+    let hasCdbColumn=cdbIndex>=0,byMonth=new Map(),recalculated=0;
     rows.slice(1).forEach((row,rowIndex)=>{
       let month=parseCsvMonth(row[monthIndex]);
       if(!month)return;
       let entries=[];
-      CATS.forEach(category=>{
+      detectedCategories.forEach(category=>{
         let index=categoryIndexes.get(category),value=index>=0?parse(row[index]):0;
         if(value>0)entries.push({id:mid(),sourceName:"Importação CSV",category,value,confidence:100,manual:true});
       });
@@ -665,6 +864,7 @@ async function importCSVFile(file){
     });
     let imported=[...byMonth.values()];
     if(!imported.length)throw Error("Nenhum fechamento válido foi encontrado.");
+    applyCategories([...categories,...detectedCategories,...categoriesFromClosings(imported)],{persist:true});
     let existingByMonth=new Map(closings.map(c=>[c.month,c])),duplicates=imported.filter(c=>existingByMonth.has(c.month)).length;
     if(duplicates&&!confirm(`O CSV contém ${duplicates} mês${duplicates===1?"":"es"} que já existe${duplicates===1?"":"m"} neste aparelho. Substituir esses meses e manter os demais?`)){
       el.csvStatus.textContent="Importação cancelada.";
@@ -697,7 +897,7 @@ async function importCSVFile(file){
     el.csvFile.value="";
   }
 }
-function renderAll(){renderHome();renderEvolution();renderSettings();renderProjections()}
+function renderAll(){renderCategorySetup();renderHome();renderEvolution();renderSettings();renderProjections()}
 
 $("#createAccount").onclick=()=>setAuthMode("signup");
 $("#forgotPassword").onclick=()=>setAuthMode("reset");
@@ -800,11 +1000,21 @@ $("#syncNow").onclick=syncCloudNow;
 addEventListener("online",()=>{if(currentUser)syncCloudNow()});
 addEventListener("offline",()=>setCloudStatus("offline","Sem internet. As alterações continuam salvas neste aparelho."));
 
+$("#firstInvestment").onclick=()=>openInvestmentSheet("first");
+$("#addInvestment").onclick=()=>openInvestmentSheet("settings");
+$("#investmentSheetClose").onclick=closeInvestmentSheet;
+$("#cancelInvestment").onclick=closeInvestmentSheet;
+$("#saveInvestment").onclick=saveInvestment;
+el.investmentSheet.onclick=e=>{if(e.target===el.investmentSheet)closeInvestmentSheet()};
+el.investmentName.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();saveInvestment()}});
+
 $("#newTop").onclick=start;$("#homeNew").onclick=start;$("#graphBtn").onclick=()=>view("evolution");el.cats.addEventListener("click",e=>{let button=e.target.closest("button.cat[data-category]");if(button&&el.cats.contains(button))openCategorySheet(button.dataset.category)});$("#uploadLabel").onclick=()=>pendingCategory=null;el.files.onchange=e=>e.target.files.length?process(e.target.files):pendingCategory=null;el.files.addEventListener("cancel",()=>pendingCategory=null);$("#more").onclick=()=>{pendingCategory=null;el.files.click()};$("#manual").onclick=()=>manual();$("#addAnother").onclick=()=>manual();$("#sheetClose").onclick=closeCategorySheet;el.categorySheet.onclick=e=>{if(e.target===el.categorySheet)closeCategorySheet()};$("#sheetManual").onclick=()=>{let category=selectedHomeCategory;closeCategorySheet();prepareDraftForMonth(currentMonth());manual(category)};$("#sheetPrint").onclick=()=>{let category=selectedHomeCategory;closeCategorySheet();prepareDraftForMonth(currentMonth());pendingCategory=category;setTimeout(()=>el.files.click(),0)};$("#addRetirementCdb").onclick=openRetirementSheet;$("#retirementSheetClose").onclick=closeRetirementSheet;$("#cancelRetirementCdb").onclick=closeRetirementSheet;el.retirementSheet.onclick=e=>{if(e.target===el.retirementSheet)closeRetirementSheet()};$("#saveRetirementCdb").onclick=saveRetirementCdb;el.save.onclick=save;$("#export").onclick=exportCSV;$("#importCsv").onclick=()=>el.csvFile.click();el.csvFile.onchange=e=>{let file=e.target.files?.[0];if(file)importCSVFile(file)};$("#exportBackup").onclick=exportBackup;$("#importBackup").onclick=()=>el.backupFile.click();el.backupFile.onchange=e=>{let file=e.target.files?.[0];if(file)mergeBackupFile(file)};el.month.onchange=summary;$$(".nav").forEach(n=>n.onclick=()=>view(n.dataset.view));addEventListener("resize",()=>document.querySelector("#evolution.active")&&renderEvolution());
 async function initializeLocalApp(){
   db=await openDB();
   closings=await getAll();
   closings.sort((a,b)=>a.month.localeCompare(b.month));
+  const localOwner=localStorage.getItem(OWNER_KEY);
+  categories=uniqueCategories([...loadLocalCategories(localOwner),...categoriesFromClosings(closings)]);
   el.month.value=currentMonth();
   renderAll();
   renderReview();
