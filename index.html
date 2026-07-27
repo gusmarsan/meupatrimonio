@@ -24,7 +24,7 @@ nav{position:fixed;z-index:40;left:50%;bottom:0;transform:translateX(-50%);width
 .auth-gate{position:fixed;inset:0;z-index:300;display:grid;place-items:center;padding:22px;background:radial-gradient(circle at 10% 0,#59d0a51d,transparent 31%),#08131cf7;backdrop-filter:blur(12px)}
 .auth-card{width:min(100%,390px);padding:25px;border:1px solid var(--line);border-radius:22px;background:var(--card);box-shadow:0 24px 70px #0007}
 .auth-brand{display:flex;align-items:center;gap:11px;margin-bottom:21px}.auth-mark{width:43px;height:43px;display:grid;place-items:center;border-radius:14px;background:#59d0a51a;color:var(--green);font-size:1.3rem;font-weight:900}.auth-brand h1{font-size:1.35rem}.auth-brand p{margin:4px 0 0;color:var(--mut);font-size:.74rem}
-.auth-card .field{margin-bottom:12px}.auth-error{min-height:20px;margin:11px 0 0;color:#ffaaaa;font-size:.73rem;line-height:1.4}.auth-help{margin:15px 0 0;color:var(--mut);font-size:.68rem;line-height:1.45;text-align:center}
+.auth-card .field{margin-bottom:12px}.auth-error{min-height:20px;margin:11px 0 0;color:#ffaaaa;font-size:.73rem;line-height:1.4}.auth-error.success{color:#8ee0bf}.auth-help{margin:15px 0 0;color:var(--mut);font-size:.68rem;line-height:1.45;text-align:center}.auth-links{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px}.auth-link{padding:3px 0;border:0;background:none;color:var(--green);font-size:.72rem;font-weight:800;text-decoration:underline;text-underline-offset:3px}.auth-link.muted{color:var(--mut)}.auth-password-note{margin:-3px 0 13px;color:var(--mut);font-size:.65rem;line-height:1.4}.verification-panel{text-align:center}.verification-icon{width:58px;height:58px;display:grid;place-items:center;margin:0 auto 17px;border-radius:19px;background:#59d0a51a;color:var(--green);font-size:1.7rem}.verification-panel h1{font-size:1.35rem}.verification-panel>p{margin:9px 0;color:var(--mut);font-size:.75rem;line-height:1.5}.verification-email{display:block;margin:15px 0 18px;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#0d1d28;color:var(--txt);font-size:.76rem;overflow-wrap:anywhere}.verification-actions{display:grid;gap:9px}.verification-message{min-height:20px;margin:12px 0 0;color:var(--mut);font-size:.7rem;line-height:1.4}.verification-message.success{color:#8ee0bf}.verification-message.error{color:#ffaaaa}
 .account-row{display:flex;justify-content:space-between;align-items:center;gap:12px}.account-copy{min-width:0}.account-copy b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sync-status{display:flex;align-items:center;gap:7px;margin-top:6px;color:var(--mut);font-size:.69rem}.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--yellow)}.sync-status.synced{color:#8ee0bf}.sync-status.synced .sync-dot{background:var(--green)}.sync-status.error{color:#ffaaaa}.sync-status.error .sync-dot{background:var(--red)}.sync-status.offline{color:#efd390}.account-actions{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:15px}.logout{min-width:82px}
 
 </style>
@@ -144,13 +144,30 @@ nav{position:fixed;z-index:40;left:50%;bottom:0;transform:translateX(-50%);width
 
 <div id="loginGate" class="auth-gate">
 <form id="loginForm" class="auth-card">
-<div class="auth-brand"><div class="auth-mark">↗</div><div><h1>Meu patrimônio</h1><p>Entre para acessar e sincronizar seus dados</p></div></div>
+<div class="auth-brand"><div class="auth-mark">↗</div><div><h1 id="authTitle">Meu patrimônio</h1><p id="authSubtitle">Entre para acessar e sincronizar seus dados</p></div></div>
 <div class="field"><label for="loginEmail">E-mail</label><input id="loginEmail" type="email" autocomplete="username" required></div>
-<div class="field"><label for="loginPassword">Senha</label><input id="loginPassword" type="password" autocomplete="current-password" required></div>
+<div id="passwordField" class="field"><label for="loginPassword">Senha</label><input id="loginPassword" type="password" autocomplete="current-password"></div>
+<div id="confirmPasswordField" class="field hidden"><label for="loginConfirmPassword">Confirmar senha</label><input id="loginConfirmPassword" type="password" autocomplete="new-password"></div>
+<p id="passwordNote" class="auth-password-note hidden">Use pelo menos 10 caracteres, com letra maiúscula, letra minúscula e número.</p>
 <button id="loginButton" class="btn primary full" type="submit">Entrar</button>
 <p id="loginError" class="auth-error" aria-live="polite"></p>
-<p class="auth-help">Use o e-mail e a senha cadastrados no Firebase Authentication.</p>
+<div id="loginLinks" class="auth-links"><button id="forgotPassword" class="auth-link muted" type="button">Esqueci minha senha</button><button id="createAccount" class="auth-link" type="button">Criar conta</button></div>
+<div id="backLoginWrap" class="auth-links hidden"><span></span><button id="backToLogin" class="auth-link" type="button">Voltar para entrar</button></div>
+<p id="authHelp" class="auth-help">Cada conta mantém seus dados separados e protegidos.</p>
 </form>
+<section id="verificationPanel" class="auth-card verification-panel hidden">
+<div class="verification-icon">✉</div>
+<h1>Confirme seu e-mail</h1>
+<p>Enviamos uma mensagem de confirmação para:</p>
+<b id="verificationEmail" class="verification-email"></b>
+<p>Abra o link recebido e depois volte aqui. Confira também a caixa de spam.</p>
+<div class="verification-actions">
+<button id="checkVerification" class="btn primary full" type="button">Já confirmei</button>
+<button id="resendVerification" class="btn secondary full" type="button">Reenviar e-mail</button>
+<button id="verificationLogout" class="auth-link muted" type="button">Entrar com outra conta</button>
+</div>
+<p id="verificationMessage" class="verification-message" aria-live="polite"></p>
+</section>
 </div>
 
 <div id="overlay" class="overlay hidden"><div class="obox"><div class="spin"></div><b>Lendo os prints</b><p id="status" class="status">Preparando...</p><div class="track"><div id="bar" class="bar"></div></div></div></div>
@@ -158,7 +175,7 @@ nav{position:fixed;z-index:40;left:50%;bottom:0;transform:translateX(-50%);width
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-import { getAuth, setPersistence, browserLocalPersistence, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+import { getAuth, setPersistence, browserLocalPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail, onAuthStateChanged, signOut, reload } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -172,14 +189,16 @@ const firebaseConfig = {
 
 const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
+auth.languageCode="pt-BR";
 const cloudDb = getFirestore(firebaseApp);
+const emailActionSettings={url:location.origin+location.pathname,handleCodeInApp:false};
 
 const CATS=["Cripto","Offshore","Investimentos BTG","Investimentos BB","Trader BTG","Brasilprev + TDs 2029 e 2033"],DB="patrimonio-db",STORE="closings";
 let db,closings=[],draft=[],editing=null,worker=null,timer,pendingCategory=null,selectedHomeCategory=null,retirementClosingId=null;
-let currentUser=null,cloudRef=null,unsubscribeCloud=null,syncTimer=null,lastPushedVersion=0,appInitialized=false;
+let currentUser=null,cloudRef=null,unsubscribeCloud=null,syncTimer=null,lastPushedVersion=0,appInitialized=false,authMode="login";
 const OWNER_KEY="patrimonio-firebase-owner";
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-const el={title:$("#title"),homeEmpty:$("#homeEmpty"),homeContent:$("#homeContent"),latestLabel:$("#latestLabel"),latestTotal:$("#latestTotal"),latestDelta:$("#latestDelta"),cats:$("#cats"),month:$("#month"),files:$("#files"),reviewList:$("#reviewList"),reviewMonth:$("#reviewMonth"),reviewTotal:$("#reviewTotal"),categorySummary:$("#categorySummary"),entryCount:$("#entryCount"),warnings:$("#warnings"),save:$("#save"),chartEmpty:$("#chartEmpty"),chartBox:$("#chartBox"),chart:$("#chart"),history:$("#history"),backupFile:$("#backupFile"),csvFile:$("#csvFile"),csvStatus:$("#csvStatus"),backupMonths:$("#backupMonths"),backupUpdated:$("#backupUpdated"),backupStatus:$("#backupStatus"),projectionEmpty:$("#projectionEmpty"),projectionContent:$("#projectionContent"),projectionCurrentLabel:$("#projectionCurrentLabel"),projectionCurrent:$("#projectionCurrent"),projectionLastRate:$("#projectionLastRate"),projectionLastDate:$("#projectionLastDate"),projectionLastPrevious:$("#projectionLastPrevious"),projection08Date:$("#projection08Date"),projection08Previous:$("#projection08Previous"),projection10Date:$("#projection10Date"),projection10Previous:$("#projection10Previous"),retirementValue:$("#retirementValue"),retirementBase:$("#retirementBase"),retirementCdbValue:$("#retirementCdbValue"),myMoneyValue:$("#myMoneyValue"),wealthSplitTotal:$("#wealthSplitTotal"),wealthSplitWarning:$("#wealthSplitWarning"),retirementSheet:$("#retirementSheet"),retirementCdbInput:$("#retirementCdbInput"),categorySheet:$("#categorySheet"),sheetTitle:$("#sheetTitle"),sheetValue:$("#sheetValue"),sheetCopy:$("#sheetCopy"),loginGate:$("#loginGate"),loginForm:$("#loginForm"),loginEmail:$("#loginEmail"),loginPassword:$("#loginPassword"),loginButton:$("#loginButton"),loginError:$("#loginError"),accountEmail:$("#accountEmail"),cloudStatus:$("#cloudStatus"),cloudStatusText:$("#cloudStatusText"),overlay:$("#overlay"),status:$("#status"),bar:$("#bar"),toast:$("#toast")};
+const el={title:$("#title"),homeEmpty:$("#homeEmpty"),homeContent:$("#homeContent"),latestLabel:$("#latestLabel"),latestTotal:$("#latestTotal"),latestDelta:$("#latestDelta"),cats:$("#cats"),month:$("#month"),files:$("#files"),reviewList:$("#reviewList"),reviewMonth:$("#reviewMonth"),reviewTotal:$("#reviewTotal"),categorySummary:$("#categorySummary"),entryCount:$("#entryCount"),warnings:$("#warnings"),save:$("#save"),chartEmpty:$("#chartEmpty"),chartBox:$("#chartBox"),chart:$("#chart"),history:$("#history"),backupFile:$("#backupFile"),csvFile:$("#csvFile"),csvStatus:$("#csvStatus"),backupMonths:$("#backupMonths"),backupUpdated:$("#backupUpdated"),backupStatus:$("#backupStatus"),projectionEmpty:$("#projectionEmpty"),projectionContent:$("#projectionContent"),projectionCurrentLabel:$("#projectionCurrentLabel"),projectionCurrent:$("#projectionCurrent"),projectionLastRate:$("#projectionLastRate"),projectionLastDate:$("#projectionLastDate"),projectionLastPrevious:$("#projectionLastPrevious"),projection08Date:$("#projection08Date"),projection08Previous:$("#projection08Previous"),projection10Date:$("#projection10Date"),projection10Previous:$("#projection10Previous"),retirementValue:$("#retirementValue"),retirementBase:$("#retirementBase"),retirementCdbValue:$("#retirementCdbValue"),myMoneyValue:$("#myMoneyValue"),wealthSplitTotal:$("#wealthSplitTotal"),wealthSplitWarning:$("#wealthSplitWarning"),retirementSheet:$("#retirementSheet"),retirementCdbInput:$("#retirementCdbInput"),categorySheet:$("#categorySheet"),sheetTitle:$("#sheetTitle"),sheetValue:$("#sheetValue"),sheetCopy:$("#sheetCopy"),loginGate:$("#loginGate"),loginForm:$("#loginForm"),authTitle:$("#authTitle"),authSubtitle:$("#authSubtitle"),authHelp:$("#authHelp"),loginEmail:$("#loginEmail"),passwordField:$("#passwordField"),loginPassword:$("#loginPassword"),confirmPasswordField:$("#confirmPasswordField"),loginConfirmPassword:$("#loginConfirmPassword"),passwordNote:$("#passwordNote"),loginButton:$("#loginButton"),loginError:$("#loginError"),loginLinks:$("#loginLinks"),backLoginWrap:$("#backLoginWrap"),verificationPanel:$("#verificationPanel"),verificationEmail:$("#verificationEmail"),verificationMessage:$("#verificationMessage"),accountEmail:$("#accountEmail"),cloudStatus:$("#cloudStatus"),cloudStatusText:$("#cloudStatusText"),overlay:$("#overlay"),status:$("#status"),bar:$("#bar"),toast:$("#toast")};
 const brl=n=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(+n||0);
 const pct=n=>new Intl.NumberFormat("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2}).format(n)+"%";
 const parse=s=>{let v=String(s??"").replace(/[^\d,.-]/g,"").replace(/\.(?=\d{3}(?:\D|$))/g,"").replace(",",".");return Number.isFinite(+v)?+v:0};
@@ -300,13 +319,70 @@ async function startCloudSync(user){
   }
 }
 
-function authMessage(error){
+function authMessage(error,context="login"){
   const code=error?.code||"";
   if(code==="auth/invalid-credential"||code==="auth/wrong-password"||code==="auth/user-not-found")return"E-mail ou senha incorretos.";
+  if(code==="auth/email-already-in-use")return"Já existe uma conta com este e-mail. Volte para entrar.";
+  if(code==="auth/weak-password")return"A senha não atende aos requisitos de segurança.";
   if(code==="auth/too-many-requests")return"Muitas tentativas. Aguarde um pouco e tente novamente.";
   if(code==="auth/network-request-failed")return"Não foi possível conectar. Confira a internet.";
   if(code==="auth/invalid-email")return"Digite um e-mail válido.";
-  return"Não foi possível entrar. Confira os dados e tente novamente.";
+  if(code==="auth/user-disabled")return"Esta conta foi desativada.";
+  return context==="signup"?"Não foi possível criar a conta. Tente novamente.":"Não foi possível entrar. Confira os dados e tente novamente.";
+}
+
+function passwordIssue(password){
+  if(password.length<10)return"A senha precisa ter pelo menos 10 caracteres.";
+  if(!/[a-z]/.test(password))return"Inclua pelo menos uma letra minúscula.";
+  if(!/[A-Z]/.test(password))return"Inclua pelo menos uma letra maiúscula.";
+  if(!/\d/.test(password))return"Inclua pelo menos um número.";
+  return"";
+}
+
+function setAuthMode(mode){
+  authMode=mode;
+  const signup=mode==="signup",reset=mode==="reset";
+  el.loginForm.classList.remove("hidden");
+  el.verificationPanel.classList.add("hidden");
+  el.authTitle.textContent=signup?"Criar conta":reset?"Redefinir senha":"Meu patrimônio";
+  el.authSubtitle.textContent=signup?"Crie seu acesso para começar":reset?"Receba um link para criar outra senha":"Entre para acessar e sincronizar seus dados";
+  el.passwordField.classList.toggle("hidden",reset);
+  el.confirmPasswordField.classList.toggle("hidden",!signup);
+  el.passwordNote.classList.toggle("hidden",!signup);
+  el.loginLinks.classList.toggle("hidden",mode!=="login");
+  el.backLoginWrap.classList.toggle("hidden",mode==="login");
+  el.loginButton.textContent=signup?"Criar conta":reset?"Enviar link":"Entrar";
+  el.authHelp.textContent=signup?"Seus dados ficam separados dos dados de todos os outros usuários.":reset?"Por segurança, a mensagem não informa se o e-mail está cadastrado.":"Cada conta mantém seus dados separados e protegidos.";
+  el.loginPassword.required=!reset;
+  el.loginPassword.autocomplete=signup?"new-password":"current-password";
+  el.loginConfirmPassword.required=signup;
+  el.loginError.className="auth-error";
+  el.loginError.textContent="";
+  if(!signup)el.loginConfirmPassword.value="";
+  setTimeout(()=>el.loginEmail.focus(),30);
+}
+
+function showVerificationGate(user,message=""){
+  currentUser=null;
+  cloudRef=null;
+  unsubscribeCloud?.();
+  unsubscribeCloud=null;
+  el.loginForm.classList.add("hidden");
+  el.verificationPanel.classList.remove("hidden");
+  el.verificationEmail.textContent=user?.email||"seu e-mail";
+  el.verificationMessage.className="verification-message";
+  el.verificationMessage.textContent=message;
+  el.loginGate.classList.remove("hidden");
+}
+
+async function sendVerification(user){
+  if(!user)return;
+  await sendEmailVerification(user,emailActionSettings);
+}
+
+async function enterVerifiedAccount(user){
+  el.loginGate.classList.add("hidden");
+  await startCloudSync(user);
 }
 
 const ordered=()=>[...closings].sort((a,b)=>a.month.localeCompare(b.month));
@@ -623,23 +699,97 @@ async function importCSVFile(file){
 }
 function renderAll(){renderHome();renderEvolution();renderSettings();renderProjections()}
 
+$("#createAccount").onclick=()=>setAuthMode("signup");
+$("#forgotPassword").onclick=()=>setAuthMode("reset");
+$("#backToLogin").onclick=()=>setAuthMode("login");
+
 el.loginForm.addEventListener("submit",async event=>{
   event.preventDefault();
+  const email=el.loginEmail.value.trim(),password=el.loginPassword.value;
+  el.loginError.className="auth-error";
   el.loginError.textContent="";
   el.loginButton.disabled=true;
-  el.loginButton.textContent="Entrando...";
+  const originalLabel=el.loginButton.textContent;
+  el.loginButton.textContent=authMode==="signup"?"Criando conta...":authMode==="reset"?"Enviando...":"Entrando...";
   try{
     await setPersistence(auth,browserLocalPersistence);
-    await signInWithEmailAndPassword(auth,el.loginEmail.value.trim(),el.loginPassword.value);
-    el.loginPassword.value="";
+    if(authMode==="signup"){
+      const issue=passwordIssue(password);
+      if(issue)throw Object.assign(new Error(issue),{friendlyMessage:issue});
+      if(password!==el.loginConfirmPassword.value)throw Object.assign(new Error("As senhas não são iguais."),{friendlyMessage:"As senhas não são iguais."});
+      const credential=await createUserWithEmailAndPassword(auth,email,password);
+      await sendVerification(credential.user);
+      el.loginPassword.value="";
+      el.loginConfirmPassword.value="";
+      showVerificationGate(credential.user,"E-mail enviado. Confirme o endereço para liberar o app.");
+    }else if(authMode==="reset"){
+      await sendPasswordResetEmail(auth,email,emailActionSettings);
+      el.loginError.className="auth-error success";
+      el.loginError.textContent="Se houver uma conta com este e-mail, você receberá o link para criar outra senha.";
+    }else{
+      await signInWithEmailAndPassword(auth,email,password);
+      el.loginPassword.value="";
+    }
   }catch(error){
     console.error(error);
-    el.loginError.textContent=authMessage(error);
+    el.loginError.className="auth-error";
+    el.loginError.textContent=error.friendlyMessage||authMessage(error,authMode);
   }finally{
     el.loginButton.disabled=false;
-    el.loginButton.textContent="Entrar";
+    el.loginButton.textContent=originalLabel;
   }
 });
+
+$("#checkVerification").onclick=async()=>{
+  const button=$("#checkVerification");
+  button.disabled=true;
+  button.textContent="Conferindo...";
+  el.verificationMessage.className="verification-message";
+  el.verificationMessage.textContent="";
+  try{
+    if(!auth.currentUser)throw Error("Entre novamente para continuar.");
+    await reload(auth.currentUser);
+    if(auth.currentUser.emailVerified){
+      el.verificationMessage.className="verification-message success";
+      el.verificationMessage.textContent="E-mail confirmado.";
+      await enterVerifiedAccount(auth.currentUser);
+    }else{
+      el.verificationMessage.textContent="A confirmação ainda não apareceu. Abra o link do e-mail e tente novamente.";
+    }
+  }catch(error){
+    console.error(error);
+    el.verificationMessage.className="verification-message error";
+    el.verificationMessage.textContent=error.message||"Não foi possível conferir a confirmação.";
+  }finally{
+    button.disabled=false;
+    button.textContent="Já confirmei";
+  }
+};
+
+$("#resendVerification").onclick=async()=>{
+  const button=$("#resendVerification");
+  button.disabled=true;
+  el.verificationMessage.className="verification-message";
+  el.verificationMessage.textContent="Enviando...";
+  try{
+    if(!auth.currentUser)throw Error("Entre novamente para reenviar.");
+    await sendVerification(auth.currentUser);
+    el.verificationMessage.className="verification-message success";
+    el.verificationMessage.textContent="Novo e-mail enviado. Confira também a caixa de spam.";
+  }catch(error){
+    console.error(error);
+    el.verificationMessage.className="verification-message error";
+    el.verificationMessage.textContent=error?.code==="auth/too-many-requests"?"Aguarde um pouco antes de reenviar.":"Não foi possível reenviar o e-mail.";
+  }finally{
+    setTimeout(()=>{button.disabled=false},15000);
+  }
+};
+
+$("#verificationLogout").onclick=async()=>{
+  await signOut(auth);
+  setAuthMode("login");
+};
+
 $("#logout").onclick=async()=>{
   if(!confirm("Sair desta conta neste aparelho?"))return;
   unsubscribeCloud?.();
@@ -669,8 +819,11 @@ const localReady=initializeLocalApp().catch(error=>{
 onAuthStateChanged(auth,async user=>{
   await localReady;
   if(user){
-    el.loginGate.classList.add("hidden");
-    await startCloudSync(user);
+    if(!user.emailVerified){
+      showVerificationGate(user);
+      return;
+    }
+    await enterVerifiedAccount(user);
   }else{
     currentUser=null;
     cloudRef=null;
@@ -679,7 +832,7 @@ onAuthStateChanged(auth,async user=>{
     el.accountEmail.textContent="—";
     setCloudStatus("","Faça login para sincronizar.");
     el.loginGate.classList.remove("hidden");
-    setTimeout(()=>el.loginEmail.focus(),50);
+    setAuthMode("login");
   }
 });
 </script>
