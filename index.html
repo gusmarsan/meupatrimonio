@@ -950,11 +950,134 @@ body{font-family:"Inter","Segoe UI",sans-serif}
   }
   #home .section-heading{margin-bottom:28px}
 }
+
+/* User controls and financial privacy */
+.topbar-actions{display:flex;align-items:center;gap:10px}
+.privacy-toggle{
+  width:44px;
+  height:44px;
+  display:grid;
+  place-items:center;
+  padding:0;
+  border:1px solid rgba(23,32,27,.16);
+  border-radius:10px;
+  background:rgba(255,255,255,.72);
+  color:#344139;
+  cursor:pointer;
+}
+.privacy-toggle:hover{border-color:rgba(23,32,27,.34);background:#fff}
+.privacy-toggle svg{
+  grid-area:1/1;
+  width:19px;
+  height:19px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.7;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.privacy-toggle .eye-closed{display:none}
+.privacy-toggle[aria-pressed="true"] .eye-open{display:none}
+.privacy-toggle[aria-pressed="true"] .eye-closed{display:block}
+nav::before{display:none}
+.user-control{
+  position:relative;
+  flex:0 0 auto;
+  margin:0 10px 52px;
+}
+.user-avatar{
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  padding:0;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:50%;
+  background:transparent;
+  color:#f0f5f1;
+  font-size:.72rem;
+  font-weight:750;
+  letter-spacing:.035em;
+  cursor:pointer;
+}
+.user-avatar:hover,.user-avatar[aria-expanded="true"]{border-color:rgba(255,255,255,.38);background:rgba(255,255,255,.08)}
+.user-menu{
+  position:absolute;
+  z-index:80;
+  top:50px;
+  left:0;
+  width:174px;
+  padding:6px;
+  border:1px solid rgba(23,32,27,.12);
+  border-radius:11px;
+  background:#fff;
+  box-shadow:0 18px 48px rgba(8,18,13,.2);
+}
+.user-menu button{
+  width:100%;
+  min-height:42px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:0 11px;
+  border:0;
+  border-radius:7px;
+  background:transparent;
+  color:#253129;
+  font-size:.77rem;
+  font-weight:620;
+  cursor:pointer;
+}
+.user-menu button:hover{background:#f0f3ef}
+.user-menu svg{
+  width:17px;
+  height:17px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.7;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+@media(max-width:760px){
+  .topbar-actions{gap:8px}
+  .privacy-toggle{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#fff;
+  }
+  .user-control{
+    position:fixed;
+    z-index:75;
+    top:26px;
+    right:116px;
+    margin:0;
+  }
+  .user-avatar{
+    width:42px;
+    height:42px;
+    border-color:rgba(23,32,27,.18);
+    background:#fff;
+    color:#253129;
+    box-shadow:0 5px 16px rgba(23,32,27,.08);
+  }
+  .user-avatar:hover,.user-avatar[aria-expanded="true"]{border-color:rgba(23,32,27,.38);background:#fff}
+  .user-menu{right:0;left:auto}
+}
+
+@media(max-width:430px){
+  header h1{font-size:1.05rem}
+  header .eyebrow{font-size:.6rem}
+  .user-control{right:112px}
+  .privacy-toggle{width:40px;height:40px}
+  header .round{width:40px;min-width:40px;height:40px}
+}
 </style>
 </head>
 <body>
 <div class="app">
-<header><div><p class="eyebrow">Fechamento mensal</p><h1 id="title">Meu patrimônio</h1></div><button id="newTop" class="round" type="button" aria-label="Adicionar fechamento">＋</button></header>
+<header><div><p class="eyebrow">Fechamento mensal</p><h1 id="title">Meu patrimônio</h1></div><div class="topbar-actions"><button id="privacyToggle" class="privacy-toggle" type="button" aria-label="Ocultar valores financeiros" aria-pressed="false"><svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.8"/></svg><svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 3 18 18M10.6 6.1A10.6 10.6 0 0 1 12 6c6 0 9.5 6 9.5 6a17 17 0 0 1-2.1 2.7M6.2 6.2C3.9 7.8 2.5 12 2.5 12s3.5 6 9.5 6c1.4 0 2.7-.3 3.8-.8M9.9 9.9A3 3 0 0 0 14.1 14"/></svg></button><button id="newTop" class="round" type="button" aria-label="Adicionar fechamento">＋</button></div></header>
 <main>
 <section id="home" class="view active">
 <div id="homeEmpty" class="empty home-empty">Nenhum fechamento salvo.<br>Adicione os prints do primeiro mês.</div>
@@ -1105,7 +1228,7 @@ body{font-family:"Inter","Segoe UI",sans-serif}
 </div>
 </section>
 </main>
-<nav><button type="button" class="nav" data-view="new"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><small>Fechamento</small></button><button type="button" class="nav" data-view="settings"><span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3A1.7 1.7 0 0 0 10 3v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/></svg></span><small>Configurações</small></button><button type="button" class="nav active" data-view="home"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16v12H4z"/><path d="M8 15V9m4 6v-3m4 3V7"/></svg></span><small>Carteira</small></button><button type="button" class="nav" data-view="evolution"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16 5-5 4 3 7-8"/><path d="M15 6h5v5"/></svg></span><small>Evolução</small></button><button type="button" class="nav" data-view="projections"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19 20 5"/><path d="M11 5h9v9"/></svg></span><small>Projeções</small></button></nav>
+<nav><div class="user-control"><button id="userAvatar" class="user-avatar" type="button" aria-label="Abrir menu do usuário" aria-haspopup="menu" aria-expanded="false"><span id="userInitials">MP</span></button><div id="userMenu" class="user-menu hidden" role="menu"><button id="userMenuLogout" type="button" role="menuitem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5H5v14h5M14 8l4 4-4 4M8 12h10"/></svg><span>Sair</span></button></div></div><button type="button" class="nav" data-view="new"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><small>Fechamento</small></button><button type="button" class="nav" data-view="settings"><span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3A1.7 1.7 0 0 0 10 3v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/></svg></span><small>Configurações</small></button><button type="button" class="nav active" data-view="home"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16v12H4z"/><path d="M8 15V9m4 6v-3m4 3V7"/></svg></span><small>Carteira</small></button><button type="button" class="nav" data-view="evolution"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16 5-5 4 3 7-8"/><path d="M15 6h5v5"/></svg></span><small>Evolução</small></button><button type="button" class="nav" data-view="projections"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19 20 5"/><path d="M11 5h9v9"/></svg></span><small>Projeções</small></button></nav>
 </div>
 <div id="investmentSheet" class="sheet hidden">
 <div class="sheet-card">
@@ -1188,6 +1311,83 @@ let currentUser=null,cloudRef=null,unsubscribeCloud=null,syncTimer=null,lastPush
 const OWNER_KEY="patrimonio-firebase-owner";
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const el={title:$("#title"),homeEmpty:$("#homeEmpty"),homeContent:$("#homeContent"),categoryOnboarding:$("#categoryOnboarding"),closingBuilder:$("#closingBuilder"),investmentList:$("#investmentList"),investmentSheet:$("#investmentSheet"),investmentName:$("#investmentName"),latestLabel:$("#latestLabel"),latestTotal:$("#latestTotal"),latestDelta:$("#latestDelta"),contributionWrap:$("#contributionWrap"),toggleContribution:$("#toggleContribution"),contributionPanel:$("#contributionPanel"),contributionMonth:$("#contributionMonth"),contributionCategory:$("#contributionCategory"),contributionValue:$("#contributionValue"),contributionList:$("#contributionList"),cats:$("#cats"),month:$("#month"),files:$("#files"),reviewList:$("#reviewList"),reviewMonth:$("#reviewMonth"),reviewTotal:$("#reviewTotal"),categorySummary:$("#categorySummary"),entryCount:$("#entryCount"),warnings:$("#warnings"),save:$("#save"),chartEmpty:$("#chartEmpty"),chartBox:$("#chartBox"),chart:$("#chart"),history:$("#history"),backupFile:$("#backupFile"),csvFile:$("#csvFile"),csvStatus:$("#csvStatus"),backupMonths:$("#backupMonths"),backupUpdated:$("#backupUpdated"),backupStatus:$("#backupStatus"),projectionEmpty:$("#projectionEmpty"),projectionContent:$("#projectionContent"),projectionCurrentLabel:$("#projectionCurrentLabel"),projectionCurrent:$("#projectionCurrent"),projectionLastRate:$("#projectionLastRate"),projectionLastDate:$("#projectionLastDate"),projectionLastPrevious:$("#projectionLastPrevious"),projection08Date:$("#projection08Date"),projection08Previous:$("#projection08Previous"),projection10Date:$("#projection10Date"),projection10Previous:$("#projection10Previous"),retirementValue:$("#retirementValue"),retirementBase:$("#retirementBase"),retirementBaseLabel:$("#retirementBaseLabel"),retirementCdbValue:$("#retirementCdbValue"),myMoneyValue:$("#myMoneyValue"),wealthSplitTotal:$("#wealthSplitTotal"),wealthSplitWarning:$("#wealthSplitWarning"),retirementSheet:$("#retirementSheet"),retirementCdbInput:$("#retirementCdbInput"),categorySheet:$("#categorySheet"),sheetTitle:$("#sheetTitle"),sheetValue:$("#sheetValue"),sheetCopy:$("#sheetCopy"),loginGate:$("#loginGate"),loginForm:$("#loginForm"),authTitle:$("#authTitle"),authSubtitle:$("#authSubtitle"),authHelp:$("#authHelp"),loginEmail:$("#loginEmail"),passwordField:$("#passwordField"),loginPassword:$("#loginPassword"),confirmPasswordField:$("#confirmPasswordField"),loginConfirmPassword:$("#loginConfirmPassword"),passwordNote:$("#passwordNote"),loginButton:$("#loginButton"),loginError:$("#loginError"),loginLinks:$("#loginLinks"),backLoginWrap:$("#backLoginWrap"),verificationPanel:$("#verificationPanel"),verificationEmail:$("#verificationEmail"),verificationMessage:$("#verificationMessage"),accountEmail:$("#accountEmail"),cloudStatus:$("#cloudStatus"),cloudStatusText:$("#cloudStatusText"),overlay:$("#overlay"),status:$("#status"),bar:$("#bar"),toast:$("#toast")};
+const PRIVACY_SESSION_KEY="patrimonio-values-hidden";
+const privacyTextNodes=new Map(),privacyAttributes=new Map();
+let financialValuesHidden=sessionStorage.getItem(PRIVACY_SESSION_KEY)==="true";
+const maskDigits=value=>String(value??"").replace(/\d/g,"*");
+const privacyText=value=>financialValuesHidden?maskDigits(value):String(value??"");
+
+function initialsFromEmail(email){
+  const local=String(email||"").split("@")[0].normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  const parts=local.split(/[._\-\d]+/).map(part=>part.replace(/[^a-z]/gi,"")).filter(Boolean);
+  if(parts.length>=2)return (parts[0][0]+parts[1][0]).toUpperCase();
+  const compact=parts[0]||"";
+  if(!compact)return"MP";
+  const knownNames=["gustavo","gabriel","rafael","ricardo","fernando","felipe","rodrigo","marcelo","marcos","lucas","pedro","paulo","joao","jose","carlos","bruno","andre","john"];
+  const given=knownNames.find(name=>compact.toLowerCase().startsWith(name)&&compact.length>name.length+1);
+  if(given)return (compact[0]+compact[given.length]).toUpperCase();
+  return compact.slice(0,2).toUpperCase()||"MP";
+}
+
+function updateUserIdentity(user){
+  $("#userInitials").textContent=initialsFromEmail(user?.email);
+  $("#userAvatar").setAttribute("aria-label",user?.email?`Abrir menu de ${user.email}`:"Abrir menu do usuário");
+}
+
+function closeUserMenu(){
+  $("#userMenu").classList.add("hidden");
+  $("#userAvatar").setAttribute("aria-expanded","false");
+}
+
+function maskTextNode(node){
+  if(!node?.nodeValue||!/\d/.test(node.nodeValue)&&!privacyTextNodes.has(node))return;
+  const parent=node.parentElement;
+  if(!parent||parent.closest("script,style,noscript,[data-privacy-ignore]"))return;
+  let original=privacyTextNodes.get(node);
+  if(original===undefined||node.nodeValue!==maskDigits(original)){
+    original=node.nodeValue;
+    privacyTextNodes.set(node,original);
+  }
+  const masked=maskDigits(original);
+  if(node.nodeValue!==masked)node.nodeValue=masked;
+}
+
+function maskSubtree(root=document.body){
+  if(root.nodeType===Node.TEXT_NODE){maskTextNode(root);return}
+  if(root.nodeType!==Node.ELEMENT_NODE)return;
+  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+  while(walker.nextNode())maskTextNode(walker.currentNode);
+  root.querySelectorAll?.("[aria-label]").forEach(node=>{
+    const value=node.getAttribute("aria-label");
+    if(!value||!/\d/.test(value))return;
+    if(!privacyAttributes.has(node))privacyAttributes.set(node,value);
+    const masked=maskDigits(privacyAttributes.get(node));
+    if(node.getAttribute("aria-label")!==masked)node.setAttribute("aria-label",masked);
+  });
+}
+
+function restoreFinancialValues(){
+  privacyTextNodes.forEach((value,node)=>{if(node.isConnected)node.nodeValue=value});
+  privacyTextNodes.clear();
+  privacyAttributes.forEach((value,node)=>{if(node.isConnected)node.setAttribute("aria-label",value)});
+  privacyAttributes.clear();
+}
+
+function applyPrivacyState({rerender=true}={}){
+  $("#privacyToggle").setAttribute("aria-pressed",String(financialValuesHidden));
+  $("#privacyToggle").setAttribute("aria-label",financialValuesHidden?"Mostrar valores financeiros":"Ocultar valores financeiros");
+  if(financialValuesHidden)maskSubtree(document.body);else restoreFinancialValues();
+  if(rerender&&appInitialized)renderAll();
+}
+
+const privacyObserver=new MutationObserver(records=>{
+  if(!financialValuesHidden)return;
+  records.forEach(record=>{
+    if(record.type==="characterData")maskTextNode(record.target);
+    record.addedNodes.forEach(maskSubtree);
+  });
+});
+privacyObserver.observe(document.body,{subtree:true,childList:true,characterData:true});
 const brl=n=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(+n||0);
 const pct=n=>new Intl.NumberFormat("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2}).format(n)+"%";
 const parse=s=>{let v=String(s??"").replace(/[^\d,.-]/g,"").replace(/\.(?=\d{3}(?:\D|$))/g,"").replace(",",".");return Number.isFinite(+v)?+v:0};
@@ -1349,6 +1549,7 @@ function queueCloudSync(){
 async function startCloudSync(user){
   unsubscribeCloud?.();
   currentUser=user;
+  updateUserIdentity(user);
   el.accountEmail.textContent=user.email||"Conta Firebase";
   cloudRef=doc(cloudDb,"users",user.uid,"data","patrimonio");
 
@@ -1756,7 +1957,7 @@ function drawPremium(data,canvas=el.chart,preferredHeight=0){
     ctx.fillStyle=mobile?"#98a59f":"#66726c";
     ctx.textAlign="right";
     ctx.textBaseline="middle";
-    ctx.fillText(compact(value),pad.l-12,y);
+    ctx.fillText(privacyText(compact(value)),pad.l-12,y);
   }
   let points=data.map((item,index)=>({x:pad.l+(plotW/(data.length-1))*index,y:pad.t+plotH-(item.total-min)/(max-min)*plotH}));
   let path=()=>{
@@ -1794,17 +1995,17 @@ function drawPremium(data,canvas=el.chart,preferredHeight=0){
       ctx.fillStyle=mobile?"#98a59f":"#66726c";
       ctx.textAlign="center";
       ctx.textBaseline="top";
-      ctx.fillText(`${month}/${year.slice(2)}`,point.x,pad.t+plotH+17);
+      ctx.fillText(privacyText(`${month}/${year.slice(2)}`),point.x,pad.t+plotH+17);
     }
   });
   let first=data[0],last=data.at(-1),change=last.total-first.total;
-  canvas.setAttribute("aria-label",`Evolução do patrimônio de ${brl(first.total)} em ${mlabel(first.month)} para ${brl(last.total)} em ${mlabel(last.month)}. Variação de ${change>=0?"+":""}${brl(change)}.`);
+  canvas.setAttribute("aria-label",privacyText(`Evolução do patrimônio de ${brl(first.total)} em ${mlabel(first.month)} para ${brl(last.total)} em ${mlabel(last.month)}. Variação de ${change>=0?"+":""}${brl(change)}.`));
   let tooltip=canvas.parentElement.querySelector(".chart-tooltip");
   canvas.onpointermove=event=>{
     let bounds=canvas.getBoundingClientRect(),pointerX=event.clientX-bounds.left,closest=points.reduce((best,point,index)=>Math.abs(point.x-pointerX)<Math.abs(best.point.x-pointerX)?{point,index}:best,{point:points[0],index:0}),item=data[closest.index];
     if(Math.abs(closest.point.x-pointerX)>Math.max(34,plotW/data.length)){tooltip?.classList.add("hidden");return}
     if(tooltip){
-      tooltip.innerHTML=`<strong>${esc(mlabel(item.month))}</strong><span>${brl(item.total)}</span>`;
+      tooltip.innerHTML=`<strong>${esc(privacyText(mlabel(item.month)))}</strong><span>${privacyText(brl(item.total))}</span>`;
       tooltip.style.left=`${closest.point.x}px`;
       tooltip.style.top=`${closest.point.y}px`;
       tooltip.classList.remove("hidden");
@@ -2220,12 +2421,37 @@ $("#verificationLogout").onclick=async()=>{
   setAuthMode("login");
 };
 
-$("#logout").onclick=async()=>{
+async function logoutCurrentAccount(){
+  closeUserMenu();
   if(!confirm("Sair desta conta neste aparelho?"))return;
   unsubscribeCloud?.();
   unsubscribeCloud=null;
   await signOut(auth);
+}
+$("#logout").onclick=logoutCurrentAccount;
+$("#userMenuLogout").onclick=logoutCurrentAccount;
+$("#userAvatar").onclick=event=>{
+  event.stopPropagation();
+  const menu=$("#userMenu"),opening=menu.classList.contains("hidden");
+  menu.classList.toggle("hidden",!opening);
+  $("#userAvatar").setAttribute("aria-expanded",String(opening));
+  if(opening)$("#userMenuLogout").focus();
 };
+document.addEventListener("click",event=>{
+  if(!event.target.closest(".user-control"))closeUserMenu();
+});
+document.addEventListener("keydown",event=>{
+  if(event.key==="Escape"&&!$("#userMenu").classList.contains("hidden")){
+    closeUserMenu();
+    $("#userAvatar").focus();
+  }
+});
+$("#privacyToggle").onclick=()=>{
+  financialValuesHidden=!financialValuesHidden;
+  sessionStorage.setItem(PRIVACY_SESSION_KEY,String(financialValuesHidden));
+  applyPrivacyState();
+};
+applyPrivacyState({rerender:false});
 $("#syncNow").onclick=syncCloudNow;
 addEventListener("online",()=>{if(currentUser)syncCloudNow()});
 addEventListener("offline",()=>setCloudStatus("offline","Sem internet. As alterações continuam salvas neste aparelho."));
@@ -2267,6 +2493,8 @@ onAuthStateChanged(auth,async user=>{
     await enterVerifiedAccount(user);
   }else{
     currentUser=null;
+    updateUserIdentity(null);
+    closeUserMenu();
     cloudRef=null;
     unsubscribeCloud?.();
     unsubscribeCloud=null;
