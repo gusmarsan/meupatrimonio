@@ -1,10 +1,11 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v1';
+const CACHE_NAME = 'meu-patrimonio-pwa-v2';
 const CORE_ASSETS = [
   './',
   './index.html',
   './install.html',
   './manifest.webmanifest',
-  './icon.svg'
+  './icon.svg',
+  './icon-192.png'
 ];
 
 self.addEventListener('install', event => {
