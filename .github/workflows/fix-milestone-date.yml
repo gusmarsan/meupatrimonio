@@ -22,23 +22,21 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-
           path = Path('index.html')
           text = path.read_text(encoding='utf-8')
-
-          old = '''const MILESTONE_STEP=50000;
-function milestoneData(data){if(!data.length)return{items:[],next:null};let baseline=Number(data[0].total)||0,firstTarget=(Math.floor(baseline/MILESTONE_STEP)+1)*MILESTONE_STEP,maxTotal=Math.max(...data.map(c=>Number(c.total)||0)),items=[];for(let target=firstTarget;target<=maxTotal;target+=MILESTONE_STEP){let closing=data.find(c=>(Number(c.total)||0)>=target);if(closing)items.push({target,month:closing.month})}return{items,next:firstTarget+items.length*MILESTONE_STEP}}
-function renderMilestones(data){let list=$("#milestones"),empty=$("#milestonesEmpty"),next=$("#milestoneNext");if(!list||!empty||!next)return;list.innerHTML="";let result=milestoneData(data);if(!data.length){next.textContent="A cada R$ 50 mil";empty.textContent="Salve o primeiro fechamento para começar a acompanhar milestones.";empty.classList.remove("hidden");return}next.textContent=`Próximo: ${compact(result.next)}`;if(!result.items.length){empty.textContent="Nenhum milestone atingido desde o primeiro fechamento.";empty.classList.remove("hidden");return}empty.classList.add("hidden");empty.textContent="";list.innerHTML=[...result.items].reverse().map(item=>`<article class="milestone-row"><span class="milestone-mark" aria-hidden="true">✓</span><div><strong class="milestone-value">${compact(item.target)}</strong><span class="milestone-meta">Atingido no fechamento</span></div><span class="milestone-date">${mlabel(item.month)}</span></article>`).join("")}'''
-
-          new = '''const MILESTONE_STEP=50000;
-function milestoneDate(ts){if(!ts)return"—";let d=new Date(Number(ts));if(Number.isNaN(d.getTime()))return"—";return`${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`}
-function milestoneData(data){if(!data.length)return{items:[],next:null};let baseline=Number(data[0].total)||0,firstTarget=(Math.floor(baseline/MILESTONE_STEP)+1)*MILESTONE_STEP,maxTotal=Math.max(...data.map(c=>Number(c.total)||0)),items=[];for(let target=firstTarget;target<=maxTotal;target+=MILESTONE_STEP){let closing=data.find(c=>(Number(c.total)||0)>=target);if(closing)items.push({target,month:closing.month,reachedAt:Number(closing.updatedAt)||0})}return{items,next:firstTarget+items.length*MILESTONE_STEP}}
-function renderMilestones(data){let list=$("#milestones"),empty=$("#milestonesEmpty"),next=$("#milestoneNext");if(!list||!empty||!next)return;list.innerHTML="";let result=milestoneData(data);if(!data.length){next.textContent="A cada R$ 50 mil";empty.textContent="Salve o primeiro fechamento para começar a acompanhar milestones.";empty.classList.remove("hidden");return}next.textContent=`Próximo: ${compact(result.next)}`;if(!result.items.length){empty.textContent="Nenhum milestone atingido desde o primeiro fechamento.";empty.classList.remove("hidden");return}empty.classList.add("hidden");empty.textContent="";list.innerHTML=[...result.items].reverse().map(item=>`<article class="milestone-row"><span class="milestone-mark" aria-hidden="true">✓</span><div><strong class="milestone-value">${compact(item.target)}</strong><span class="milestone-meta">Atingido no fechamento</span></div><span class="milestone-date">${milestoneDate(item.reachedAt)}</span></article>`).join("")}'''
-
-          if text.count(old) != 1:
-              raise RuntimeError(f'Expected exactly one milestone block, found {text.count(old)}')
-
-          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          marker = 'const MILESTONE_STEP=50000;\nfunction milestoneData'
+          helper = 'const MILESTONE_STEP=50000;\nfunction milestoneDate(ts){if(!ts)return"—";let d=new Date(Number(ts));if(Number.isNaN(d.getTime()))return"—";return`${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`}\nfunction milestoneData'
+          if text.count(marker) != 1: raise RuntimeError(f'helper marker: {text.count(marker)} matches')
+          text = text.replace(marker, helper, 1)
+          old_item = 'items.push({target,month:closing.month})'
+          new_item = 'items.push({target,month:closing.month,reachedAt:Number(closing.updatedAt)||0})'
+          if text.count(old_item) != 1: raise RuntimeError(f'item marker: {text.count(old_item)} matches')
+          text = text.replace(old_item, new_item, 1)
+          old_date = '${mlabel(item.month)}</span></article>'
+          new_date = '${milestoneDate(item.reachedAt)}</span></article>'
+          if text.count(old_date) != 1: raise RuntimeError(f'date marker: {text.count(old_date)} matches')
+          text = text.replace(old_date, new_date, 1)
+          path.write_text(text, encoding='utf-8')
           PY
 
       - name: Commit changes
