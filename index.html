@@ -1089,8 +1089,6 @@ nav::before{display:none}
   .nav{min-height:58px;touch-action:manipulation}
   .nav span svg{width:23px;height:23px}
   .nav small{font-size:.72rem;line-height:1.1}
-  .nav-label-desktop{display:none}
-  .nav-label-mobile{display:inline}
   .save-label-desktop{display:none}
   .save-label-mobile{display:inline}
   .toast{bottom:calc(var(--mobile-bottom-nav-height) + 8px);font-size:.82rem}
@@ -1214,9 +1212,6 @@ nav::before{display:none}
     line-height:14px;
     letter-spacing:-.01em;
   }
-  .nav .nav-label-desktop{display:none!important}
-  .nav .nav-label-mobile{display:inline!important;width:auto;height:auto;place-items:normal;font-family:"Inter",sans-serif;font-size:10px;font-weight:600;line-height:14px;letter-spacing:-.01em}
-
   #home .home-balance{padding-top:2px;padding-bottom:14px}
   #home .home-balance-top{margin-bottom:17px}
   #home .home-performance-line{margin-top:18px;gap:8px}
@@ -1371,8 +1366,6 @@ nav::before{display:none}
   #home .home-history-chart canvas{height:232px}
 }
 @media(min-width:761px){
-  .nav-label-mobile{display:none}
-  .nav-label-desktop{display:inline}
   .save-label-mobile{display:none}
   .save-label-desktop{display:inline}
   .summary-compact{display:none}
@@ -1629,16 +1622,17 @@ const contributionWrap=$('#contributionWrap'),mobileContributionSlot=$('.mobile-
 const homeNewButton=$('#homeNew'),graphButton=$('#graphBtn'),homePrimaryActions=homeNewButton.parentElement;
 const logoutButton=$('#logout'),accountActions=$('.account-actions'),accountSyncNote=$('#accountSyncNote');
 const settingsNavLabel=$('.nav[data-view="settings"] small');
-settingsNavLabel.innerHTML='<span class="nav-label-desktop">Configurações</span><span class="nav-label-mobile">Ajustes</span>';
 function placeUserControl(){
   const mobile=matchMedia('(max-width:760px)').matches;
   if(mobile){
+    settingsNavLabel.textContent='Ajustes';
     topbarActions.insertBefore(userControl,$('#privacyToggle'));
     mobileContributionSlot.append(homeNewButton);
     mobileContributionSlot.append(contributionWrap);
     mobileContributionSlot.append(graphButton);
     accountSyncNote.after(logoutButton);
   }else{
+    settingsNavLabel.textContent='Configurações';
     primaryNav.prepend(userControl);
     homePrimaryActions.append(graphButton);
     homePrimaryActions.append(homeNewButton);
