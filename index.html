@@ -1138,7 +1138,6 @@ nav::before{display:none}
   body[data-view="settings"] header>div:first-child{display:none}
   #settings{padding-top:8px}
   .account-actions{display:block;margin-top:15px}
-  .account-actions #syncNow{width:100%}
   .account-logout{display:block;width:auto;min-height:44px;margin:14px 0 0 auto;padding:0 4px;border:0;background:transparent;color:var(--red);font-size:.82rem;font-weight:700}
 }
 @media(max-width:430px){
@@ -1500,7 +1499,7 @@ nav::before{display:none}
 <div class="account-copy"><span class="label">Conta conectada</span><b id="accountEmail">—</b></div>
 </div>
 <div id="cloudStatus" class="sync-status"><span class="sync-dot"></span><span id="cloudStatusText">Preparando sincronização...</span></div>
-<div class="account-actions"><button type="button" id="syncNow" class="btn secondary full">Sincronizar agora</button></div>
+<div class="account-actions"></div>
 <p id="accountSyncNote" class="settings-note">Os fechamentos ficam salvos neste aparelho e também no Firebase. Ao entrar em outro dispositivo com a mesma conta, o histórico é carregado automaticamente.</p>
 <button type="button" id="logout" class="btn danger logout account-logout"><span class="logout-label-desktop">Sair</span><span class="logout-label-mobile">Sair desta conta</span></button>
 </div>
@@ -1514,29 +1513,19 @@ nav::before{display:none}
 </div>
 
 
-<div class="card restore-card">
-<p class="eyebrow">Recuperar histórico</p>
-<h2>Importar CSV</h2>
-<p class="settings-copy">Selecione um CSV exportado pelo app para restaurar os fechamentos neste aparelho. Meses novos são adicionados e meses repetidos podem ser substituídos após sua confirmação.</p>
-<button type="button" id="importCsv" class="btn primary full">Selecionar CSV</button>
-<input id="csvFile" type="file" accept=".csv,text/csv,application/vnd.ms-excel" hidden>
-<p class="settings-note">Também funciona com arquivos antigos que não tenham as colunas de aportes ou de CDBs da aposentadoria.</p>
-<p id="csvStatus" class="csv-status" aria-live="polite"></p>
-</div>
-
-<div class="card">
-<p class="eyebrow">Backup entre aparelhos</p>
-<h2>Mesclar dados</h2>
-<p class="settings-copy">Exporte o histórico deste aparelho e importe o arquivo em outro. Meses que ainda não existem serão adicionados. Quando o mesmo mês estiver nos dois aparelhos, o app mantém a versão atualizada mais recentemente.</p>
-<div class="backup-info"><div class="backup-stat"><span>Meses salvos</span><b id="backupMonths">0</b></div><div class="backup-stat"><span>Última atualização</span><b id="backupUpdated">—</b></div></div>
-<div class="settings-actions"><button type="button" id="exportBackup" class="btn primary full">Exportar backup</button><button type="button" id="importBackup" class="btn secondary full">Importar e mesclar</button></div>
-<input id="backupFile" type="file" accept="application/json,.json" hidden>
-<p class="settings-note">O arquivo contém meses, investimentos, valores, aportes e classificações confirmadas. Prints e imagens não são incluídos.</p>
-<p id="backupStatus" class="backup-status" aria-live="polite"></p>
-</div>
 </section>
 </main>
 <nav><div class="user-control"><button id="userAvatar" class="user-avatar" type="button" aria-label="Abrir menu do usuário" aria-haspopup="menu" aria-expanded="false"><span id="userInitials">MP</span></button><div id="userMenu" class="user-menu hidden" role="menu"><button id="userMenuLogout" type="button" role="menuitem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5H5v14h5M14 8l4 4-4 4M8 12h10"/></svg><span>Sair</span></button></div></div><button type="button" class="nav" data-view="new"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><small>Fechamento</small></button><button type="button" class="nav" data-view="settings"><span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3A1.7 1.7 0 0 0 10 3v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/></svg></span><small>Configurações</small></button><button type="button" class="nav active" data-view="home"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16v12H4z"/><path d="M8 15V9m4 6v-3m4 3V7"/></svg></span><small>Carteira</small></button><button type="button" class="nav" data-view="evolution"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16 5-5 4 3 7-8"/><path d="M15 6h5v5"/></svg></span><small>Evolução</small></button><button type="button" class="nav" data-view="projections"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19 20 5"/><path d="M11 5h9v9"/></svg></span><small>Projeções</small></button></nav>
+</div>
+<div id="recoverySheet" class="sheet hidden" aria-hidden="true">
+<div class="sheet-card">
+<button type="button" id="recoverySheetClose" class="sheet-close" aria-label="Fechar">×</button>
+<h2>Recuperar backup</h2>
+<p class="sheet-copy">Importe um CSV exportado anteriormente para recuperar dados do histórico.</p>
+<div class="sheet-actions"><button type="button" id="importCsv" class="btn primary full">Selecionar CSV</button></div>
+<input id="csvFile" type="file" accept=".csv,text/csv,application/vnd.ms-excel" hidden>
+<p id="csvStatus" class="csv-status" aria-live="polite"></p>
+</div>
 </div>
 <div id="investmentSheet" class="sheet hidden">
 <div class="sheet-card">
@@ -1628,6 +1617,12 @@ const contributionWrap=$('#contributionWrap'),mobileContributionSlot=$('.mobile-
 const homeNewButton=$('#homeNew'),graphButton=$('#graphBtn'),homePrimaryActions=homeNewButton.parentElement;
 const logoutButton=$('#logout'),accountActions=$('.account-actions'),accountSyncNote=$('#accountSyncNote');
 const settingsNavLabel=$('.nav[data-view="settings"] small');
+const userMenuRecover=document.createElement('button');
+userMenuRecover.id='userMenuRecover';
+userMenuRecover.type='button';
+userMenuRecover.setAttribute('role','menuitem');
+userMenuRecover.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 20h14"/></svg><span>Recuperar backup</span>';
+$('#userMenu').insertBefore(userMenuRecover,$('#userMenuLogout'));
 function placeUserControl(){
   const mobile=matchMedia('(max-width:760px)').matches;
   if(mobile){
@@ -1648,7 +1643,7 @@ function placeUserControl(){
 }
 placeUserControl();
 addEventListener('resize',placeUserControl);
-const el={title:$("#title"),homeEmpty:$("#homeEmpty"),homeContent:$("#homeContent"),categoryOnboarding:$("#categoryOnboarding"),closingBuilder:$("#closingBuilder"),investmentList:$("#investmentList"),investmentSheet:$("#investmentSheet"),investmentName:$("#investmentName"),latestLabel:$("#latestLabel"),latestTotal:$("#latestTotal"),latestDelta:$("#latestDelta"),contributionWrap:$("#contributionWrap"),toggleContribution:$("#toggleContribution"),contributionPanel:$("#contributionPanel"),contributionMonth:$("#contributionMonth"),contributionCategory:$("#contributionCategory"),contributionValue:$("#contributionValue"),contributionList:$("#contributionList"),cats:$("#cats"),month:$("#month"),files:$("#files"),reviewList:$("#reviewList"),reviewMonth:$("#reviewMonth"),reviewTotal:$("#reviewTotal"),categorySummary:$("#categorySummary"),entryCount:$("#entryCount"),warnings:$("#warnings"),save:$("#save"),chartEmpty:$("#chartEmpty"),chartBox:$("#chartBox"),chart:$("#chart"),history:$("#history"),backupFile:$("#backupFile"),csvFile:$("#csvFile"),csvStatus:$("#csvStatus"),backupMonths:$("#backupMonths"),backupUpdated:$("#backupUpdated"),backupStatus:$("#backupStatus"),projectionEmpty:$("#projectionEmpty"),projectionContent:$("#projectionContent"),projectionCurrentLabel:$("#projectionCurrentLabel"),projectionCurrent:$("#projectionCurrent"),projectionLastRate:$("#projectionLastRate"),projectionLastDate:$("#projectionLastDate"),projectionLastPrevious:$("#projectionLastPrevious"),projection08Date:$("#projection08Date"),projection08Previous:$("#projection08Previous"),projection10Date:$("#projection10Date"),projection10Previous:$("#projection10Previous"),retirementValue:$("#retirementValue"),retirementBase:$("#retirementBase"),retirementBaseLabel:$("#retirementBaseLabel"),retirementCdbValue:$("#retirementCdbValue"),myMoneyValue:$("#myMoneyValue"),wealthSplitTotal:$("#wealthSplitTotal"),wealthSplitWarning:$("#wealthSplitWarning"),retirementSheet:$("#retirementSheet"),retirementCdbInput:$("#retirementCdbInput"),categorySheet:$("#categorySheet"),sheetTitle:$("#sheetTitle"),sheetValue:$("#sheetValue"),sheetCopy:$("#sheetCopy"),loginGate:$("#loginGate"),loginForm:$("#loginForm"),authTitle:$("#authTitle"),authSubtitle:$("#authSubtitle"),authHelp:$("#authHelp"),loginEmail:$("#loginEmail"),passwordField:$("#passwordField"),loginPassword:$("#loginPassword"),confirmPasswordField:$("#confirmPasswordField"),loginConfirmPassword:$("#loginConfirmPassword"),passwordNote:$("#passwordNote"),loginButton:$("#loginButton"),loginError:$("#loginError"),loginLinks:$("#loginLinks"),backLoginWrap:$("#backLoginWrap"),verificationPanel:$("#verificationPanel"),verificationEmail:$("#verificationEmail"),verificationMessage:$("#verificationMessage"),accountEmail:$("#accountEmail"),cloudStatus:$("#cloudStatus"),cloudStatusText:$("#cloudStatusText"),overlay:$("#overlay"),status:$("#status"),bar:$("#bar"),toast:$("#toast")};
+const el={title:$("#title"),homeEmpty:$("#homeEmpty"),homeContent:$("#homeContent"),categoryOnboarding:$("#categoryOnboarding"),closingBuilder:$("#closingBuilder"),investmentList:$("#investmentList"),investmentSheet:$("#investmentSheet"),investmentName:$("#investmentName"),latestLabel:$("#latestLabel"),latestTotal:$("#latestTotal"),latestDelta:$("#latestDelta"),contributionWrap:$("#contributionWrap"),toggleContribution:$("#toggleContribution"),contributionPanel:$("#contributionPanel"),contributionMonth:$("#contributionMonth"),contributionCategory:$("#contributionCategory"),contributionValue:$("#contributionValue"),contributionList:$("#contributionList"),cats:$("#cats"),month:$("#month"),files:$("#files"),reviewList:$("#reviewList"),reviewMonth:$("#reviewMonth"),reviewTotal:$("#reviewTotal"),categorySummary:$("#categorySummary"),entryCount:$("#entryCount"),warnings:$("#warnings"),save:$("#save"),chartEmpty:$("#chartEmpty"),chartBox:$("#chartBox"),chart:$("#chart"),history:$("#history"),csvFile:$("#csvFile"),csvStatus:$("#csvStatus"),projectionEmpty:$("#projectionEmpty"),projectionContent:$("#projectionContent"),projectionCurrentLabel:$("#projectionCurrentLabel"),projectionCurrent:$("#projectionCurrent"),projectionLastRate:$("#projectionLastRate"),projectionLastDate:$("#projectionLastDate"),projectionLastPrevious:$("#projectionLastPrevious"),projection08Date:$("#projection08Date"),projection08Previous:$("#projection08Previous"),projection10Date:$("#projection10Date"),projection10Previous:$("#projection10Previous"),retirementValue:$("#retirementValue"),retirementBase:$("#retirementBase"),retirementBaseLabel:$("#retirementBaseLabel"),retirementCdbValue:$("#retirementCdbValue"),myMoneyValue:$("#myMoneyValue"),wealthSplitTotal:$("#wealthSplitTotal"),wealthSplitWarning:$("#wealthSplitWarning"),retirementSheet:$("#retirementSheet"),retirementCdbInput:$("#retirementCdbInput"),categorySheet:$("#categorySheet"),sheetTitle:$("#sheetTitle"),sheetValue:$("#sheetValue"),sheetCopy:$("#sheetCopy"),loginGate:$("#loginGate"),loginForm:$("#loginForm"),authTitle:$("#authTitle"),authSubtitle:$("#authSubtitle"),authHelp:$("#authHelp"),loginEmail:$("#loginEmail"),passwordField:$("#passwordField"),loginPassword:$("#loginPassword"),confirmPasswordField:$("#confirmPasswordField"),loginConfirmPassword:$("#loginConfirmPassword"),passwordNote:$("#passwordNote"),loginButton:$("#loginButton"),loginError:$("#loginError"),loginLinks:$("#loginLinks"),backLoginWrap:$("#backLoginWrap"),verificationPanel:$("#verificationPanel"),verificationEmail:$("#verificationEmail"),verificationMessage:$("#verificationMessage"),accountEmail:$("#accountEmail"),cloudStatus:$("#cloudStatus"),cloudStatusText:$("#cloudStatusText"),overlay:$("#overlay"),status:$("#status"),bar:$("#bar"),toast:$("#toast")};
 const PRIVACY_SESSION_KEY="patrimonio-values-hidden";
 const privacyTextNodes=new Map(),privacyAttributes=new Map();
 let financialValuesHidden=sessionStorage.getItem(PRIVACY_SESSION_KEY)==="true";
@@ -1675,6 +1670,23 @@ function updateUserIdentity(user){
 function closeUserMenu(){
   $("#userMenu").classList.add("hidden");
   $("#userAvatar").setAttribute("aria-expanded","false");
+}
+
+function openRecoverySheet(){
+  closeUserMenu();
+  el.csvStatus.className="csv-status";
+  el.csvStatus.textContent="";
+  $("#recoverySheet").classList.remove("hidden");
+  $("#recoverySheet").setAttribute("aria-hidden","false");
+  document.body.style.overflow="hidden";
+  setTimeout(()=>$("#importCsv").focus(),50);
+}
+
+function closeRecoverySheet(){
+  $("#recoverySheet").classList.add("hidden");
+  $("#recoverySheet").setAttribute("aria-hidden","true");
+  document.body.style.overflow="";
+  $("#userAvatar").focus();
 }
 
 function maskTextNode(node){
@@ -2508,7 +2520,7 @@ async function saveRetirementCdb(){
 }
 
 function formatBackupDate(ts){if(!ts)return "—";return new Intl.DateTimeFormat("pt-BR",{day:"2-digit",month:"2-digit",year:"2-digit"}).format(new Date(ts))}
-function renderSettings(){let o=ordered(),updated=o.length?Math.max(...o.map(c=>+c.updatedAt||0)):0;el.backupMonths.textContent=String(o.length);el.backupUpdated.textContent=formatBackupDate(updated);renderInvestmentList()}
+function renderSettings(){renderInvestmentList()}
 function downloadFile(blob,name){let url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 function exportBackup(){let data={app:"Meu patrimônio",formatVersion:3,exportedAt:new Date().toISOString(),categories:[...categories],pendingContributions:cleanPendingContributions(pendingContributions),closings:ordered()};let stamp=new Date().toISOString().slice(0,10),blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"});downloadFile(blob,`meu-patrimonio-backup-${stamp}.json`);el.backupStatus.className="backup-status success";el.backupStatus.textContent=`Backup com ${closings.length} mês${closings.length===1?"":"es"} exportado.`}
 function normalizeImportedClosing(c){if(!c||typeof c!=="object"||typeof c.month!=="string"||!/^[0-9]{4}-(0[1-9]|1[0-2])$/.test(c.month)||!Array.isArray(c.entries))return null;let entries=c.entries.map(x=>({id:typeof x?.id==="string"?x.id:mid(),sourceName:typeof x?.sourceName==="string"?x.sourceName:"Backup",category:cleanCategoryName(x?.category),value:Number(x?.value),confidence:Number.isFinite(Number(x?.confidence))?Number(x.confidence):100,manual:!!x?.manual})).filter(x=>x.category&&Number.isFinite(x.value)&&x.value>0);if(!entries.length)return null;let total=sum(entries),contributions=cleanContributions(c.contributions),base=entries.filter(x=>x.category===RETIREMENT_CATEGORY).reduce((s,x)=>s+x.value,0),retirementCdb=Math.min(Math.max(0,Number(c.retirementCdb)||0),Math.max(0,total-base));return{id:typeof c.id==="string"?c.id:mid(),month:c.month,total,entries,contributions,retirementCdb,updatedAt:Number.isFinite(Number(c.updatedAt))?Number(c.updatedAt):Date.now()}}
@@ -2772,12 +2784,14 @@ async function logoutCurrentAccount(){
 }
 $("#logout").onclick=logoutCurrentAccount;
 $("#userMenuLogout").onclick=logoutCurrentAccount;
+$("#userMenuRecover").onclick=openRecoverySheet;
+$("#recoverySheetClose").onclick=closeRecoverySheet;
 $("#userAvatar").onclick=event=>{
   event.stopPropagation();
   const menu=$("#userMenu"),opening=menu.classList.contains("hidden");
   menu.classList.toggle("hidden",!opening);
   $("#userAvatar").setAttribute("aria-expanded",String(opening));
-  if(opening)$("#userMenuLogout").focus();
+  if(opening)$("#userMenuRecover").focus();
 };
 document.addEventListener("click",event=>{
   if(!event.target.closest(".user-control"))closeUserMenu();
@@ -2794,7 +2808,6 @@ $("#privacyToggle").onclick=()=>{
   applyPrivacyState();
 };
 applyPrivacyState({rerender:false});
-$("#syncNow").onclick=syncCloudNow;
 addEventListener("online",()=>{if(currentUser)syncCloudNow()});
 addEventListener("offline",()=>setCloudStatus("offline","Sem internet. As alterações continuam salvas neste aparelho."));
 
@@ -2806,7 +2819,7 @@ $("#saveInvestment").onclick=saveInvestment;
 el.investmentSheet.onclick=e=>{if(e.target===el.investmentSheet)closeInvestmentSheet()};
 el.investmentName.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();saveInvestment()}});
 
-$("#newTop").onclick=start;$("#homeNew").onclick=start;$("#graphBtn").onclick=()=>view("evolution");$("#homeHistoryButton").onclick=()=>view("evolution");el.toggleContribution.onclick=()=>setContributionPanel(el.contributionPanel.classList.contains("hidden"));$("#closeContribution").onclick=()=>setContributionPanel(false);el.contributionMonth.onchange=renderContributionList;$("#saveContribution").onclick=saveContribution;el.contributionValue.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();saveContribution()}});el.contributionList.addEventListener("click",e=>{let button=e.target.closest("button[data-id]");if(button)removeContribution(el.contributionMonth.value,button.dataset.id,button.dataset.pending==="true")});el.cats.addEventListener("click",e=>{let button=e.target.closest("button.cat[data-category]");if(button&&el.cats.contains(button))openCategorySheet(button.dataset.category)});$("#uploadLabel").onclick=()=>pendingCategory=null;el.files.onchange=e=>e.target.files.length?process(e.target.files):pendingCategory=null;el.files.addEventListener("cancel",()=>pendingCategory=null);$("#more").onclick=()=>{pendingCategory=null;el.files.click()};$("#manual").onclick=()=>manual();$("#addAnother").onclick=()=>manual();$("#sheetClose").onclick=closeCategorySheet;el.categorySheet.onclick=e=>{if(e.target===el.categorySheet)closeCategorySheet()};$("#sheetManual").onclick=()=>{let category=selectedHomeCategory;closeCategorySheet();prepareDraftForMonth(currentMonth());manual(category)};$("#sheetPrint").onclick=()=>{let category=selectedHomeCategory;closeCategorySheet();prepareDraftForMonth(currentMonth());pendingCategory=category;setTimeout(()=>el.files.click(),0)};$("#addRetirementCdb").onclick=openRetirementSheet;$("#retirementSheetClose").onclick=closeRetirementSheet;$("#cancelRetirementCdb").onclick=closeRetirementSheet;el.retirementSheet.onclick=e=>{if(e.target===el.retirementSheet)closeRetirementSheet()};$("#saveRetirementCdb").onclick=saveRetirementCdb;el.save.onclick=save;$("#export").onclick=exportCSV;$("#importCsv").onclick=()=>el.csvFile.click();el.csvFile.onchange=e=>{let file=e.target.files?.[0];if(file)importCSVFile(file)};$("#exportBackup").onclick=exportBackup;$("#importBackup").onclick=()=>el.backupFile.click();el.backupFile.onchange=e=>{let file=e.target.files?.[0];if(file)mergeBackupFile(file)};el.month.onchange=summary;$$(".nav").forEach(n=>n.onclick=()=>view(n.dataset.view));addEventListener("resize",()=>document.querySelector("#evolution.active")&&renderEvolution());
+$("#newTop").onclick=start;$("#homeNew").onclick=start;$("#graphBtn").onclick=()=>view("evolution");$("#homeHistoryButton").onclick=()=>view("evolution");el.toggleContribution.onclick=()=>setContributionPanel(el.contributionPanel.classList.contains("hidden"));$("#closeContribution").onclick=()=>setContributionPanel(false);el.contributionMonth.onchange=renderContributionList;$("#saveContribution").onclick=saveContribution;el.contributionValue.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();saveContribution()}});el.contributionList.addEventListener("click",e=>{let button=e.target.closest("button[data-id]");if(button)removeContribution(el.contributionMonth.value,button.dataset.id,button.dataset.pending==="true")});el.cats.addEventListener("click",e=>{let button=e.target.closest("button.cat[data-category]");if(button&&el.cats.contains(button))openCategorySheet(button.dataset.category)});$("#uploadLabel").onclick=()=>pendingCategory=null;el.files.onchange=e=>e.target.files.length?process(e.target.files):pendingCategory=null;el.files.addEventListener("cancel",()=>pendingCategory=null);$("#more").onclick=()=>{pendingCategory=null;el.files.click()};$("#manual").onclick=()=>manual();$("#addAnother").onclick=()=>manual();$("#sheetClose").onclick=closeCategorySheet;el.categorySheet.onclick=e=>{if(e.target===el.categorySheet)closeCategorySheet()};$("#sheetManual").onclick=()=>{let category=selectedHomeCategory;closeCategorySheet();prepareDraftForMonth(currentMonth());manual(category)};$("#sheetPrint").onclick=()=>{let category=selectedHomeCategory;closeCategorySheet();prepareDraftForMonth(currentMonth());pendingCategory=category;setTimeout(()=>el.files.click(),0)};$("#addRetirementCdb").onclick=openRetirementSheet;$("#retirementSheetClose").onclick=closeRetirementSheet;$("#cancelRetirementCdb").onclick=closeRetirementSheet;el.retirementSheet.onclick=e=>{if(e.target===el.retirementSheet)closeRetirementSheet()};$("#saveRetirementCdb").onclick=saveRetirementCdb;el.save.onclick=save;$("#export").onclick=exportCSV;$("#importCsv").onclick=()=>el.csvFile.click();el.csvFile.onchange=e=>{let file=e.target.files?.[0];if(file)importCSVFile(file)};el.month.onchange=summary;$$(".nav").forEach(n=>n.onclick=()=>view(n.dataset.view));addEventListener("resize",()=>document.querySelector("#evolution.active")&&renderEvolution());
 async function initializeLocalApp(){
   db=await openDB();
   closings=await getAll();
