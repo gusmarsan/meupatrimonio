@@ -1,0 +1,115 @@
+name: Apply mobile nav alignment fix
+
+on:
+  push:
+    paths:
+      - '.github/workflows/nav-mobile-fix.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch mobile navigation styles
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          marker = '/* Mobile nav precision fix */'
+          if marker not in text:
+              block = r'''
+
+/* Mobile nav precision fix */
+@media(max-width:760px){
+  nav{
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    column-gap:0;
+    padding-left:4px;
+    padding-right:4px;
+  }
+  nav .nav{
+    position:relative;
+    width:100%;
+    min-width:0;
+    min-height:60px;
+    display:grid;
+    grid-template-rows:30px 14px;
+    align-content:center;
+    justify-items:center;
+    gap:2px;
+    margin:0;
+    padding:3px 0;
+    border-radius:0;
+    background:transparent;
+  }
+  nav .nav span{
+    width:30px;
+    height:30px;
+    display:grid;
+    place-items:center;
+    min-width:30px;
+    max-width:30px;
+    line-height:1;
+  }
+  nav .nav span svg{
+    width:20px;
+    height:20px;
+    display:block;
+    stroke-width:1.8;
+  }
+  nav .nav small,
+  nav .nav small *{
+    font-family:"Inter","Segoe UI",sans-serif !important;
+    font-size:10px !important;
+    font-weight:600 !important;
+    line-height:14px !important;
+    letter-spacing:-.01em !important;
+  }
+  nav .nav small{
+    display:block;
+    width:100%;
+    min-width:0;
+    max-width:100%;
+    text-align:center;
+    white-space:nowrap;
+  }
+  nav .nav.active{
+    background:transparent;
+    color:#155f42;
+  }
+  nav .nav.active span{
+    border-radius:10px;
+    background:#dfe9e2;
+  }
+  nav .nav:hover{
+    background:transparent;
+  }
+}
+@media(max-width:360px){
+  nav .nav small,
+  nav .nav small *{
+    font-size:10px !important;
+  }
+}
+'''
+              text = text.replace('</style>', block + '\n</style>', 1)
+              path.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit change
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No change needed"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Align mobile navigation"
+          git push origin HEAD:main
