@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f3f4ef">
 <title>Meu patrimônio</title>
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -1069,13 +1070,103 @@ nav::before{display:none}
 @media(max-width:430px){
   header h1{font-size:1.05rem}
   header .eyebrow{font-size:.6rem}
-  .user-control{right:112px}
   .privacy-toggle{width:40px;height:40px}
   header .round{width:40px;min-width:40px;height:40px}
 }
+
+/* Mobile Fix Pass 1 — scoped mobile ergonomics and PWA insets */
+@media(max-width:760px){
+  :root{--mobile-bottom-nav-height:calc(76px + env(safe-area-inset-bottom,0px))}
+  html,body{min-height:100%;overflow-x:hidden}
+  .app{min-height:100dvh;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:calc(var(--mobile-bottom-nav-height) + 30px)}
+  header{padding-top:0}
+  .topbar-actions{flex:0 0 auto}
+  .user-control{position:relative;inset:auto;margin:0;z-index:auto;order:1}
+  .privacy-toggle{order:2}
+  header .round{order:3}
+  .user-avatar{width:42px;height:42px;border-color:#17201b2e;background:#fff;color:#253129;box-shadow:none}
+  .user-menu{top:calc(100% + 8px);right:0;left:auto}
+  nav{padding-bottom:calc(9px + env(safe-area-inset-bottom,0px))}
+  .nav{min-height:58px;touch-action:manipulation}
+  .nav span svg{width:23px;height:23px}
+  .nav small{font-size:.72rem;line-height:1.1}
+  .nav-label-desktop{display:none}
+  .nav-label-mobile{display:inline}
+  .save-label-desktop{display:none}
+  .save-label-mobile{display:inline}
+  .toast{bottom:calc(var(--mobile-bottom-nav-height) + 8px);font-size:.82rem}
+  .auth-gate{min-height:100dvh;max-height:100dvh;place-items:start center;overflow-y:auto;overscroll-behavior:contain;padding:calc(18px + env(safe-area-inset-top,0px)) calc(16px + env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) calc(16px + env(safe-area-inset-left,0px))}
+  .auth-card{max-height:none;margin:auto 0}
+  .auth-card input{font-size:1rem;scroll-margin-bottom:120px}
+  .sheet{min-height:100dvh;max-height:100dvh;overflow-y:auto;overscroll-behavior:contain;padding:calc(12px + env(safe-area-inset-top,0px)) calc(12px + env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) calc(12px + env(safe-area-inset-left,0px))}
+  .sheet-card{max-height:calc(100dvh - 24px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+  .sheet-card input{font-size:1rem;scroll-margin-bottom:110px}
+  .mini,.x,.chip,.sheet-close,.investment-remove,.contribution-remove,.wealth-cta{min-width:44px;min-height:44px;touch-action:manipulation}
+  .chip{padding-inline:13px;font-size:.82rem}
+  .rowact{gap:10px}
+  .contribution-row{grid-template-columns:1fr auto 44px}
+  .summary{position:static;padding:0;border:0;background:transparent;backdrop-filter:none}
+  .summary-details{padding:14px;margin-bottom:10px;border:1px solid var(--line);border-radius:14px;background:#fff}
+  .summary-details .sumline{margin-bottom:10px}
+  .summary-bar{position:sticky;z-index:30;bottom:calc(var(--mobile-bottom-nav-height) + 8px);display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:11px 12px;border:1px solid #137a5240;border-radius:14px;background:#fbfcf9f2;box-shadow:0 12px 34px #17201b1c;backdrop-filter:blur(14px)}
+  .summary-compact{min-width:0}
+  .summary-compact-total{display:block;font-size:1rem;font-weight:750}
+  .summary-compact-status{display:block;margin-top:3px;color:var(--mut);font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .summary-bar .btn{width:auto;min-width:124px;padding-inline:16px}
+  .month-summary-row,.month-summary-value b,.month-summary-value small,.count-note,.warn,.cat .s,.aporte-mini,.history-aporte,.contribution-note,.contribution-row span,.contribution-row b,.meta,.sync-status,.backup-status,.csv-status,.backup-stat span,.projection-rate,.projection-case small,.projection-previous,.projection-note,.wealth-detail,.wealth-check,.wealth-warning{font-size:.82rem}
+  .projection-date{font-size:.9rem}
+  nav{grid-template-columns:repeat(5,minmax(0,1fr));column-gap:0;padding-inline:5px}
+  .nav{width:100%;min-width:0;min-height:58px;grid-template-rows:24px 14px;align-content:center;justify-items:center;gap:3px;padding:3px 0;overflow:visible}
+  .nav span{min-width:0;max-width:100%;line-height:1}
+  .nav small{display:block;width:100%;min-width:0;max-width:100%;font-size:.68rem;line-height:14px;letter-spacing:-.01em;text-align:center;white-space:nowrap;overflow:visible}
+  .nav.active{transform:none}
+  body[data-view="new"] header{margin-bottom:8px}
+  #new{padding-top:8px}
+  #new #closingBuilder>.card{margin-bottom:12px}
+  #new .upload{min-height:150px;margin-bottom:0;padding:18px}
+  #new .note{margin:9px 2px 12px}
+  #home .home-balance{padding-bottom:20px}
+  #home .home-metrics{padding-top:12px;padding-bottom:18px}
+  #home .metric-block{padding-top:11px;padding-bottom:11px}
+  #home .actions:empty{display:none}
+  #home .mobile-contribution-slot{display:grid;grid-template-columns:minmax(0,1fr);align-items:start;gap:9px;padding:6px 0 34px}
+  #home .mobile-contribution-slot #homeNew{width:100%;min-height:50px}
+  #home .mobile-contribution-slot .contribution-wrap{margin:0;padding:0}
+  #home .mobile-contribution-slot .contribution-toggle{display:block;width:100%;min-height:48px;padding:0 14px;border:1px solid #17201b2b;border-radius:9px;background:#fff;color:#365d4b;font-size:.84rem}
+  #home .mobile-contribution-slot #graphBtn{width:100%;min-height:44px;border-color:transparent;background:transparent;color:#59675f}
+  #home .mobile-contribution-slot .contribution-panel{width:100%;margin-top:2px}
+  body[data-view="settings"] header{min-height:50px;margin-bottom:8px;justify-content:flex-end}
+  body[data-view="settings"] header>div:first-child{display:none}
+  #settings{padding-top:8px}
+  .account-actions{display:block;margin-top:15px}
+  .account-actions #syncNow{width:100%}
+  .account-logout{display:block;width:auto;min-height:44px;margin:14px 0 0 auto;padding:0 4px;border:0;background:transparent;color:var(--red);font-size:.82rem;font-weight:700}
+}
+@media(max-width:430px){
+  .user-avatar{width:40px;height:40px}
+  .projection-grid{grid-template-columns:1fr;gap:10px}
+  .projection-case{padding:16px;text-align:left}
+  .projection-case h3{min-height:0;font-size:.9rem}
+  .projection-rate{min-height:0;margin:5px 0 14px}
+  .projection-date{font-size:1.05rem}
+  .projection-previous{margin-top:14px}
+  .contribution-grid{grid-template-columns:1fr}
+  .contribution-card input,.contribution-card select{min-height:48px;font-size:1rem}
+  .contribution-save{min-height:48px;font-size:.84rem}
+}
+@media(min-width:761px){
+  .nav-label-mobile{display:none}
+  .nav-label-desktop{display:inline}
+  .save-label-mobile{display:none}
+  .save-label-desktop{display:inline}
+  .summary-compact{display:none}
+  .logout-label-mobile{display:none}
+  .logout-label-desktop{display:inline}
+}
+@media(max-width:760px){.logout-label-desktop{display:none}.logout-label-mobile{display:inline}}
 </style>
 </head>
-<body>
+<body data-view="home">
 <div class="app">
 <header><div><p class="eyebrow">Fechamento mensal</p><h1 id="title">Meu patrimônio</h1></div><div class="topbar-actions"><button id="privacyToggle" class="privacy-toggle" type="button" aria-label="Ocultar valores financeiros" aria-pressed="false"><svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.8"/></svg><svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 3 18 18M10.6 6.1A10.6 10.6 0 0 1 12 6c6 0 9.5 6 9.5 6a17 17 0 0 1-2.1 2.7M6.2 6.2C3.9 7.8 2.5 12 2.5 12s3.5 6 9.5 6c1.4 0 2.7-.3 3.8-.8M9.9 9.9A3 3 0 0 0 14.1 14"/></svg></button><button id="newTop" class="round" type="button" aria-label="Adicionar fechamento">＋</button></div></header>
 <main>
@@ -1094,6 +1185,7 @@ nav::before{display:none}
 <article class="metric-block"><span>Aportes</span><strong id="homeContributions">—</strong><small>Capital adicionado</small></article>
 <article class="metric-block"><span>Variação total</span><strong id="homeNetChange">—</strong><small>Patrimônio no período</small></article>
 </section>
+<div class="mobile-contribution-slot"></div>
 <section class="allocation-panel">
 <div class="section-heading"><div><p class="section-kicker">Distribuição</p><h2>Alocação da carteira</h2></div><span class="small">Participação atual</span></div>
 <div class="allocation-overview"><div id="allocationChart" class="allocation-chart" role="img" aria-label="Distribuição da carteira"><div><strong id="allocationCount">0</strong><span>ativos</span></div></div><div id="allocationLegend" class="allocation-legend"></div></div>
@@ -1133,7 +1225,7 @@ nav::before{display:none}
 </div>
 <div id="closingBuilder">
 <div class="card"><div class="field"><label for="month">Mês do fechamento</label><input id="month" type="month"></div></div>
-<label id="uploadLabel" for="files" class="upload"><span><strong>Adicionar prints</strong><span>Selecione vários prints ou fotos da tela. O app tentará encontrar os valores.</span></span></label>
+<label id="uploadLabel" for="files" class="upload"><span class="upload-copy"><strong>Adicionar prints</strong><span class="upload-description">Selecione vários prints ou fotos da tela. O app tentará encontrar os valores.</span></span></label>
 <input id="files" type="file" accept="image/*" multiple hidden>
 <div class="note"><span>◉</span><span>Os prints são usados apenas durante a conferência. O histórico guarda os números confirmados.</span></div>
 <button type="button" id="manual" class="btn secondary full">Adicionar valor manualmente</button>
@@ -1144,7 +1236,7 @@ nav::before{display:none}
 <div class="card review-intro"><div class="monthline"><span>Mês do fechamento</span><b id="reviewMonth"></b></div><p>Inclua quantos investimentos precisar. O mês só será salvo quando você usar o botão “Salvar mês”.</p></div>
 <div id="reviewList" class="review"></div>
 <button type="button" id="addAnother" class="btn secondary full review-add">＋ Adicionar outro investimento</button>
-<div class="summary"><div class="sumline"><span>Total do mês</span><span id="reviewTotal"></span></div><div id="categorySummary" class="month-summary"></div><p id="entryCount" class="count-note"></p><div id="warnings"></div><button type="button" id="save" class="btn primary full">Salvar mês</button></div>
+<div class="summary"><div class="summary-details"><div class="sumline"><span>Total do mês</span><span id="reviewTotal"></span></div><div id="categorySummary" class="month-summary"></div><p id="entryCount" class="count-note"></p><div id="warnings"></div></div><div class="summary-bar"><div class="summary-compact"><span id="reviewCompactTotal" class="summary-compact-total"></span><span id="reviewCompactStatus" class="summary-compact-status"></span></div><button type="button" id="save" class="btn primary full"><span class="save-label-desktop">Salvar mês</span><span class="save-label-mobile">Confirmar mês</span></button></div></div>
 </section>
 <section id="evolution" class="view">
 <div class="head"><div><p class="eyebrow">Histórico mensal</p><h2>Evolução</h2></div><button type="button" id="export" class="mini">Exportar CSV</button></div>
@@ -1193,8 +1285,9 @@ nav::before{display:none}
 <div class="account-copy"><span class="label">Conta conectada</span><b id="accountEmail">—</b></div>
 </div>
 <div id="cloudStatus" class="sync-status"><span class="sync-dot"></span><span id="cloudStatusText">Preparando sincronização...</span></div>
-<div class="account-actions"><button type="button" id="syncNow" class="btn secondary full">Sincronizar agora</button><button type="button" id="logout" class="btn danger logout">Sair</button></div>
-<p class="settings-note">Os fechamentos ficam salvos neste aparelho e também no Firebase. Ao entrar em outro dispositivo com a mesma conta, o histórico é carregado automaticamente.</p>
+<div class="account-actions"><button type="button" id="syncNow" class="btn secondary full">Sincronizar agora</button></div>
+<p id="accountSyncNote" class="settings-note">Os fechamentos ficam salvos neste aparelho e também no Firebase. Ao entrar em outro dispositivo com a mesma conta, o histórico é carregado automaticamente.</p>
+<button type="button" id="logout" class="btn danger logout account-logout"><span class="logout-label-desktop">Sair</span><span class="logout-label-mobile">Sair desta conta</span></button>
 </div>
 <div class="card">
 <p class="eyebrow">Organização da carteira</p>
@@ -1284,6 +1377,11 @@ nav::before{display:none}
 <div id="overlay" class="overlay hidden"><div class="obox"><div class="spin"></div><b>Lendo os prints</b><p id="status" class="status">Preparando...</p><div class="track"><div id="bar" class="bar"></div></div></div></div>
 <div id="toast" class="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script>
+if('serviceWorker' in navigator){
+  addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(error=>console.error('Falha ao registrar o service worker.',error)));
+}
+</script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 import { getAuth, setPersistence, browserLocalPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail, onAuthStateChanged, signOut, reload } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
@@ -1310,6 +1408,30 @@ let db,closings=[],categories=[],pendingContributions=[],draft=[],draftContribut
 let currentUser=null,cloudRef=null,unsubscribeCloud=null,syncTimer=null,lastPushedVersion=0,appInitialized=false,authMode="login";
 const OWNER_KEY="patrimonio-firebase-owner";
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const userControl=$('.user-control'),topbarActions=$('.topbar-actions'),primaryNav=$('nav');
+const contributionWrap=$('#contributionWrap'),mobileContributionSlot=$('.mobile-contribution-slot'),homeContent=$('#homeContent');
+const homeNewButton=$('#homeNew'),graphButton=$('#graphBtn'),homePrimaryActions=homeNewButton.parentElement;
+const logoutButton=$('#logout'),accountActions=$('.account-actions'),accountSyncNote=$('#accountSyncNote');
+const settingsNavLabel=$('.nav[data-view="settings"] small');
+settingsNavLabel.innerHTML='<span class="nav-label-desktop">Configurações</span><span class="nav-label-mobile">Ajustes</span>';
+function placeUserControl(){
+  const mobile=matchMedia('(max-width:760px)').matches;
+  if(mobile){
+    topbarActions.insertBefore(userControl,$('#privacyToggle'));
+    mobileContributionSlot.append(homeNewButton);
+    mobileContributionSlot.append(contributionWrap);
+    mobileContributionSlot.append(graphButton);
+    accountSyncNote.after(logoutButton);
+  }else{
+    primaryNav.prepend(userControl);
+    homePrimaryActions.append(graphButton);
+    homePrimaryActions.append(homeNewButton);
+    homeContent.after(contributionWrap);
+    accountActions.append(logoutButton);
+  }
+}
+placeUserControl();
+addEventListener('resize',placeUserControl);
 const el={title:$("#title"),homeEmpty:$("#homeEmpty"),homeContent:$("#homeContent"),categoryOnboarding:$("#categoryOnboarding"),closingBuilder:$("#closingBuilder"),investmentList:$("#investmentList"),investmentSheet:$("#investmentSheet"),investmentName:$("#investmentName"),latestLabel:$("#latestLabel"),latestTotal:$("#latestTotal"),latestDelta:$("#latestDelta"),contributionWrap:$("#contributionWrap"),toggleContribution:$("#toggleContribution"),contributionPanel:$("#contributionPanel"),contributionMonth:$("#contributionMonth"),contributionCategory:$("#contributionCategory"),contributionValue:$("#contributionValue"),contributionList:$("#contributionList"),cats:$("#cats"),month:$("#month"),files:$("#files"),reviewList:$("#reviewList"),reviewMonth:$("#reviewMonth"),reviewTotal:$("#reviewTotal"),categorySummary:$("#categorySummary"),entryCount:$("#entryCount"),warnings:$("#warnings"),save:$("#save"),chartEmpty:$("#chartEmpty"),chartBox:$("#chartBox"),chart:$("#chart"),history:$("#history"),backupFile:$("#backupFile"),csvFile:$("#csvFile"),csvStatus:$("#csvStatus"),backupMonths:$("#backupMonths"),backupUpdated:$("#backupUpdated"),backupStatus:$("#backupStatus"),projectionEmpty:$("#projectionEmpty"),projectionContent:$("#projectionContent"),projectionCurrentLabel:$("#projectionCurrentLabel"),projectionCurrent:$("#projectionCurrent"),projectionLastRate:$("#projectionLastRate"),projectionLastDate:$("#projectionLastDate"),projectionLastPrevious:$("#projectionLastPrevious"),projection08Date:$("#projection08Date"),projection08Previous:$("#projection08Previous"),projection10Date:$("#projection10Date"),projection10Previous:$("#projection10Previous"),retirementValue:$("#retirementValue"),retirementBase:$("#retirementBase"),retirementBaseLabel:$("#retirementBaseLabel"),retirementCdbValue:$("#retirementCdbValue"),myMoneyValue:$("#myMoneyValue"),wealthSplitTotal:$("#wealthSplitTotal"),wealthSplitWarning:$("#wealthSplitWarning"),retirementSheet:$("#retirementSheet"),retirementCdbInput:$("#retirementCdbInput"),categorySheet:$("#categorySheet"),sheetTitle:$("#sheetTitle"),sheetValue:$("#sheetValue"),sheetCopy:$("#sheetCopy"),loginGate:$("#loginGate"),loginForm:$("#loginForm"),authTitle:$("#authTitle"),authSubtitle:$("#authSubtitle"),authHelp:$("#authHelp"),loginEmail:$("#loginEmail"),passwordField:$("#passwordField"),loginPassword:$("#loginPassword"),confirmPasswordField:$("#confirmPasswordField"),loginConfirmPassword:$("#loginConfirmPassword"),passwordNote:$("#passwordNote"),loginButton:$("#loginButton"),loginError:$("#loginError"),loginLinks:$("#loginLinks"),backLoginWrap:$("#backLoginWrap"),verificationPanel:$("#verificationPanel"),verificationEmail:$("#verificationEmail"),verificationMessage:$("#verificationMessage"),accountEmail:$("#accountEmail"),cloudStatus:$("#cloudStatus"),cloudStatusText:$("#cloudStatusText"),overlay:$("#overlay"),status:$("#status"),bar:$("#bar"),toast:$("#toast")};
 const PRIVACY_SESSION_KEY="patrimonio-values-hidden";
 const privacyTextNodes=new Map(),privacyAttributes=new Map();
@@ -1691,7 +1813,7 @@ const performancePct=(current,previous,category=null)=>{
 const signedPct=n=>Number.isFinite(n)?(n>0?"+":"")+pct(n):"—";
 const changeClass=n=>n>0?"up":n<0?"down":"";
 const previousClosing=month=>ordered().filter(c=>c.month<month).at(-1)||null;
-function view(id){$$(".view").forEach(v=>v.classList.toggle("active",v.id===id));$$(".nav").forEach(n=>n.classList.toggle("active",n.dataset.view===id));el.title.textContent={home:"Meu patrimônio",new:editing?"Editar fechamento":"Adicionar fechamento",review:"Conferência",evolution:"Evolução",settings:"Configurações",projections:"Projeções"}[id];if(id==="evolution")requestAnimationFrame(renderEvolution);if(id==="settings")renderSettings();if(id==="projections")renderProjections();scrollTo({top:0,behavior:"instant"})}
+function view(id){document.body.dataset.view=id;$$(".view").forEach(v=>v.classList.toggle("active",v.id===id));$$(".nav").forEach(n=>n.classList.toggle("active",n.dataset.view===id));el.title.textContent={home:"Meu patrimônio",new:editing?"Editar fechamento":"Adicionar fechamento",review:"Conferência",evolution:"Evolução",settings:"Configurações",projections:"Projeções"}[id];if(id==="evolution")requestAnimationFrame(renderEvolution);if(id==="settings")renderSettings();if(id==="projections")renderProjections();scrollTo({top:0,behavior:"instant"})}
 function reset(){draft.forEach(x=>x.url?.startsWith("blob:")&&URL.revokeObjectURL(x.url));draft=[];draftContributions=[];editing=null;pendingCategory=null;el.month.value=currentMonth();el.files.value="";renderReview()}
 function start(){reset();view("new")}
 function renderCategorySetup(){
@@ -1929,6 +2051,10 @@ function summary(){
     :"Adicione ao menos um investimento para salvar o mês.";
   let invalid=draft.filter(x=>!x.value||x.value<=0);
   if(invalid.length)el.warnings.innerHTML=`<div class="warn">${invalid.length} registro(s) ainda estão sem valor válido. Preencha ou exclua esses itens antes de salvar.</div>`;
+  $('#reviewCompactTotal').textContent=brl(total);
+  $('#reviewCompactStatus').textContent=invalid.length
+    ?`${invalid.length} pendência${invalid.length===1?'':'s'}`
+    :draft.length?'Sem pendências':'Adicione investimentos';
   el.save.disabled=!draft.length||invalid.length>0||!el.month.value;
   el.save.style.opacity=el.save.disabled?".45":"1";
 }
