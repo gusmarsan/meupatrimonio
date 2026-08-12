@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Meu Patrimônio">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b3d86"/>
+      <stop offset="0.55" stop-color="#082c63"/>
+      <stop offset="1" stop-color="#031b32"/>
+    </linearGradient>
+    <linearGradient id="bar1" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#0b72dc"/>
+      <stop offset="1" stop-color="#4bc1ff"/>
+    </linearGradient>
+    <linearGradient id="bar2" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#0b91d6"/>
+      <stop offset="1" stop-color="#64e0e2"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#c99036"/>
+      <stop offset="0.48" stop-color="#f0c66f"/>
+      <stop offset="1" stop-color="#ffe09a"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#000" flood-opacity=".32"/>
+    </filter>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect x="28" y="28" width="456" height="456" rx="112" fill="url(#bg)" filter="url(#shadow)"/>
+  <rect x="30" y="30" width="452" height="452" rx="110" fill="none" stroke="#4da1dd" stroke-opacity=".45" stroke-width="3"/>
+  <path d="M95 397h322" stroke="#8fc8ef" stroke-opacity=".18" stroke-width="4" stroke-linecap="round"/>
+  <g filter="url(#glow)">
+    <rect x="105" y="303" width="52" height="94" rx="8" fill="url(#bar1)"/>
+    <rect x="183" y="248" width="52" height="149" rx="8" fill="url(#bar1)"/>
+    <rect x="261" y="213" width="52" height="184" rx="8" fill="url(#bar2)"/>
+    <rect x="339" y="154" width="52" height="243" rx="8" fill="url(#bar2)"/>
+  </g>
+  <path d="M99 258L194 164L261 221L392 89" fill="none" stroke="#06172a" stroke-opacity=".6" stroke-width="23" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M99 251L194 157L261 214L392 82" fill="none" stroke="url(#gold)" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M366 74l51-14-15 51z" fill="#06172a" fill-opacity=".65" transform="translate(5 6)"/>
+  <path d="M363 67l51-14-15 51z" fill="url(#gold)"/>
+  <circle cx="110" cy="316" r="6" fill="#fff" fill-opacity=".22"/>
+  <circle cx="357" cy="171" r="7" fill="#fff" fill-opacity=".25"/>
+</svg>
