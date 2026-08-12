@@ -1,44 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Meu Patrimônio">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0b3d86"/>
-      <stop offset="0.55" stop-color="#082c63"/>
-      <stop offset="1" stop-color="#031b32"/>
+      <stop offset="0" stop-color="#f7f8f4"/>
+      <stop offset="1" stop-color="#e5ece6"/>
     </linearGradient>
-    <linearGradient id="bar1" x1="0" y1="1" x2="0" y2="0">
-      <stop offset="0" stop-color="#0b72dc"/>
-      <stop offset="1" stop-color="#4bc1ff"/>
-    </linearGradient>
-    <linearGradient id="bar2" x1="0" y1="1" x2="0" y2="0">
-      <stop offset="0" stop-color="#0b91d6"/>
-      <stop offset="1" stop-color="#64e0e2"/>
-    </linearGradient>
-    <linearGradient id="gold" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#c99036"/>
-      <stop offset="0.48" stop-color="#f0c66f"/>
-      <stop offset="1" stop-color="#ffe09a"/>
+    <linearGradient id="barGreen" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#137a52"/>
+      <stop offset="1" stop-color="#59d0a5"/>
     </linearGradient>
     <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
-      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#000" flood-opacity=".32"/>
-    </filter>
-    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="6" result="b"/>
-      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#17201b" flood-opacity=".14"/>
     </filter>
   </defs>
-  <rect x="28" y="28" width="456" height="456" rx="112" fill="url(#bg)" filter="url(#shadow)"/>
-  <rect x="30" y="30" width="452" height="452" rx="110" fill="none" stroke="#4da1dd" stroke-opacity=".45" stroke-width="3"/>
-  <path d="M95 397h322" stroke="#8fc8ef" stroke-opacity=".18" stroke-width="4" stroke-linecap="round"/>
-  <g filter="url(#glow)">
-    <rect x="105" y="303" width="52" height="94" rx="8" fill="url(#bar1)"/>
-    <rect x="183" y="248" width="52" height="149" rx="8" fill="url(#bar1)"/>
-    <rect x="261" y="213" width="52" height="184" rx="8" fill="url(#bar2)"/>
-    <rect x="339" y="154" width="52" height="243" rx="8" fill="url(#bar2)"/>
-  </g>
-  <path d="M99 258L194 164L261 221L392 89" fill="none" stroke="#06172a" stroke-opacity=".6" stroke-width="23" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M99 251L194 157L261 214L392 82" fill="none" stroke="url(#gold)" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M366 74l51-14-15 51z" fill="#06172a" fill-opacity=".65" transform="translate(5 6)"/>
-  <path d="M363 67l51-14-15 51z" fill="url(#gold)"/>
-  <circle cx="110" cy="316" r="6" fill="#fff" fill-opacity=".22"/>
-  <circle cx="357" cy="171" r="7" fill="#fff" fill-opacity=".25"/>
+
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <rect x="34" y="34" width="444" height="444" rx="108" fill="#ffffff" fill-opacity=".58" stroke="#17201b" stroke-opacity=".10" stroke-width="3" filter="url(#shadow)"/>
+
+  <path d="M96 398H416" stroke="#17201b" stroke-opacity=".30" stroke-width="5" stroke-linecap="round"/>
+
+  <rect x="106" y="306" width="54" height="92" rx="10" fill="#b9dfcf"/>
+  <rect x="184" y="252" width="54" height="146" rx="10" fill="url(#barGreen)"/>
+  <rect x="262" y="214" width="54" height="184" rx="10" fill="#5e746a"/>
+  <rect x="340" y="154" width="54" height="244" rx="10" fill="#17201b"/>
+
+  <path d="M101 272L194 192L268 224L397 91" fill="none" stroke="#ffffff" stroke-opacity=".74" stroke-width="27" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M101 272L194 192L268 224L397 91" fill="none" stroke="#137a52" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M366 84L417 70L403 121Z" fill="#137a52"/>
+
+  <circle cx="101" cy="272" r="10" fill="#137a52"/>
+  <circle cx="194" cy="192" r="10" fill="#137a52"/>
+  <circle cx="268" cy="224" r="10" fill="#137a52"/>
 </svg>
