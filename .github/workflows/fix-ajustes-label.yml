@@ -1,0 +1,61 @@
+name: Fix Ajustes mobile label
+
+on:
+  push:
+    paths:
+      - '.nav-label-fix-trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch Ajustes mobile label
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          marker = '/* Ajustes label normalization */'
+          if marker not in text:
+              block = r'''
+
+/* Ajustes label normalization */
+@media(max-width:760px){
+  nav .nav small .nav-label-mobile{
+    display:inline;
+    width:auto;
+    height:auto;
+    min-width:0;
+    max-width:none;
+    font-family:"Inter",sans-serif;
+    font-size:10px;
+    font-weight:600;
+    line-height:14px;
+    letter-spacing:-.01em;
+  }
+  nav .nav small .nav-label-desktop{
+    display:none;
+  }
+}
+'''
+              text = text.replace('</style>', block + '\n</style>', 1)
+              path.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit change
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No change needed"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Normalize Ajustes mobile label"
+          git push origin HEAD:main
