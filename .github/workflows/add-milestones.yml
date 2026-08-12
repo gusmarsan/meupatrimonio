@@ -1,0 +1,86 @@
+name: Add milestones section
+
+on:
+  push:
+    paths:
+      - '.github/workflows/add-milestones.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Add milestones to Evolution
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+
+          def replace_once(source, old, new, label):
+              count = source.count(old)
+              if count != 1:
+                  raise RuntimeError(f'{label}: expected 1 match, found {count}')
+              return source.replace(old, new, 1)
+
+          css_marker = '@media(max-width:760px){.logout-label-desktop{display:none}.logout-label-mobile{display:inline}}\n</style>'
+          css_block = '''@media(max-width:760px){.logout-label-desktop{display:none}.logout-label-mobile{display:inline}}
+/* Evolution milestones */
+.milestones-section{margin-top:52px;padding-top:36px;border-top:1px solid var(--line)}
+.milestones-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px}
+.milestones-head p{margin:0 0 6px;color:var(--mut);font-size:.68rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase}
+.milestones-head h2{margin:0;font-family:"Inter",sans-serif;font-size:1.55rem;font-weight:600;letter-spacing:-.035em}
+.milestones-list{display:grid;gap:0;border-top:1px solid var(--line)}
+.milestone-row{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:14px;min-height:78px;padding:15px 0;border-bottom:1px solid var(--line)}
+.milestone-mark{width:36px;height:36px;display:grid;place-items:center;border-radius:50%;background:#dceee5;color:#0e7049;font-size:1rem;font-weight:700}
+.milestone-value{display:block;font-size:1rem;font-weight:650;letter-spacing:-.02em}
+.milestone-meta{display:block;margin-top:3px;color:var(--mut);font-size:.74rem}
+.milestone-date{color:#344039;font-size:.82rem;font-weight:650;text-align:right}
+.milestones-empty{padding:22px 0;color:var(--mut);font-size:.8rem;line-height:1.5;border-top:1px solid var(--line)}
+@media(max-width:760px){.milestones-section{margin-top:32px;padding-top:28px}.milestones-head{margin-bottom:14px}.milestones-head h2{font-size:1.45rem}.milestone-row{grid-template-columns:38px minmax(0,1fr) auto;gap:11px;min-height:70px;padding:13px 0}.milestone-mark{width:32px;height:32px}.milestone-value{font-size:.94rem}.milestone-date{font-size:.76rem}}
+</style>'''
+          text = replace_once(text, css_marker, css_block, 'CSS insertion')
+
+          html_marker = '<div id="history" class="history"></div>\n</section>\n<section id="projections" class="view">'
+          html_block = '''<div id="history" class="history"></div>
+<section class="milestones-section" aria-labelledby="milestonesTitle">
+<div class="milestones-head"><div><p>Conquistas</p><h2 id="milestonesTitle">Milestones</h2></div><span id="milestoneNext" class="small">A cada R$ 50 mil</span></div>
+<div id="milestones" class="milestones-list"></div>
+<div id="milestonesEmpty" class="milestones-empty hidden"></div>
+</section>
+</section>
+<section id="projections" class="view">'''
+          text = replace_once(text, html_marker, html_block, 'Evolution HTML insertion')
+
+          js_marker = 'function renderEvolution(){'
+          js_helpers = '''const MILESTONE_STEP=50000;
+function milestoneData(data){if(!data.length)return{items:[],next:null};let baseline=Number(data[0].total)||0,firstTarget=(Math.floor(baseline/MILESTONE_STEP)+1)*MILESTONE_STEP,maxTotal=Math.max(...data.map(c=>Number(c.total)||0)),items=[];for(let target=firstTarget;target<=maxTotal;target+=MILESTONE_STEP){let closing=data.find(c=>(Number(c.total)||0)>=target);if(closing)items.push({target,month:closing.month})}return{items,next:firstTarget+items.length*MILESTONE_STEP}}
+function renderMilestones(data){let list=$("#milestones"),empty=$("#milestonesEmpty"),next=$("#milestoneNext");if(!list||!empty||!next)return;list.innerHTML="";let result=milestoneData(data);if(!data.length){next.textContent="A cada R$ 50 mil";empty.textContent="Salve o primeiro fechamento para começar a acompanhar milestones.";empty.classList.remove("hidden");return}next.textContent=`Próximo: ${compact(result.next)}`;if(!result.items.length){empty.textContent="Nenhum milestone atingido desde o primeiro fechamento.";empty.classList.remove("hidden");return}empty.classList.add("hidden");empty.textContent="";list.innerHTML=[...result.items].reverse().map(item=>`<article class="milestone-row"><span class="milestone-mark" aria-hidden="true">✓</span><div><strong class="milestone-value">${compact(item.target)}</strong><span class="milestone-meta">Atingido no fechamento</span></div><span class="milestone-date">${mlabel(item.month)}</span></article>`).join("")}
+function renderEvolution(){'''
+          text = replace_once(text, js_marker, js_helpers, 'Milestone JS insertion')
+
+          tail_marker = 'r.querySelector(".edit").onclick=()=>edit(c.id);r.querySelector(".del").onclick=()=>remove(c.id);el.history.appendChild(r)})}\nfunction compact(v)'
+          tail_replacement = 'r.querySelector(".edit").onclick=()=>edit(c.id);r.querySelector(".del").onclick=()=>remove(c.id);el.history.appendChild(r)});renderMilestones(o)}\nfunction compact(v)'
+          text = replace_once(text, tail_marker, tail_replacement, 'renderEvolution hook')
+
+          path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --check
+          git commit -m "Add automatic portfolio milestones"
+          git push origin main
