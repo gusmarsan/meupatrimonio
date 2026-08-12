@@ -1324,6 +1324,7 @@ nav::before{display:none}
   #home .contributors-grid{gap:0}
   #home .contributor{padding:14px 0}
   #home .contributor:first-child{padding-top:5px}
+  #home .contributor:last-child{padding-bottom:14px}
   #home .contributor>span{margin-bottom:6px}
   #home .contributor small{margin-top:4px}
 
@@ -2295,9 +2296,9 @@ function drawPremium(data,canvas=el.chart,preferredHeight=0){
     ctx.lineTo(width-pad.r,y+.5);
     ctx.stroke();
     ctx.fillStyle=mobile?"#98a59f":"#66726c";
-    ctx.textAlign="right";
+    ctx.textAlign=homeMobile?"left":"right";
     ctx.textBaseline="middle";
-    ctx.fillText(privacyText(compact(value)),pad.l-12,y);
+    ctx.fillText(privacyText(compact(value)),homeMobile?4:pad.l-12,y);
   }
   let points=data.map((item,index)=>({x:pad.l+(plotW/(data.length-1))*index,y:pad.t+plotH-(item.total-min)/(max-min)*plotH}));
   let path=()=>{
