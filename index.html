@@ -159,11 +159,22 @@ body{font-family:"Inter","Segoe UI",sans-serif}#home .total,.projection-current 
 .milestone-date{color:#344039;font-size:.82rem;font-weight:650;text-align:right}
 .milestones-empty{padding:22px 0;color:var(--mut);font-size:.8rem;line-height:1.5;border-top:1px solid var(--line)}
 @media(max-width:760px){.milestones-section{margin-top:32px;padding-top:28px}.milestones-head{margin-bottom:14px}.milestones-head h2{font-size:1.45rem}.milestone-row{grid-template-columns:38px minmax(0,1fr) auto;gap:11px;min-height:70px;padding:13px 0}.milestone-mark{width:32px;height:32px}.milestone-value{font-size:.94rem}.milestone-date{font-size:.76rem}}
+
+/* Desktop header brand and hero value fit */
+.app-title-icon{display:none}
+@media(min-width:761px){
+  header>div:first-child{display:flex;align-items:center;gap:12px}
+  body[data-view="home"] header .app-title-icon{display:block;width:34px;height:34px;flex:0 0 34px;border-radius:9px}
+  body[data-view="home"] header h1{font-size:1.6rem;font-weight:650;letter-spacing:-.035em}
+}
+@media(min-width:1101px){
+  #home .total{font-size:clamp(4.35rem,6.15vw,7.2rem);letter-spacing:-.055em}
+}
 </style>
 </head>
 <body data-view="home">
 <div class="app">
-<header><div><p class="eyebrow">Fechamento mensal</p><h1 id="title">Meu patrimônio</h1></div><div class="topbar-actions"><button id="privacyToggle" class="privacy-toggle" type="button" aria-label="Ocultar valores financeiros" aria-pressed="false"><svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.8"/></svg><svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 3 18 18M10.6 6.1A10.6 10.6 0 0 1 12 6c6 0 9.5 6 9.5 6a17 17 0 0 1-2.1 2.7M6.2 6.2C3.9 7.8 2.5 12 2.5 12s3.5 6 9.5 6c1.4 0 2.7-.3 3.8-.8M9.9 9.9A3 3 0 0 0 14.1 14"/></svg></button><button id="newTop" class="round" type="button" aria-label="Adicionar fechamento">＋</button></div></header>
+<header><div><p class="eyebrow">Fechamento mensal</p><img class="app-title-icon" src="icon.svg" alt="" aria-hidden="true"><h1 id="title">Meu patrimônio</h1></div><div class="topbar-actions"><button id="privacyToggle" class="privacy-toggle" type="button" aria-label="Ocultar valores financeiros" aria-pressed="false"><svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.8"/></svg><svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 3 18 18M10.6 6.1A10.6 10.6 0 0 1 12 6c6 0 9.5 6 9.5 6a17 17 0 0 1-2.1 2.7M6.2 6.2C3.9 7.8 2.5 12 2.5 12s3.5 6 9.5 6c1.4 0 2.7-.3 3.8-.8M9.9 9.9A3 3 0 0 0 14.1 14"/></svg></button><button id="newTop" class="round" type="button" aria-label="Adicionar fechamento">＋</button></div></header>
 <main>
 <section id="home" class="view active">
 <div id="homeEmpty" class="empty home-empty">Nenhum investimento adicionado.<br>Adicione o primeiro para começar.</div>
