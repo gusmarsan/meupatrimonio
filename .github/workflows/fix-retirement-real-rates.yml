@@ -1,0 +1,39 @@
+name: Fix retirement real rates
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-retirement-real-rates.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fix retirement real rate formulas
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path=Path('index.html')
+          text=path.read_text(encoding='utf-8')
+          old='conservative=years?value*Math.pow(1+(0.06-0.056),years):null,moderate=years?value*Math.pow(1+(0.08-0.056),years):null,optimistic=years?value*Math.pow(1+(0.1066-0.056),years):null;'
+          new='conservative=years?value*Math.pow((1+0.06)/(1+0.056),years):null,moderate=years?value*Math.pow((1+0.08)/(1+0.056),years):null,optimistic=years?value*Math.pow((1+0.1066)/(1+0.056),years):null;'
+          count=text.count(old)
+          if count!=1:
+              raise RuntimeError(f'expected 1 match, found {count}')
+          path.write_text(text.replace(old,new,1),encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --check
+          git commit -m "Use exact real returns in retirement scenarios"
+          git push origin main
