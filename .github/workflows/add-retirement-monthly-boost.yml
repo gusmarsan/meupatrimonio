@@ -1,0 +1,53 @@
+name: Retirement monthly boost control
+
+on:
+  push:
+    paths:
+      - '.github/workflows/add-retirement-monthly-boost.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Add retirement monthly boost control
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path=Path('index.html')
+          text=path.read_text(encoding='utf-8')
+
+          def rep(old,new,label):
+              global text
+              count=text.count(old)
+              if count!=1:
+                  raise RuntimeError(f'{label}: expected 1 match, found {count}')
+              text=text.replace(old,new,1)
+
+          old='''    <article class="retirement-simulation-card retirement-simulation-card--optimistic"><span class="retirement-simulation-index">03</span><h3>Otimista</h3><p class="retirement-simulation-result-label">Você vai ter, em valores de hoje:</p><strong id="retirementSimulationOptimisticValue" class="retirement-simulation-result">—</strong><p class="retirement-simulation-income">Vivendo de rendimentos, você tiraria uns: <strong id="retirementSimulationOptimisticIncome">—</strong></p></article>\n  </div>\n</section>'''
+          new='''    <article class="retirement-simulation-card retirement-simulation-card--optimistic"><span class="retirement-simulation-index">03</span><h3>Otimista</h3><p class="retirement-simulation-result-label">Você vai ter, em valores de hoje:</p><strong id="retirementSimulationOptimisticValue" class="retirement-simulation-result">—</strong><p class="retirement-simulation-income">Vivendo de rendimentos, você tiraria uns: <strong id="retirementSimulationOptimisticIncome">—</strong></p></article>\n  </div>\n  <div class="retirement-simulation-boost">\n    <label class="retirement-simulation-boost-toggle"><span>Turbina com aportes mensais</span><input id="retirementSimulationBoost" type="checkbox" aria-controls="retirementSimulationBoostField" aria-expanded="false"></label>\n    <div id="retirementSimulationBoostField" class="retirement-simulation-boost-field hidden">\n      <label for="retirementSimulationMonthlyContribution">Valor do aporte mensal</label>\n      <input id="retirementSimulationMonthlyContribution" type="text" inputmode="decimal" placeholder="R$ 0,00" autocomplete="off">\n    </div>\n  </div>\n</section>'''
+          rep(old,new,'monthly boost HTML')
+
+          css='''\n/* Retirement simulation monthly boost — visual control only */\n.retirement-simulation-boost{margin-top:14px;padding:14px 16px;border:1px solid var(--line);border-radius:16px;background:var(--card)}\n.retirement-simulation-boost-toggle{display:flex;align-items:center;justify-content:space-between;gap:16px;color:var(--txt);font-size:.78rem;font-weight:650;cursor:pointer}\n.retirement-simulation-boost-toggle input{width:18px;height:18px;min-height:0;flex:0 0 auto;margin:0;accent-color:var(--green)}\n.retirement-simulation-boost-field{display:grid;gap:7px;margin-top:13px;padding-top:13px;border-top:1px solid var(--line)}\n.retirement-simulation-boost-field label{font-size:.67rem}\n.retirement-simulation-boost-field input{max-width:220px;background:var(--card2);color:var(--txt)}\n@media(max-width:760px){.retirement-simulation-boost{padding:13px 14px}.retirement-simulation-boost-toggle{font-size:.74rem}.retirement-simulation-boost-field input{max-width:none}}\n'''
+          rep('</style>',css+'</style>','monthly boost CSS')
+
+          old_events='el.retirementSimulationAuto.onchange=toggleRetirementSimulationAuto;el.retirementSimulationYears.onchange=saveRetirementSimulationYears;$("#addRetirementCdb")'
+          new_events='el.retirementSimulationAuto.onchange=toggleRetirementSimulationAuto;el.retirementSimulationYears.onchange=saveRetirementSimulationYears;$("#retirementSimulationBoost").onchange=e=>{let field=$("#retirementSimulationBoostField"),checked=e.target.checked;field.classList.toggle("hidden",!checked);e.target.setAttribute("aria-expanded",String(checked));if(checked)setTimeout(()=>$("#retirementSimulationMonthlyContribution").focus(),0)};$("#addRetirementCdb")'
+          rep(old_events,new_events,'monthly boost behavior')
+
+          path.write_text(text,encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --check
+          git commit -m "Add retirement monthly contribution control"
+          git push origin main
