@@ -1,0 +1,48 @@
+name: Desktop header and value fix
+
+on:
+  push:
+    paths:
+      - '.github/workflows/desktop-header-value-fix.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply desktop fixes
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+
+          old_header = '<header><div><p class="eyebrow">Fechamento mensal</p><h1 id="title">Meu patrimônio</h1></div>'
+          new_header = '<header><div><p class="eyebrow">Fechamento mensal</p><img class="app-title-icon" src="icon.svg" alt="" aria-hidden="true"><h1 id="title">Meu patrimônio</h1></div>'
+          if text.count(old_header) != 1:
+              raise RuntimeError(f'header marker matches: {text.count(old_header)}')
+          text = text.replace(old_header, new_header, 1)
+
+          css = '''\n/* Desktop header brand and hero value fit */\n.app-title-icon{display:none}\n@media(min-width:761px){\n  header>div:first-child{display:flex;align-items:center;gap:12px}\n  body[data-view="home"] header .app-title-icon{display:block;width:34px;height:34px;flex:0 0 34px;border-radius:9px}\n  body[data-view="home"] header h1{font-size:1.6rem;font-weight:650;letter-spacing:-.035em}\n}\n@media(min-width:1101px){\n  #home .total{font-size:clamp(4.35rem,6.15vw,7.2rem);letter-spacing:-.055em}\n}\n'''
+          marker = '</style>'
+          if text.count(marker) != 1:
+              raise RuntimeError(f'style marker matches: {text.count(marker)}')
+          text = text.replace(marker, css + marker, 1)
+          path.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit changes
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --check
+          git commit -m "Fix desktop header and hero value fit"
+          git push origin main
