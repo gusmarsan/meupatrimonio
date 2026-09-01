@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v5';
+const CACHE_NAME = 'meu-patrimonio-pwa-v6';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -8,7 +8,7 @@ const CORE_ASSETS = [
 ];
 
 const CONTRIBUTION_STYLE = `
-<style id="contribution-placement-fix-v5">
+<style id="contribution-placement-fix-v6">
 @media (min-width: 761px) {
   #home .home-dashboard {
     grid-template-areas:
@@ -69,30 +69,30 @@ const CONTRIBUTION_STYLE = `
     position: fixed;
     inset: 0;
     z-index: 84;
-    background: rgba(11, 20, 16, .48);
-    backdrop-filter: blur(2px);
+    background: rgba(11,20,16,.48);
   }
   body.contribution-open nav {
-    opacity: 0;
+    visibility: hidden;
     pointer-events: none;
   }
   #home .mobile-contribution-slot .contribution-panel:not(.hidden) {
     position: fixed;
     z-index: 90;
-    top: max(12px, env(safe-area-inset-top, 0px));
+    top: calc(12px + env(safe-area-inset-top, 0px));
     right: 12px;
     left: 12px;
     width: auto;
     max-width: none;
-    max-height: calc(var(--app-visual-height, 100dvh) - 24px - env(safe-area-inset-top, 0px));
+    max-height: calc(100dvh - 24px - env(safe-area-inset-top, 0px));
     margin: 0;
     padding: 18px 16px calc(22px + env(safe-area-inset-bottom, 0px));
+    overflow-x: hidden;
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
     border-radius: 18px;
     background: #fff;
-    box-shadow: 0 24px 70px rgba(16, 29, 22, .24);
+    box-shadow: 0 24px 70px rgba(16,29,22,.24);
   }
   #home .mobile-contribution-slot .contribution-panel .contribution-head {
     position: sticky;
@@ -114,8 +114,6 @@ const CONTRIBUTION_STYLE = `
   #home .mobile-contribution-slot .contribution-panel select {
     min-height: 50px;
     font-size: 16px;
-    scroll-margin-top: 92px;
-    scroll-margin-bottom: 120px;
   }
   #home .mobile-contribution-slot .contribution-panel .contribution-save {
     width: 100%;
@@ -128,37 +126,6 @@ const CONTRIBUTION_STYLE = `
   }
 }
 </style>`;
-
-const CONTRIBUTION_RUNTIME = `
-<script id="contribution-keyboard-fix-v5">
-(() => {
-  const root = document.documentElement;
-  const syncVisualHeight = () => {
-    const viewport = window.visualViewport;
-    const height = viewport ? viewport.height : window.innerHeight;
-    root.style.setProperty('--app-visual-height', Math.max(240, Math.round(height)) + 'px');
-  };
-
-  syncVisualHeight();
-  window.addEventListener('resize', syncVisualHeight, { passive: true });
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', syncVisualHeight, { passive: true });
-    window.visualViewport.addEventListener('scroll', syncVisualHeight, { passive: true });
-  }
-
-  document.addEventListener('focusin', event => {
-    const panel = document.getElementById('contributionPanel');
-    if (!panel || panel.classList.contains('hidden') || !panel.contains(event.target)) return;
-    setTimeout(() => {
-      try {
-        event.target.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'smooth' });
-      } catch (_) {
-        event.target.scrollIntoView();
-      }
-    }, 120);
-  });
-})();
-<\/script>`;
 
 function enhanceAppHtml(html) {
   if (!html.includes('mobile-contribution-slot')) return html;
@@ -174,16 +141,17 @@ function enhanceAppHtml(html) {
   );
 
   updated = updated.replace(
+    "placeUserControl();addEventListener('resize',placeUserControl);",
+    "placeUserControl();const layoutMedia=matchMedia('(max-width:760px)');if(layoutMedia.addEventListener)layoutMedia.addEventListener('change',placeUserControl);else if(layoutMedia.addListener)layoutMedia.addListener(placeUserControl);"
+  );
+
+  updated = updated.replace(
     'function setContributionPanel(open){el.contributionPanel.classList.toggle("hidden",!open);if(open){renderContributionControls();setTimeout(()=>el.contributionValue.focus(),30)}}',
     'function setContributionPanel(open){el.contributionPanel.classList.toggle("hidden",!open);document.body.classList.toggle("contribution-open",open&&matchMedia("(max-width:760px)").matches);if(open){renderContributionControls();if(matchMedia("(min-width:761px)").matches)setTimeout(()=>el.contributionValue.focus(),30)}}'
   );
 
-  if (!updated.includes('id="contribution-placement-fix-v5"')) {
+  if (!updated.includes('id="contribution-placement-fix-v6"')) {
     updated = updated.replace('</head>', `${CONTRIBUTION_STYLE}\n</head>`);
-  }
-
-  if (!updated.includes('id="contribution-keyboard-fix-v5"')) {
-    updated = updated.replace('</body>', `${CONTRIBUTION_RUNTIME}\n</body>`);
   }
 
   return updated;
