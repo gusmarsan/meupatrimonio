@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v6';
+const CACHE_NAME = 'meu-patrimonio-pwa-v7';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -8,7 +8,7 @@ const CORE_ASSETS = [
 ];
 
 const CONTRIBUTION_STYLE = `
-<style id="contribution-placement-fix-v6">
+<style id="contribution-placement-fix-v7">
 @media (min-width: 761px) {
   #home .home-dashboard {
     grid-template-areas:
@@ -68,33 +68,34 @@ const CONTRIBUTION_STYLE = `
     content: "";
     position: fixed;
     inset: 0;
-    z-index: 84;
+    z-index: 2147483000;
     background: rgba(11,20,16,.48);
   }
   body.contribution-open nav {
     visibility: hidden;
     pointer-events: none;
   }
-  #home .mobile-contribution-slot .contribution-panel:not(.hidden) {
-    position: fixed;
-    z-index: 90;
-    top: calc(12px + env(safe-area-inset-top, 0px));
-    right: 12px;
-    left: 12px;
-    width: auto;
-    max-width: none;
-    max-height: calc(100dvh - 24px - env(safe-area-inset-top, 0px));
-    margin: 0;
-    padding: 18px 16px calc(22px + env(safe-area-inset-bottom, 0px));
-    overflow-x: hidden;
-    overflow-y: auto;
+  body.contribution-open > #contributionPanel:not(.hidden) {
+    position: fixed !important;
+    z-index: 2147483001 !important;
+    top: calc(12px + env(safe-area-inset-top, 0px)) !important;
+    right: 12px !important;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+    left: 12px !important;
+    width: auto !important;
+    max-width: none !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 18px 16px calc(22px + env(safe-area-inset-bottom, 0px)) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
     border-radius: 18px;
-    background: #fff;
+    background: #fff !important;
     box-shadow: 0 24px 70px rgba(16,29,22,.24);
   }
-  #home .mobile-contribution-slot .contribution-panel .contribution-head {
+  body.contribution-open > #contributionPanel .contribution-head {
     position: sticky;
     top: -18px;
     z-index: 2;
@@ -103,25 +104,25 @@ const CONTRIBUTION_STYLE = `
     background: #fff;
     border-bottom: 1px solid rgba(23,32,27,.08);
   }
-  #home .mobile-contribution-slot .contribution-panel .contribution-grid {
+  body.contribution-open > #contributionPanel .contribution-grid {
     grid-template-columns: 1fr;
     gap: 12px;
   }
-  #home .mobile-contribution-slot .contribution-panel .field {
+  body.contribution-open > #contributionPanel .field {
     min-width: 0;
   }
-  #home .mobile-contribution-slot .contribution-panel input,
-  #home .mobile-contribution-slot .contribution-panel select {
+  body.contribution-open > #contributionPanel input,
+  body.contribution-open > #contributionPanel select {
     min-height: 50px;
     font-size: 16px;
   }
-  #home .mobile-contribution-slot .contribution-panel .contribution-save {
+  body.contribution-open > #contributionPanel .contribution-save {
     width: 100%;
     min-height: 50px;
     margin-top: 2px;
     font-size: .88rem;
   }
-  #home .mobile-contribution-slot .contribution-panel .contribution-note {
+  body.contribution-open > #contributionPanel .contribution-note {
     margin-top: 14px;
   }
 }
@@ -147,10 +148,10 @@ function enhanceAppHtml(html) {
 
   updated = updated.replace(
     'function setContributionPanel(open){el.contributionPanel.classList.toggle("hidden",!open);if(open){renderContributionControls();setTimeout(()=>el.contributionValue.focus(),30)}}',
-    'function setContributionPanel(open){el.contributionPanel.classList.toggle("hidden",!open);document.body.classList.toggle("contribution-open",open&&matchMedia("(max-width:760px)").matches);if(open){renderContributionControls();if(matchMedia("(min-width:761px)").matches)setTimeout(()=>el.contributionValue.focus(),30)}}'
+    'function setContributionPanel(open){const mobile=matchMedia("(max-width:760px)").matches;if(open&&mobile&&el.contributionPanel.parentElement!==document.body)document.body.append(el.contributionPanel);if(!open&&el.contributionPanel.parentElement!==el.contributionWrap)el.contributionWrap.append(el.contributionPanel);el.contributionPanel.classList.toggle("hidden",!open);document.body.classList.toggle("contribution-open",open&&mobile);if(open){renderContributionControls();if(!mobile)setTimeout(()=>el.contributionValue.focus(),30)}}'
   );
 
-  if (!updated.includes('id="contribution-placement-fix-v6"')) {
+  if (!updated.includes('id="contribution-placement-fix-v7"')) {
     updated = updated.replace('</head>', `${CONTRIBUTION_STYLE}\n</head>`);
   }
 
