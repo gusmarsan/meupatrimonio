@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v11';
+const CACHE_NAME = 'meu-patrimonio-pwa-v12';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -206,9 +206,7 @@ const LETRAO_SIMPLE_STYLE = `
   body.letrao-mode #home .allocation-panel,
   body.letrao-mode #home .contributors-panel,
   body.letrao-mode #home #graphBtn,
-  body.letrao-mode #evolution #export,
   body.letrao-mode #evolution .rowact,
-  body.letrao-mode #evolution .milestones-section,
   body.letrao-mode #review details,
   body.letrao-mode #review pre{display:none!important}
 
