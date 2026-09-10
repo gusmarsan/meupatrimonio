@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v7';
+const CACHE_NAME = 'meu-patrimonio-pwa-v8';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -128,6 +128,96 @@ const CONTRIBUTION_STYLE = `
 }
 </style>`;
 
+const LETRAO_STYLE = `
+<style id="letrao-mode-v8">
+.letrao-toggle{display:none}
+@media (min-width:761px){
+  .letrao-toggle{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 14px;border:1px solid rgba(23,32,27,.16);border-radius:10px;background:rgba(255,255,255,.72);color:#344139;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap}
+  .letrao-toggle:hover{border-color:rgba(23,32,27,.34);background:#fff}
+  .letrao-toggle[aria-pressed="true"]{border-color:#137a5266;background:#137a5212;color:#116743}
+  body.letrao-mode{--mut:#46514b}
+  body.letrao-mode .eyebrow{font-size:.82rem;color:#46514b}
+  body.letrao-mode .label{font-size:.92rem;color:#46514b}
+  body.letrao-mode .delta{font-size:.96rem}
+  body.letrao-mode .small{font-size:.88rem;color:#46514b}
+  body.letrao-mode label{font-size:.86rem;color:#46514b}
+  body.letrao-mode .note{font-size:.84rem;color:#46514b}
+  body.letrao-mode .cat b{font-size:1rem}
+  body.letrao-mode .cat .tap{font-size:.8rem;color:#4b5851}
+  body.letrao-mode .cat .s{font-size:.82rem;color:#4b5851}
+  body.letrao-mode .meta{font-size:.84rem;color:#4b5851}
+  body.letrao-mode .mini{font-size:.8rem;color:#4b5851}
+  body.letrao-mode .nav small{font-size:.82rem}
+  body.letrao-mode #home .home-balance .label{font-size:.84rem;color:#344239}
+  body.letrao-mode #home .home-updated{font-size:.82rem;color:#46514b}
+  body.letrao-mode #home .home-return-badge{font-size:.82rem}
+  body.letrao-mode #home .metric-block>span{font-size:.82rem;color:#3f4c44}
+  body.letrao-mode #home .metric-block small{font-size:.8rem;color:#536057}
+  body.letrao-mode #home .section-heading .small{font-size:.84rem;color:#4a574f}
+  body.letrao-mode .projection-current span{font-size:.86rem;color:#46514b}
+  body.letrao-mode .projection-case h3{font-size:.88rem}
+  body.letrao-mode .projection-rate{font-size:.8rem;color:#4b5851}
+  body.letrao-mode .projection-case small{font-size:.78rem;color:#4b5851}
+  body.letrao-mode .projection-date{font-size:1rem}
+  body.letrao-mode .projection-previous{font-size:.78rem;color:#4b5851}
+  body.letrao-mode .projection-previous b{font-size:.84rem}
+  body.letrao-mode .projection-note{font-size:.82rem;color:#4b5851}
+  body.letrao-mode .wealth-card .wealth-label{font-size:.84rem;color:#46514b}
+  body.letrao-mode .wealth-detail{font-size:.8rem;color:#4b5851}
+  body.letrao-mode .wealth-cta{font-size:.8rem}
+  body.letrao-mode .wealth-check{font-size:.8rem;color:#46514b}
+  body.letrao-mode .wealth-warning{font-size:.8rem}
+  body.letrao-mode .settings-copy{font-size:.92rem;color:#46514b}
+  body.letrao-mode .settings-note,
+  body.letrao-mode .csv-status,
+  body.letrao-mode .backup-status,
+  body.letrao-mode .cdb-help{font-size:.82rem;color:#4b5851}
+  body.letrao-mode .backup-stat span{font-size:.8rem;color:#4b5851}
+  body.letrao-mode .milestone-meta{font-size:.84rem;color:#4b5851}
+  body.letrao-mode .milestone-date{font-size:.9rem;color:#344039}
+  body.letrao-mode .retirement-simulation-index{font-size:.76rem;color:#46514b}
+  body.letrao-mode .retirement-simulation-capital-main>span,
+  body.letrao-mode .retirement-simulation-years>span:first-child{font-size:.92rem;color:#46514b}
+  body.letrao-mode .retirement-simulation-auto{font-size:.84rem;color:#36453d}
+  body.letrao-mode .retirement-simulation-years-field>span{font-size:.86rem}
+  body.letrao-mode .retirement-simulation-growth{font-size:.82rem;color:#4b5851}
+  body.letrao-mode .retirement-simulation-result-label{font-size:.82rem;color:#4b5851}
+  body.letrao-mode .retirement-simulation-income{font-size:.8rem;color:#4b5851}
+  body.letrao-mode .retirement-simulation-boost-toggle{font-size:.86rem}
+  body.letrao-mode .retirement-simulation-boost-field label{font-size:.8rem;color:#46514b}
+  body.letrao-mode .contribution-note,
+  body.letrao-mode .contribution-row span,
+  body.letrao-mode .contribution-row b,
+  body.letrao-mode .aporte-mini,
+  body.letrao-mode .history-aporte,
+  body.letrao-mode .sync-status{font-size:.82rem;color:#4b5851}
+  body.letrao-mode .chart-header span,
+  body.letrao-mode .chart-legend{font-size:.82rem;color:#4b5851}
+}
+</style>`;
+
+const LETRAO_SCRIPT = `
+<script id="letrao-script-v8">
+(()=>{
+  const key='patrimonio-letrao-mode';
+  const button=document.getElementById('letraoToggle');
+  if(!button)return;
+  const apply=enabled=>{
+    document.body.classList.toggle('letrao-mode',enabled);
+    button.setAttribute('aria-pressed',String(enabled));
+    button.title=enabled?'Voltar ao tamanho normal':'Aumentar textos pequenos';
+  };
+  let stored=false;
+  try{stored=localStorage.getItem(key)==='true'}catch{}
+  apply(stored);
+  button.addEventListener('click',()=>{
+    const enabled=!document.body.classList.contains('letrao-mode');
+    apply(enabled);
+    try{localStorage.setItem(key,String(enabled))}catch{}
+  });
+})();
+</script>`;
+
 function enhanceAppHtml(html) {
   if (!html.includes('mobile-contribution-slot')) return html;
 
@@ -153,6 +243,21 @@ function enhanceAppHtml(html) {
 
   if (!updated.includes('id="contribution-placement-fix-v7"')) {
     updated = updated.replace('</head>', `${CONTRIBUTION_STYLE}\n</head>`);
+  }
+
+  if (!updated.includes('id="letraoToggle"')) {
+    updated = updated.replace(
+      '<div class="topbar-actions"><button id="privacyToggle"',
+      '<div class="topbar-actions"><button id="letraoToggle" class="letrao-toggle" type="button" aria-pressed="false">Módulo letrão</button><button id="privacyToggle"'
+    );
+  }
+
+  if (!updated.includes('id="letrao-mode-v8"')) {
+    updated = updated.replace('</head>', `${LETRAO_STYLE}\n</head>`);
+  }
+
+  if (!updated.includes('id="letrao-script-v8"')) {
+    updated = updated.replace('</body>', `${LETRAO_SCRIPT}\n</body>`);
   }
 
   return updated;
