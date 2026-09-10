@@ -17,15 +17,8 @@ jobs:
           p = Path('sw.js')
           s = p.read_text(encoding='utf-8')
           s = s.replace("meu-patrimonio-pwa-v11", "meu-patrimonio-pwa-v12")
-          old = '''  body.letrao-mode #evolution #export,
-  body.letrao-mode #evolution .rowact,
-  body.letrao-mode #evolution .milestones-section,
-'''
-          new = '''  body.letrao-mode #evolution .rowact,
-'''
-          if old not in s:
-              raise SystemExit('Expected Letrao hide block not found')
-          s = s.replace(old, new, 1)
+          s = s.replace('  body.letrao-mode #evolution #export,\n', '', 1)
+          s = s.replace('  body.letrao-mode #evolution .milestones-section,\n', '', 1)
           p.write_text(s, encoding='utf-8')
           PY
       - name: Commit changes
