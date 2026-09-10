@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v12';
+const CACHE_NAME = 'meu-patrimonio-pwa-v13';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -206,6 +206,13 @@ const LETRAO_SIMPLE_STYLE = `
   body.letrao-mode #home .allocation-panel,
   body.letrao-mode #home .contributors-panel,
   body.letrao-mode #home #graphBtn,
+  body.letrao-mode #projections .projection-target:has(+ .wealth-split),
+  body.letrao-mode #projections .wealth-split,
+  body.letrao-mode #projections .wealth-check,
+  body.letrao-mode #projections .wealth-warning,
+  body.letrao-mode #projections .retirement-simulation,
+  body.letrao-mode #retirementSimulationCapitalSheet,
+  body.letrao-mode #retirementSheet,
   body.letrao-mode #evolution .rowact,
   body.letrao-mode #review details,
   body.letrao-mode #review pre{display:none!important}
