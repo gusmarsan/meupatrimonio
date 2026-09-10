@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v8';
+const CACHE_NAME = 'meu-patrimonio-pwa-v9';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -129,11 +129,11 @@ const CONTRIBUTION_STYLE = `
 </style>`;
 
 const LETRAO_STYLE = `
-<style id="letrao-mode-v8">
+<style id="letrao-mode-v9">
 .letrao-toggle{display:none}
 @media (min-width:761px){
   .letrao-toggle{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 14px;border:1px solid rgba(23,32,27,.16);border-radius:10px;background:rgba(255,255,255,.72);color:#344139;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap}
-  .letrao-toggle:hover{border-color:rgba(23,32,27,.34);background:#fff}
+  .letrao-toggle svg{width:18px;height:18px;flex:0 0 18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.letrao-toggle span{display:inline-block}.letrao-toggle:hover{border-color:rgba(23,32,27,.34);background:#fff}
   .letrao-toggle[aria-pressed="true"]{border-color:#137a5266;background:#137a5212;color:#116743}
   body.letrao-mode{--mut:#46514b}
   body.letrao-mode .eyebrow{font-size:.82rem;color:#46514b}
@@ -248,11 +248,11 @@ function enhanceAppHtml(html) {
   if (!updated.includes('id="letraoToggle"')) {
     updated = updated.replace(
       '<div class="topbar-actions"><button id="privacyToggle"',
-      '<div class="topbar-actions"><button id="letraoToggle" class="letrao-toggle" type="button" aria-pressed="false">Módulo letrão</button><button id="privacyToggle"'
+      '<div class="topbar-actions"><button id="letraoToggle" class="letrao-toggle" type="button" aria-pressed="false" aria-label="Modo Letrão"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.2 7.5 5.6 6.2 2.8 13.6a3.1 3.1 0 1 0 5.8 2.2l1.1-4.1M15.8 7.5l2.6-1.3 2.8 7.4a3.1 3.1 0 1 1-5.8 2.2l-1.1-4.1M9.7 8.1h4.6M8.6 15.8h6.8M9.7 8.1l-1.1 7.7M14.3 8.1l1.1 7.7"/></svg><span>Modo Letrão</span></button><button id="privacyToggle"'
     );
   }
 
-  if (!updated.includes('id="letrao-mode-v8"')) {
+  if (!updated.includes('id="letrao-mode-v9"')) {
     updated = updated.replace('</head>', `${LETRAO_STYLE}\n</head>`);
   }
 
