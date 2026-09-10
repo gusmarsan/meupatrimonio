@@ -10,21 +10,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Update desktop reading toggle
+      - name: Refine desktop reading toggle
         run: |
           python - <<'PY'
           from pathlib import Path
           p = Path('sw.js')
           s = p.read_text(encoding='utf-8')
-          s = s.replace("meu-patrimonio-pwa-v8", "meu-patrimonio-pwa-v9")
-          s = s.replace('<style id="letrao-mode-v8">', '<style id="letrao-mode-v9">')
-          s = s.replace('.letrao-toggle:hover{', '.letrao-toggle svg{width:18px;height:18px;flex:0 0 18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.letrao-toggle span{display:inline-block}.letrao-toggle:hover{')
-          old = '<div class="topbar-actions"><button id="letraoToggle" class="letrao-toggle" type="button" aria-pressed="false">Módulo letrão</button><button id="privacyToggle"'
-          new = '<div class="topbar-actions"><button id="letraoToggle" class="letrao-toggle" type="button" aria-pressed="false" aria-label="Modo Letrão"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.2 7.5 5.6 6.2 2.8 13.6a3.1 3.1 0 1 0 5.8 2.2l1.1-4.1M15.8 7.5l2.6-1.3 2.8 7.4a3.1 3.1 0 1 1-5.8 2.2l-1.1-4.1M9.7 8.1h4.6M8.6 15.8h6.8M9.7 8.1l-1.1 7.7M14.3 8.1l1.1 7.7"/></svg><span>Modo Letrão</span></button><button id="privacyToggle"'
-          s = s.replace(old, new)
-          s = s.replace("'<div class=\"topbar-actions\"><button id=\"letraoToggle\" class=\"letrao-toggle\" type=\"button\" aria-pressed=\"false\">Módulo letrão</button><button id=\"privacyToggle\"'", "'<div class=\"topbar-actions\"><button id=\"letraoToggle\" class=\"letrao-toggle\" type=\"button\" aria-pressed=\"false\" aria-label=\"Modo Letrão\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8.2 7.5 5.6 6.2 2.8 13.6a3.1 3.1 0 1 0 5.8 2.2l1.1-4.1M15.8 7.5l2.6-1.3 2.8 7.4a3.1 3.1 0 1 1-5.8 2.2l-1.1-4.1M9.7 8.1h4.6M8.6 15.8h6.8M9.7 8.1l-1.1 7.7M14.3 8.1l1.1 7.7\"/></svg><span>Modo Letrão</span></button><button id=\"privacyToggle\"'")
-          s = s.replace("id=\"letrao-mode-v8\"", "id=\"letrao-mode-v9\"")
-          s = s.replace("updated.includes('id=\"letrao-mode-v8\"')", "updated.includes('id=\"letrao-mode-v9\"')")
+          s = s.replace("meu-patrimonio-pwa-v9", "meu-patrimonio-pwa-v10")
+          s = s.replace('<style id="letrao-mode-v9">', '<style id="letrao-mode-v10">')
+          s = s.replace("updated.includes('id=\"letrao-mode-v9\"')", "updated.includes('id=\"letrao-mode-v10\"')")
+          s = s.replace('justify-content:center;min-height:42px', 'justify-content:center;gap:7px;min-height:42px')
+          needle = "  if (!updated.includes('id=\"letraoToggle\"')) {\n"
+          upgrade = '''  updated = updated.replace(\n    '<button id="letraoToggle" class="letrao-toggle" type="button" aria-pressed="false">Módulo letrão</button>',\n    '<button id="letraoToggle" class="letrao-toggle" type="button" aria-pressed="false" aria-label="Modo Letrão"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.2 7.5 5.6 6.2 2.8 13.6a3.1 3.1 0 1 0 5.8 2.2l1.1-4.1M15.8 7.5l2.6-1.3 2.8 7.4a3.1 3.1 0 1 1-5.8 2.2l-1.1-4.1M9.7 8.1h4.6M8.6 15.8h6.8M9.7 8.1l-1.1 7.7M14.3 8.1l1.1 7.7"/></svg><span>Modo Letrão</span></button>'\n  );\n\n'''
+          if upgrade not in s:
+              s = s.replace(needle, upgrade + needle)
           p.write_text(s, encoding='utf-8')
           PY
       - name: Commit
@@ -32,5 +31,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add sw.js
-          git commit -m "Rename desktop Letrao mode and add binocular icon"
+          git commit -m "Refine desktop Modo Letrao toggle"
           git push
