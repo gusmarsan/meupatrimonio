@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v24';
+const CACHE_NAME = 'meu-patrimonio-pwa-v25';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -253,6 +253,7 @@ const LETRAO_SIMPLE_STYLE = `
   body.letrao-mode #home .home-updated{display:none!important}
   body.letrao-mode #home .home-balance .actions{align-items:center;flex-wrap:wrap}
   body.letrao-mode #home .home-balance .actions .contribution-toggle{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 20px;border:1px solid #17201b2b;border-radius:14px;background:#fff;color:#365d4b;font-size:.8rem;font-weight:700;cursor:pointer}
+  body.letrao-mode #home .home-balance .actions #homeNew{min-width:230px;flex:0 0 auto;white-space:nowrap}
   body.letrao-mode #home #homeFirstClosing{font-size:0}
   body.letrao-mode #home #homeFirstClosing::after{content:"Atualizar investimentos";font-size:.96rem}
   body.letrao-mode #home .total{font-size:clamp(4.3rem,6vw,5.8rem);line-height:.92}
@@ -359,6 +360,8 @@ const LETRAO_SCRIPT = `
   const reviewTitle=document.querySelector('#review>.head h2');
   const homeNewButton=document.getElementById('homeNew');
   const newTopButton=document.getElementById('newTop');
+  const capitalAddedLabel=document.querySelector('#home .metric-block:nth-child(2) small');
+  const allocationCurrentLabel=document.querySelector('#home .allocation-panel .section-heading>.small');
   const titleElement=document.getElementById('title');
   const mainElement=document.querySelector('main');
   let helpView=document.getElementById('letraoHelp');
@@ -373,6 +376,8 @@ const LETRAO_SCRIPT = `
     if(reviewTitle)reviewTitle.textContent=simple?'Atualização':'Montar fechamento';
     if(homeNewButton)homeNewButton.textContent=simple?'Atualizar investimentos':'Adicionar fechamento';
     if(newTopButton)newTopButton.setAttribute('aria-label',simple?'Atualizar investimentos':'Adicionar fechamento');
+    if(capitalAddedLabel)capitalAddedLabel.textContent=simple?'Valores adicionados':'Capital adicionado';
+    if(allocationCurrentLabel)allocationCurrentLabel.textContent=simple?'Divisão atual':'Participação atual';
   };
   const apply=enabled=>{
     const active=!!enabled&&desktop.matches;
