@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v29';
+const CACHE_NAME = 'meu-patrimonio-pwa-v30';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -414,7 +414,7 @@ const LETRAO_SCRIPT = `
     if(manualButton)manualButton.textContent=active?'Inserir valores':'Adicionar valor manualmente';
     if(sheetManualButton)sheetManualButton.textContent=active?'Atualizar valor':'Inserir manualmente';
     if(active&&['settings','new'].includes(document.body.dataset.view||''))homeNav?.click();
-    if(!active&&(document.body.dataset.view||'')==='letrao-help')homeNav?.click();
+    if(!active&&['letrao-help','letraoHelp'].includes(document.body.dataset.view||''))homeNav?.click();
   };
   let stored=false;
   try{stored=localStorage.getItem(key)==='true'}catch{}
