@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v14';
+const CACHE_NAME = 'meu-patrimonio-pwa-v15';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -204,6 +204,9 @@ const LETRAO_SIMPLE_STYLE = `
   body.letrao-mode .nav[data-view="settings"],
   body.letrao-mode .nav[data-view="projections"],
   body.letrao-mode #home #graphBtn,
+  body.letrao-mode #new #uploadLabel,
+  body.letrao-mode #new .note,
+  body.letrao-mode #review #more,
   body.letrao-mode #projections .projection-target:has(+ .wealth-split),
   body.letrao-mode #projections .wealth-split,
   body.letrao-mode #projections .wealth-check,
@@ -309,6 +312,8 @@ const LETRAO_SCRIPT = `
   const contributionButton=document.getElementById('toggleContribution');
   const contributionWrap=document.getElementById('contributionWrap');
   const homeActions=document.querySelector('#home .home-balance .actions');
+  const printInput=document.getElementById('files');
+  const manualButton=document.getElementById('manual');
   const setLabels=simple=>{
     if(navNew)navNew.textContent=simple?'Novo mês':'Fechamento';
     if(navHome)navHome.textContent=simple?'Início':'Carteira';
@@ -324,6 +329,8 @@ const LETRAO_SCRIPT = `
       if(active&&homeActions){homeActions.append(contributionButton)}
       else if(contributionWrap&&contributionButton.parentElement!==contributionWrap){contributionWrap.insertBefore(contributionButton,contributionWrap.firstChild)}
     }
+    if(printInput)printInput.disabled=active;
+    if(manualButton)manualButton.textContent=active?'Inserir valores':'Adicionar valor manualmente';
     if(active&&['settings','projections'].includes(document.body.dataset.view||''))homeNav?.click();
   };
   let stored=false;
