@@ -14,36 +14,16 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-
           p=Path('sw.js')
           s=p.read_text(encoding='utf-8')
-
-          if "meu-patrimonio-pwa-v27" not in s:
-              raise SystemExit('Expected cache v27 not found')
+          if "meu-patrimonio-pwa-v27" not in s: raise SystemExit('Expected cache v27 not found')
           s=s.replace("meu-patrimonio-pwa-v27","meu-patrimonio-pwa-v28",1)
-
-          if '<script id="letrao-script-v11">' not in s:
-              raise SystemExit('Expected Letrao script v11 not found')
+          if '<script id="letrao-script-v11">' not in s: raise SystemExit('Expected Letrao script v11 not found')
           s=s.replace('<script id="letrao-script-v11">','<script id="letrao-script-v12">',1)
-
-          old='''  if (!updated.includes('id="letrao-script-v8"')) {
-    updated = updated.replace('</body>', `${LETRAO_SCRIPT}\\n</body>`);
-  }
-
-  if (!updated.includes('id="letrao-script-v11"')) {
-    updated = updated.replace('</body>', `${LETRAO_SCRIPT}\\n</body>`);
-  }
-'''
-          new='''  updated = updated.replace(/<script id="letrao-script-v(?:8|11)">[\\s\\S]*?<\\/script>/g, '');
-
-  if (!updated.includes('id="letrao-script-v12"')) {
-    updated = updated.replace('</body>', `${LETRAO_SCRIPT}\\n</body>`);
-  }
-'''
-          if old not in s:
-              raise SystemExit('Expected legacy script injection block not found')
+          old="  if (!updated.includes('id=\"letrao-script-v8\"')) {\n    updated = updated.replace('</body>', `${LETRAO_SCRIPT}\\n</body>`);\n  }\n\n  if (!updated.includes('id=\"letrao-script-v11\"')) {\n    updated = updated.replace('</body>', `${LETRAO_SCRIPT}\\n</body>`);\n  }\n"
+          new="  updated = updated.replace(/<script id=\"letrao-script-v(?:8|11)\">[\\s\\S]*?<\\/script>/g, '');\n\n  if (!updated.includes('id=\"letrao-script-v12\"')) {\n    updated = updated.replace('</body>', `${LETRAO_SCRIPT}\\n</body>`);\n  }\n"
+          if old not in s: raise SystemExit('Expected legacy script injection block not found')
           s=s.replace(old,new,1)
-
           p.write_text(s,encoding='utf-8')
           PY
       - name: Commit changes
