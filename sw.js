@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v19';
+const CACHE_NAME = 'meu-patrimonio-pwa-v20';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -302,6 +302,10 @@ const LETRAO_SIMPLE_STYLE = `
   body.letrao-mode #review .count-note,
   body.letrao-mode #review .warn{font-size:.9rem}
   body.letrao-mode #review .btn{min-height:54px;font-size:.96rem}
+  body.letrao-mode #review .summary{position:static;bottom:auto;z-index:auto;margin-top:24px;padding:0;border:0;background:transparent;backdrop-filter:none}
+  body.letrao-mode #review .summary-details{padding:22px;border:1px solid #17201b20;border-radius:14px;background:#fff}
+  body.letrao-mode #review .summary-bar{position:static;margin-top:12px;padding:0;border:0;background:transparent;box-shadow:none;backdrop-filter:none}
+  body.letrao-mode #review .summary-bar .btn{width:100%;min-height:58px}
 
   body.letrao-mode #projections{max-width:900px}
   body.letrao-mode #projections .projection-target-row{margin-top:34px;padding:30px 32px;border:1px solid #17201b20;border-radius:14px;background:#fff;align-items:center}
