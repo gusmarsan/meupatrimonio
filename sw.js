@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v22';
+const CACHE_NAME = 'meu-patrimonio-pwa-v23';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -223,6 +223,8 @@ const LETRAO_SIMPLE_STYLE = `
   body.letrao-mode header h1{font-size:1.75rem;font-weight:650}
   body.letrao-mode header .eyebrow{font-size:.88rem;color:#38463e}
   body.letrao-mode .letrao-toggle{min-height:48px;padding:0 17px;font-size:.9rem;border-width:2px}
+  body.letrao-mode button,
+  body.letrao-mode nav .nav small{text-transform:uppercase}
   body.letrao-mode .letrao-toggle svg{width:20px;height:20px;flex-basis:20px}
   body.letrao-mode #newTop{width:auto;min-width:0;height:48px;padding:0 17px;border-radius:10px;font-size:0;font-weight:700}
   body.letrao-mode #newTop::after{content:"Atualizar investimentos";font-size:.96rem;white-space:nowrap}
