@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v20';
+const CACHE_NAME = 'meu-patrimonio-pwa-v21';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -351,10 +351,12 @@ const LETRAO_SCRIPT = `
   const manualButton=document.getElementById('manual');
   const sheetManualButton=document.getElementById('sheetManual');
   const cats=document.getElementById('cats');
+  const reviewTitle=document.querySelector('#review>.head h2');
   const setLabels=simple=>{
     if(navNew)navNew.textContent=simple?'Novo mês':'Fechamento';
     if(navHome)navHome.textContent=simple?'Início':'Carteira';
     if(navEvolution)navEvolution.textContent=simple?'Histórico':'Evolução';
+    if(reviewTitle)reviewTitle.textContent=simple?'Atualização':'Montar fechamento';
   };
   const apply=enabled=>{
     const active=!!enabled&&desktop.matches;
