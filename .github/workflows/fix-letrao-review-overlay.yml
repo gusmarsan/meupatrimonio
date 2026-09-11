@@ -1,0 +1,46 @@
+name: Fix Letrao review overlay
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-letrao-review-overlay.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make Letrao review summary non-sticky
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('sw.js')
+          s = p.read_text(encoding='utf-8')
+
+          if "meu-patrimonio-pwa-v19" not in s:
+              raise SystemExit('Expected cache v19 not found')
+          s = s.replace("meu-patrimonio-pwa-v19", "meu-patrimonio-pwa-v20", 1)
+
+          anchor = '  body.letrao-mode #review .btn{min-height:54px;font-size:.96rem}\n'
+          additions = (
+              '  body.letrao-mode #review .summary{position:static;bottom:auto;z-index:auto;margin-top:24px;padding:0;border:0;background:transparent;backdrop-filter:none}\n'
+              '  body.letrao-mode #review .summary-details{padding:22px;border:1px solid #17201b20;border-radius:14px;background:#fff}\n'
+              '  body.letrao-mode #review .summary-bar{position:static;margin-top:12px;padding:0;border:0;background:transparent;box-shadow:none;backdrop-filter:none}\n'
+              '  body.letrao-mode #review .summary-bar .btn{width:100%;min-height:58px}\n'
+          )
+          if anchor not in s:
+              raise SystemExit('Expected Letrao review anchor not found')
+          if 'body.letrao-mode #review .summary{position:static' in s:
+              raise SystemExit('Letrao review summary fix already present')
+          s = s.replace(anchor, anchor + additions, 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sw.js
+          git commit -m "Fix sticky review summary in Modo Letrao"
+          git push
