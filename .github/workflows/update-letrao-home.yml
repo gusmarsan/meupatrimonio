@@ -1,0 +1,71 @@
+name: Update Letrao home
+on:
+  push:
+    paths:
+      - '.github/workflows/update-letrao-home.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply Letrao-only home updates
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('sw.js')
+          s = p.read_text(encoding='utf-8')
+
+          if "meu-patrimonio-pwa-v13" not in s:
+              raise SystemExit('Expected cache v13 not found')
+          s = s.replace("meu-patrimonio-pwa-v13", "meu-patrimonio-pwa-v14", 1)
+
+          for selector in (
+              '  body.letrao-mode #home .allocation-panel,\n',
+              '  body.letrao-mode #home .contributors-panel,\n',
+          ):
+              if selector not in s:
+                  raise SystemExit(f'Expected hidden selector not found: {selector!r}')
+              s = s.replace(selector, '', 1)
+
+          old_grid = '  body.letrao-mode #home .home-dashboard{max-width:1120px;margin:0 auto;grid-template-columns:1fr;grid-template-areas:"balance" "metrics" "contribution" "positions" "history"}\n'
+          new_grid = '  body.letrao-mode #home .home-dashboard{max-width:1120px;margin:0 auto;grid-template-columns:1fr;grid-template-areas:"balance" "metrics" "contribution" "allocation" "contributors" "positions" "history"}\n'
+          if old_grid not in s:
+              raise SystemExit('Expected Letrao home grid not found')
+          s = s.replace(old_grid, new_grid, 1)
+
+          old_balance = '  body.letrao-mode #home .home-balance{min-height:auto;padding:54px 0 44px}\n'
+          new_balance = old_balance + '  body.letrao-mode #home .home-updated{display:none!important}\n  body.letrao-mode #home .home-balance .actions{align-items:center;flex-wrap:wrap}\n  body.letrao-mode #home .home-balance .actions .contribution-toggle{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 20px;border:1px solid #17201b2b;border-radius:14px;background:#fff;color:#365d4b;font-size:.8rem;font-weight:700;cursor:pointer}\n'
+          if old_balance not in s:
+              raise SystemExit('Expected Letrao home balance rule not found')
+          s = s.replace(old_balance, new_balance, 1)
+
+          old_slot = '  body.letrao-mode #home .mobile-contribution-slot{padding:22px 0 34px}\n  body.letrao-mode #home .contribution-toggle{min-height:52px;padding-inline:18px;font-size:.95rem}\n'
+          new_slot = '  body.letrao-mode #home .mobile-contribution-slot{padding:0;border-bottom:0}\n  body.letrao-mode #home .mobile-contribution-slot:has(#contributionPanel:not(.hidden)){padding:22px 0 34px;border-bottom:1px solid var(--home-rule,rgba(23,32,27,.12))}\n'
+          if old_slot not in s:
+              raise SystemExit('Expected Letrao contribution slot rules not found')
+          s = s.replace(old_slot, new_slot, 1)
+
+          old_refs = "  const homeNav=document.querySelector('.nav[data-view=\"home\"]');\n"
+          new_refs = old_refs + "  const contributionButton=document.getElementById('toggleContribution');\n  const contributionWrap=document.getElementById('contributionWrap');\n  const homeActions=document.querySelector('#home .home-balance .actions');\n"
+          if old_refs not in s:
+              raise SystemExit('Expected Letrao script refs not found')
+          s = s.replace(old_refs, new_refs, 1)
+
+          old_apply = '    setLabels(active);\n    if(active&&[\'settings\',\'projections\'].includes(document.body.dataset.view||\'\'))homeNav?.click();\n'
+          new_apply = '    setLabels(active);\n    if(contributionButton){\n      if(active&&homeActions){homeActions.append(contributionButton)}\n      else if(contributionWrap&&contributionButton.parentElement!==contributionWrap){contributionWrap.insertBefore(contributionButton,contributionWrap.firstChild)}\n    }\n    if(active&&[\'settings\',\'projections\'].includes(document.body.dataset.view||\'\'))homeNav?.click();\n'
+          if old_apply not in s:
+              raise SystemExit('Expected Letrao apply block not found')
+          s = s.replace(old_apply, new_apply, 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sw.js
+          git commit -m "Restore Letrao allocation and contributors"
+          git push
