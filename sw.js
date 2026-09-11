@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v26';
+const CACHE_NAME = 'meu-patrimonio-pwa-v27';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -337,6 +337,7 @@ const LETRAO_SIMPLE_STYLE = `
   body.letrao-mode #evolution .meta{font-size:.92rem;color:#45534b}
   body.letrao-mode #evolution .hv{font-size:1.22rem}
   body.letrao-mode #evolution .hrow{min-height:96px}
+  body.letrao-mode #letraoHelp{min-height:calc(100vh - 120px);margin:0;padding:0;background:transparent}
 }
 </style>`;
 
@@ -382,9 +383,8 @@ const LETRAO_SCRIPT = `
   const mainElement=document.querySelector('main');
   let helpView=document.getElementById('letraoHelp');
   if(!helpView&&mainElement){helpView=document.createElement('section');helpView.id='letraoHelp';helpView.className='view';helpView.setAttribute('aria-label','Dúvidas');mainElement.append(helpView)}
-  const openHelp=()=>{if(!helpView||!navNewButton)return;document.body.dataset.view='letrao-help';document.querySelectorAll('.view').forEach(view=>view.classList.toggle('active',view===helpView));document.querySelectorAll('.nav').forEach(nav=>nav.classList.toggle('active',nav===navNewButton));if(titleElement)titleElement.textContent='Dúvidas';scrollTo({top:0,behavior:'instant'})};
-  const originalNavNewClick=navNewButton?.onclick;
-  if(navNewButton)navNewButton.onclick=event=>{if(document.body.classList.contains('letrao-mode')){event?.preventDefault();openHelp();return}originalNavNewClick?.call(navNewButton,event)};
+  const openHelp=()=>{if(!helpView||!navNewButton)return;helpView.replaceChildren();document.body.dataset.view='letrao-help';document.querySelectorAll('.view').forEach(view=>view.classList.toggle('active',view===helpView));document.querySelectorAll('.nav').forEach(nav=>nav.classList.toggle('active',nav===navNewButton));if(titleElement)titleElement.textContent='Veja o passo a passo';scrollTo({top:0,behavior:'instant'})};
+  if(navNewButton)navNewButton.addEventListener('click',event=>{if(!document.body.classList.contains('letrao-mode'))return;event.preventDefault();event.stopImmediatePropagation();openHelp()},true);
   const setLabels=simple=>{
     if(navNew)navNew.textContent=simple?'Dúvidas':'Fechamento';
     if(navHome)navHome.textContent=simple?'Início':'Carteira';
