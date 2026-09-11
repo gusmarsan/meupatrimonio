@@ -266,6 +266,18 @@ body{font-family:"Inter","Segoe UI",sans-serif}#home .total,.projection-current 
   body.letrao-mode #letraoHelp{min-height:calc(100vh - 112px);padding:0!important;background:transparent!important}
 }
 
+/* Letrao help content */
+@media(min-width:761px){
+  body.letrao-mode #letraoHelp .letrao-help-content{max-width:820px;padding:34px 0 56px}
+  body.letrao-mode #letraoHelp .letrao-help-content h2{margin:0 0 28px;font-size:2rem;line-height:1.2;font-weight:700;color:#17201b}
+  body.letrao-mode #letraoHelp .letrao-help-steps{list-style:none;margin:0;padding:0;display:grid;gap:0}
+  body.letrao-mode #letraoHelp .letrao-help-steps li{display:grid;grid-template-columns:56px minmax(0,1fr);gap:18px;align-items:center;min-height:88px;padding:16px 0;border-bottom:1px solid #17201b1f}
+  body.letrao-mode #letraoHelp .letrao-help-steps li:first-child{border-top:1px solid #17201b1f}
+  body.letrao-mode #letraoHelp .letrao-help-number{width:48px;height:48px;display:grid;place-items:center;border-radius:50%;background:#17201b;color:#fff;font-size:1.15rem;font-weight:800}
+  body.letrao-mode #letraoHelp .letrao-help-steps p{margin:0;color:#17201b;font-size:1.15rem;line-height:1.45}
+  body.letrao-mode #letraoHelp .letrao-help-steps b{font-weight:800}
+}
+
 /* Modo Letrao month-only picker */
 .letrao-month-trigger{display:none}
 @media(min-width:761px){
@@ -425,7 +437,18 @@ body{font-family:"Inter","Segoe UI",sans-serif}#home .total,.projection-current 
 <div class="card"><p class="eyebrow">Conta e nuvem</p><h2>Sincronização</h2><div class="account-row"><div class="account-copy"><span class="label">Conta conectada</span><b id="accountEmail">—</b></div></div><div id="cloudStatus" class="sync-status"><span class="sync-dot"></span><span id="cloudStatusText">Preparando sincronização...</span></div><div class="account-actions"></div><p id="accountSyncNote" class="settings-note">Os fechamentos ficam salvos neste aparelho e também no Firebase. Ao entrar em outro dispositivo com a mesma conta, o histórico é carregado automaticamente.</p><button type="button" id="logout" class="btn danger logout account-logout"><span class="logout-label-desktop">Sair</span><span class="logout-label-mobile">Sair desta conta</span></button></div>
 <div class="card"><p class="eyebrow">Organização da carteira</p><h2>Meus investimentos</h2><p class="settings-copy">Estes nomes pertencem somente à sua conta e aparecem na seleção dos fechamentos.</p><div id="investmentList" class="investment-list"></div><button id="addInvestment" class="btn primary full" type="button">Adicionar investimento</button><p class="investment-note">Um investimento que já aparece no histórico não pode ser excluído.</p></div>
 </section>
-<section id="letraoHelp" class="view" aria-label="Dúvidas"></section>
+<section id="letraoHelp" class="view" aria-label="Dúvidas">
+<div class="letrao-help-content">
+<h2>Como adicionar investimento</h2>
+<ol class="letrao-help-steps">
+<li><span class="letrao-help-number">1</span><p>Clique em <b>ATUALIZAR INVESTIMENTOS</b>.</p></li>
+<li><span class="letrao-help-number">2</span><p>Escolha o mês que quer atualizar.</p></li>
+<li><span class="letrao-help-number">3</span><p>Clique em <b>INSERIR VALORES</b>.</p></li>
+<li><span class="letrao-help-number">4</span><p>Digite o valor atual de cada investimento.</p></li>
+<li><span class="letrao-help-number">5</span><p>Confira os valores e clique em <b>SALVAR MÊS</b>.</p></li>
+</ol>
+</div>
+</section>
 </main>
 <nav><div class="user-control"><button id="userAvatar" class="user-avatar" type="button" aria-label="Abrir menu do usuário" aria-haspopup="menu" aria-expanded="false"><span id="userInitials">MP</span></button><div id="userMenu" class="user-menu hidden" role="menu"><button id="userMenuLogout" type="button" role="menuitem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5H5v14h5M14 8l4 4-4 4M8 12h10"/></svg><span>Sair</span></button></div></div><button type="button" class="nav" data-view="new"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><small>Fechamento</small></button><button type="button" class="nav" data-view="settings"><span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3A1.7 1.7 0 0 0 10 3v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/></svg></span><small>Configurações</small></button><button type="button" class="nav active" data-view="home"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16v12H4z"/><path d="M8 15V9m4 6v-3m4 3V7"/></svg></span><small>Carteira</small></button><button type="button" class="nav" data-view="evolution"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16 5-5 4 3 7-8"/><path d="M15 6h5v5"/></svg></span><small>Evolução</small></button><button type="button" class="nav" data-view="projections"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19 20 5"/><path d="M11 5h9v9"/></svg></span><small>Projeções</small></button><button type="button" class="nav letrao-help-nav" data-view="letraoHelp"><span aria-hidden="true">＋</span><small>Dúvidas</small></button></nav>
 </div>
@@ -439,7 +462,7 @@ body{font-family:"Inter","Segoe UI",sans-serif}#home .total,.projection-current 
 <div id="loginGate" class="auth-gate hidden"><form id="loginForm" class="auth-card"><div class="auth-brand"><div class="auth-mark">↗</div><div><h1 id="authTitle">Meu patrimônio</h1><p id="authSubtitle">Entre para acessar e sincronizar seus dados</p></div></div><div class="field"><label for="loginEmail">E-mail</label><input id="loginEmail" type="email" autocomplete="username" required></div><div id="passwordField" class="field"><label for="loginPassword">Senha</label><input id="loginPassword" type="password" autocomplete="current-password"></div><div id="confirmPasswordField" class="field hidden"><label for="loginConfirmPassword">Confirmar senha</label><input id="loginConfirmPassword" type="password" autocomplete="new-password"></div><p id="passwordNote" class="auth-password-note hidden">Use pelo menos 10 caracteres, com letra maiúscula, letra minúscula e número.</p><button id="loginButton" class="btn primary full" type="submit">Entrar</button><p id="loginError" class="auth-error" aria-live="polite"></p><div id="loginLinks" class="auth-links"><button id="forgotPassword" class="auth-link muted" type="button">Esqueci minha senha</button><button id="createAccount" class="auth-link" type="button">Criar conta</button></div><div id="backLoginWrap" class="auth-links hidden"><span></span><button id="backToLogin" class="auth-link" type="button">Voltar para entrar</button></div><p id="authHelp" class="auth-help">Cada conta mantém seus dados separados e protegidos.</p></form><section id="verificationPanel" class="auth-card verification-panel hidden"><div class="verification-icon">✉</div><h1>Confirme seu e-mail</h1><p>Enviamos uma mensagem de confirmação para:</p><b id="verificationEmail" class="verification-email"></b><p>Abra o link recebido e depois volte aqui. Confira também a caixa de spam.</p><div class="verification-actions"><button id="checkVerification" class="btn primary full" type="button">Já confirmei</button><button id="resendVerification" class="btn secondary full" type="button">Reenviar e-mail</button><button id="verificationLogout" class="auth-link muted" type="button">Entrar com outra conta</button></div><p id="verificationMessage" class="verification-message" aria-live="polite"></p></section></div>
 <div id="overlay" class="overlay hidden"><div class="obox"><div class="spin"></div><b>Lendo os prints</b><p id="status" class="status">Preparando...</p><div class="track"><div id="bar" class="bar"></div></div></div></div><div id="toast" class="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-<script>if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=31',{updateViaCache:'none'}).catch(error=>console.error('Falha ao registrar o service worker.',error)));}</script>
+<script>if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=32',{updateViaCache:'none'}).catch(error=>console.error('Falha ao registrar o service worker.',error)));}</script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 import { getAuth, setPersistence, browserLocalPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail, onAuthStateChanged, signOut, reload } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
