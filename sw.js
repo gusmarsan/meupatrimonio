@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v23';
+const CACHE_NAME = 'meu-patrimonio-pwa-v24';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -345,6 +345,7 @@ const LETRAO_SCRIPT = `
   if(!button)return;
   const desktop=matchMedia('(min-width:761px)');
   const navNew=document.querySelector('.nav[data-view="new"] small');
+  const navNewButton=document.querySelector('.nav[data-view="new"]');
   const navHome=document.querySelector('.nav[data-view="home"] small');
   const navEvolution=document.querySelector('.nav[data-view="evolution"] small');
   const homeNav=document.querySelector('.nav[data-view="home"]');
@@ -358,8 +359,15 @@ const LETRAO_SCRIPT = `
   const reviewTitle=document.querySelector('#review>.head h2');
   const homeNewButton=document.getElementById('homeNew');
   const newTopButton=document.getElementById('newTop');
+  const titleElement=document.getElementById('title');
+  const mainElement=document.querySelector('main');
+  let helpView=document.getElementById('letraoHelp');
+  if(!helpView&&mainElement){helpView=document.createElement('section');helpView.id='letraoHelp';helpView.className='view';helpView.setAttribute('aria-label','Dúvidas');mainElement.append(helpView)}
+  const openHelp=()=>{if(!helpView||!navNewButton)return;document.body.dataset.view='letrao-help';document.querySelectorAll('.view').forEach(view=>view.classList.toggle('active',view===helpView));document.querySelectorAll('.nav').forEach(nav=>nav.classList.toggle('active',nav===navNewButton));if(titleElement)titleElement.textContent='Dúvidas';scrollTo({top:0,behavior:'instant'})};
+  const originalNavNewClick=navNewButton?.onclick;
+  if(navNewButton)navNewButton.onclick=event=>{if(document.body.classList.contains('letrao-mode')){event?.preventDefault();openHelp();return}originalNavNewClick?.call(navNewButton,event)};
   const setLabels=simple=>{
-    if(navNew)navNew.textContent=simple?'Atualizar investimentos':'Fechamento';
+    if(navNew)navNew.textContent=simple?'Dúvidas':'Fechamento';
     if(navHome)navHome.textContent=simple?'Início':'Carteira';
     if(navEvolution)navEvolution.textContent=simple?'Histórico':'Evolução';
     if(reviewTitle)reviewTitle.textContent=simple?'Atualização':'Montar fechamento';
@@ -379,7 +387,8 @@ const LETRAO_SCRIPT = `
     if(printInput)printInput.disabled=active;
     if(manualButton)manualButton.textContent=active?'Inserir valores':'Adicionar valor manualmente';
     if(sheetManualButton)sheetManualButton.textContent=active?'Atualizar valor':'Inserir manualmente';
-    if(active&&(document.body.dataset.view||'')==='settings')homeNav?.click();
+    if(active&&['settings','new'].includes(document.body.dataset.view||''))homeNav?.click();
+    if(!active&&(document.body.dataset.view||'')==='letrao-help')homeNav?.click();
   };
   let stored=false;
   try{stored=localStorage.getItem(key)==='true'}catch{}
