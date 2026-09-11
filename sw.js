@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v18';
+const CACHE_NAME = 'meu-patrimonio-pwa-v19';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -268,7 +268,9 @@ const LETRAO_SIMPLE_STYLE = `
   body.letrao-mode #home .catlist{grid-template-columns:1fr;column-gap:0}
   body.letrao-mode #home .cat{min-height:92px;padding:20px 4px;border-top:0;border-bottom:1px solid #17201b20}
   body.letrao-mode #home .cat b{font-size:1.12rem}
-  body.letrao-mode #home .cat .tap{font-size:.9rem;color:#44534b}
+  body.letrao-mode #home .cat .tap{display:inline-flex;margin-top:12px;font-size:0;color:inherit}
+  body.letrao-mode #home .cat .tap::after{content:"Atualizar valor";min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0 17px;border:1px solid #17201b;border-radius:10px;background:#17201b;color:#fff;font-size:.94rem;font-weight:700;line-height:1;white-space:nowrap}
+  body.letrao-mode #categorySheet #sheetPrint{display:none!important}
   body.letrao-mode #home .cat .v{font-size:1.28rem}
   body.letrao-mode #home .cat .s{font-size:.92rem;color:#44534b}
   body.letrao-mode #home .home-history-section{padding-top:52px}
@@ -343,6 +345,8 @@ const LETRAO_SCRIPT = `
   const homeActions=document.querySelector('#home .home-balance .actions');
   const printInput=document.getElementById('files');
   const manualButton=document.getElementById('manual');
+  const sheetManualButton=document.getElementById('sheetManual');
+  const cats=document.getElementById('cats');
   const setLabels=simple=>{
     if(navNew)navNew.textContent=simple?'Novo mês':'Fechamento';
     if(navHome)navHome.textContent=simple?'Início':'Carteira';
@@ -360,11 +364,13 @@ const LETRAO_SCRIPT = `
     }
     if(printInput)printInput.disabled=active;
     if(manualButton)manualButton.textContent=active?'Inserir valores':'Adicionar valor manualmente';
+    if(sheetManualButton)sheetManualButton.textContent=active?'Atualizar valor':'Inserir manualmente';
     if(active&&(document.body.dataset.view||'')==='settings')homeNav?.click();
   };
   let stored=false;
   try{stored=localStorage.getItem(key)==='true'}catch{}
   apply(stored);
+  if(cats)cats.addEventListener('click',event=>{if(document.body.classList.contains('letrao-mode')&&event.target.closest?.('.tap'))setTimeout(()=>sheetManualButton?.click(),0)});
   button.addEventListener('click',()=>{
     stored=!document.body.classList.contains('letrao-mode');
     try{localStorage.setItem(key,String(stored))}catch{}
