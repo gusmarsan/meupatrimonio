@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v15';
+const CACHE_NAME = 'meu-patrimonio-pwa-v16';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -202,11 +202,13 @@ const LETRAO_SIMPLE_STYLE = `
   body.letrao-mode .privacy-toggle,
   body.letrao-mode nav .user-control,
   body.letrao-mode .nav[data-view="settings"],
-  body.letrao-mode .nav[data-view="projections"],
   body.letrao-mode #home #graphBtn,
   body.letrao-mode #new #uploadLabel,
   body.letrao-mode #new .note,
   body.letrao-mode #review #more,
+  body.letrao-mode #projections .projection-current,
+  body.letrao-mode #projections .projection-grid,
+  body.letrao-mode #projections .projection-note,
   body.letrao-mode #projections .projection-target:has(+ .wealth-split),
   body.letrao-mode #projections .wealth-split,
   body.letrao-mode #projections .wealth-check,
@@ -286,6 +288,11 @@ const LETRAO_SIMPLE_STYLE = `
   body.letrao-mode #review .warn{font-size:.9rem}
   body.letrao-mode #review .btn{min-height:54px;font-size:.96rem}
 
+  body.letrao-mode #projections{max-width:900px}
+  body.letrao-mode #projections .projection-target-row{margin-top:34px;padding:30px 32px;border:1px solid #17201b20;border-radius:14px;background:#fff;align-items:center}
+  body.letrao-mode #projections .projection-target{margin:0;font-size:2rem;line-height:1.2}
+  body.letrao-mode #projections .projection-target-edit{width:48px;height:48px;flex:0 0 48px}
+  body.letrao-mode #projections .projection-target-edit svg{width:22px;height:22px}
   body.letrao-mode #evolution{max-width:1050px}
   body.letrao-mode #evolution>.head h2{font-size:2.55rem}
   body.letrao-mode #evolution .chart-header span,
@@ -331,7 +338,7 @@ const LETRAO_SCRIPT = `
     }
     if(printInput)printInput.disabled=active;
     if(manualButton)manualButton.textContent=active?'Inserir valores':'Adicionar valor manualmente';
-    if(active&&['settings','projections'].includes(document.body.dataset.view||''))homeNav?.click();
+    if(active&&(document.body.dataset.view||'')==='settings')homeNav?.click();
   };
   let stored=false;
   try{stored=localStorage.getItem(key)==='true'}catch{}
