@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v21';
+const CACHE_NAME = 'meu-patrimonio-pwa-v22';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -225,7 +225,7 @@ const LETRAO_SIMPLE_STYLE = `
   body.letrao-mode .letrao-toggle{min-height:48px;padding:0 17px;font-size:.9rem;border-width:2px}
   body.letrao-mode .letrao-toggle svg{width:20px;height:20px;flex-basis:20px}
   body.letrao-mode #newTop{width:auto;min-width:0;height:48px;padding:0 17px;border-radius:10px;font-size:0;font-weight:700}
-  body.letrao-mode #newTop::after{content:"+  Novo mês";font-size:.96rem;white-space:nowrap}
+  body.letrao-mode #newTop::after{content:"Atualizar investimentos";font-size:.96rem;white-space:nowrap}
 
   body.letrao-mode nav .nav{min-height:58px;margin-bottom:8px;padding:10px 12px}
   body.letrao-mode nav .nav small{font-size:.96rem;font-weight:650}
@@ -251,6 +251,8 @@ const LETRAO_SIMPLE_STYLE = `
   body.letrao-mode #home .home-updated{display:none!important}
   body.letrao-mode #home .home-balance .actions{align-items:center;flex-wrap:wrap}
   body.letrao-mode #home .home-balance .actions .contribution-toggle{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 20px;border:1px solid #17201b2b;border-radius:14px;background:#fff;color:#365d4b;font-size:.8rem;font-weight:700;cursor:pointer}
+  body.letrao-mode #home #homeFirstClosing{font-size:0}
+  body.letrao-mode #home #homeFirstClosing::after{content:"Atualizar investimentos";font-size:.96rem}
   body.letrao-mode #home .total{font-size:clamp(4.3rem,6vw,5.8rem);line-height:.92}
   body.letrao-mode #home .home-performance-line{margin-top:26px}
   body.letrao-mode #home .delta{font-size:1.08rem;color:#33423a}
@@ -352,11 +354,15 @@ const LETRAO_SCRIPT = `
   const sheetManualButton=document.getElementById('sheetManual');
   const cats=document.getElementById('cats');
   const reviewTitle=document.querySelector('#review>.head h2');
+  const homeNewButton=document.getElementById('homeNew');
+  const newTopButton=document.getElementById('newTop');
   const setLabels=simple=>{
-    if(navNew)navNew.textContent=simple?'Novo mês':'Fechamento';
+    if(navNew)navNew.textContent=simple?'Atualizar investimentos':'Fechamento';
     if(navHome)navHome.textContent=simple?'Início':'Carteira';
     if(navEvolution)navEvolution.textContent=simple?'Histórico':'Evolução';
     if(reviewTitle)reviewTitle.textContent=simple?'Atualização':'Montar fechamento';
+    if(homeNewButton)homeNewButton.textContent=simple?'Atualizar investimentos':'Adicionar fechamento';
+    if(newTopButton)newTopButton.setAttribute('aria-label',simple?'Atualizar investimentos':'Adicionar fechamento');
   };
   const apply=enabled=>{
     const active=!!enabled&&desktop.matches;
