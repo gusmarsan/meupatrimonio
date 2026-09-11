@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v16';
+const CACHE_NAME = 'meu-patrimonio-pwa-v17';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -232,6 +232,21 @@ const LETRAO_SIMPLE_STYLE = `
   body.letrao-mode nav .nav{min-height:58px;margin-bottom:8px;padding:10px 12px}
   body.letrao-mode nav .nav small{font-size:.96rem;font-weight:650}
   body.letrao-mode nav .nav span svg{width:22px;height:22px}
+  body.letrao-mode nav::before,
+  body.letrao-mode nav .nav,
+  body.letrao-mode nav .nav:hover,
+  body.letrao-mode nav .nav.active,
+  body.letrao-mode nav .nav small,
+  body.letrao-mode nav .nav span,
+  body.letrao-mode nav .nav svg{color:#f6d65b!important}
+
+  body.letrao-mode #home .allocation-overview{grid-template-columns:380px minmax(0,1fr);gap:52px}
+  body.letrao-mode #home .allocation-chart{width:360px}
+  body.letrao-mode #home .allocation-chart::before{width:232px}
+  body.letrao-mode #home .allocation-legend{gap:20px}
+  body.letrao-mode #home .allocation-legend-item{grid-template-columns:14px minmax(0,1fr) auto;gap:14px;font-size:1.52rem;line-height:1.25}
+  body.letrao-mode #home .allocation-legend-item i{width:14px;height:14px}
+  body.letrao-mode #home .allocation-legend-item b{font-size:1.44rem}
 
   body.letrao-mode #home .home-dashboard{max-width:1120px;margin:0 auto;grid-template-columns:1fr;grid-template-areas:"balance" "metrics" "contribution" "allocation" "contributors" "positions" "history"}
   body.letrao-mode #home .home-balance{min-height:auto;padding:54px 0 44px}
