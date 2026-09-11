@@ -1,0 +1,64 @@
+name: Letrao update investments labels
+on:
+  push:
+    paths:
+      - '.github/workflows/letrao-update-investments-labels.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Standardize update labels in Letrao
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('sw.js')
+          s = p.read_text(encoding='utf-8')
+
+          if "meu-patrimonio-pwa-v21" not in s:
+              raise SystemExit('Expected cache v21 not found')
+          s = s.replace("meu-patrimonio-pwa-v21", "meu-patrimonio-pwa-v22", 1)
+
+          old = '  body.letrao-mode #newTop::after{content:"+  Novo mês";font-size:.96rem;white-space:nowrap}\n'
+          new = '  body.letrao-mode #newTop::after{content:"Atualizar investimentos";font-size:.96rem;white-space:nowrap}\n'
+          if old not in s:
+              raise SystemExit('Expected newTop Letrao label not found')
+          s = s.replace(old, new, 1)
+
+          old_nav = "    if(navNew)navNew.textContent=simple?'Novo mês':'Fechamento';\n"
+          new_nav = "    if(navNew)navNew.textContent=simple?'Atualizar investimentos':'Fechamento';\n"
+          if old_nav not in s:
+              raise SystemExit('Expected Letrao nav label not found')
+          s = s.replace(old_nav, new_nav, 1)
+
+          old_ref = "  const reviewTitle=document.querySelector('#review>.head h2');\n"
+          new_ref = old_ref + "  const homeNewButton=document.getElementById('homeNew');\n  const newTopButton=document.getElementById('newTop');\n"
+          if old_ref not in s:
+              raise SystemExit('Expected reviewTitle reference not found')
+          s = s.replace(old_ref, new_ref, 1)
+
+          old_labels = "    if(reviewTitle)reviewTitle.textContent=simple?'Atualização':'Montar fechamento';\n"
+          new_labels = old_labels + "    if(homeNewButton)homeNewButton.textContent=simple?'Atualizar investimentos':'Adicionar fechamento';\n    if(newTopButton)newTopButton.setAttribute('aria-label',simple?'Atualizar investimentos':'Adicionar fechamento');\n"
+          if old_labels not in s:
+              raise SystemExit('Expected review label block not found')
+          s = s.replace(old_labels, new_labels, 1)
+
+          anchor = '  body.letrao-mode #home .home-balance .actions .contribution-toggle{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 20px;border:1px solid #17201b2b;border-radius:14px;background:#fff;color:#365d4b;font-size:.8rem;font-weight:700;cursor:pointer}\n'
+          extra = '  body.letrao-mode #home #homeFirstClosing{font-size:0}\n  body.letrao-mode #home #homeFirstClosing::after{content:"Atualizar investimentos";font-size:.96rem}\n'
+          if anchor not in s:
+              raise SystemExit('Expected Letrao home action anchor not found')
+          if 'body.letrao-mode #home #homeFirstClosing{font-size:0}' not in s:
+              s = s.replace(anchor, anchor + extra, 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sw.js
+          git commit -m "Standardize update investments labels in Modo Letrao"
+          git push
