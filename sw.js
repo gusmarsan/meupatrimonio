@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v13';
+const CACHE_NAME = 'meu-patrimonio-pwa-v14';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -203,8 +203,6 @@ const LETRAO_SIMPLE_STYLE = `
   body.letrao-mode nav .user-control,
   body.letrao-mode .nav[data-view="settings"],
   body.letrao-mode .nav[data-view="projections"],
-  body.letrao-mode #home .allocation-panel,
-  body.letrao-mode #home .contributors-panel,
   body.letrao-mode #home #graphBtn,
   body.letrao-mode #projections .projection-target:has(+ .wealth-split),
   body.letrao-mode #projections .wealth-split,
@@ -230,8 +228,11 @@ const LETRAO_SIMPLE_STYLE = `
   body.letrao-mode nav .nav small{font-size:.96rem;font-weight:650}
   body.letrao-mode nav .nav span svg{width:22px;height:22px}
 
-  body.letrao-mode #home .home-dashboard{max-width:1120px;margin:0 auto;grid-template-columns:1fr;grid-template-areas:"balance" "metrics" "contribution" "positions" "history"}
+  body.letrao-mode #home .home-dashboard{max-width:1120px;margin:0 auto;grid-template-columns:1fr;grid-template-areas:"balance" "metrics" "contribution" "allocation" "contributors" "positions" "history"}
   body.letrao-mode #home .home-balance{min-height:auto;padding:54px 0 44px}
+  body.letrao-mode #home .home-updated{display:none!important}
+  body.letrao-mode #home .home-balance .actions{align-items:center;flex-wrap:wrap}
+  body.letrao-mode #home .home-balance .actions .contribution-toggle{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 20px;border:1px solid #17201b2b;border-radius:14px;background:#fff;color:#365d4b;font-size:.8rem;font-weight:700;cursor:pointer}
   body.letrao-mode #home .total{font-size:clamp(4.3rem,6vw,5.8rem);line-height:.92}
   body.letrao-mode #home .home-performance-line{margin-top:26px}
   body.letrao-mode #home .delta{font-size:1.08rem;color:#33423a}
@@ -241,8 +242,8 @@ const LETRAO_SIMPLE_STYLE = `
   body.letrao-mode #home .metric-block>span{display:block;margin:0 0 13px;font-size:.92rem;color:#35443c;letter-spacing:.04em}
   body.letrao-mode #home .metric-block strong{display:block;font-size:2rem;line-height:1.08;text-align:left}
   body.letrao-mode #home .metric-block small{display:block;margin-top:9px;font-size:.9rem;color:#4a5850}
-  body.letrao-mode #home .mobile-contribution-slot{padding:22px 0 34px}
-  body.letrao-mode #home .contribution-toggle{min-height:52px;padding-inline:18px;font-size:.95rem}
+  body.letrao-mode #home .mobile-contribution-slot{padding:0;border-bottom:0}
+  body.letrao-mode #home .mobile-contribution-slot:has(#contributionPanel:not(.hidden)){padding:22px 0 34px;border-bottom:1px solid var(--home-rule,rgba(23,32,27,.12))}
   body.letrao-mode #home .portfolio-section{padding-top:46px}
   body.letrao-mode #home .section-heading h2{font-size:2.25rem}
   body.letrao-mode #home .portfolio-section .section-heading>.small{display:none}
@@ -305,6 +306,9 @@ const LETRAO_SCRIPT = `
   const navHome=document.querySelector('.nav[data-view="home"] small');
   const navEvolution=document.querySelector('.nav[data-view="evolution"] small');
   const homeNav=document.querySelector('.nav[data-view="home"]');
+  const contributionButton=document.getElementById('toggleContribution');
+  const contributionWrap=document.getElementById('contributionWrap');
+  const homeActions=document.querySelector('#home .home-balance .actions');
   const setLabels=simple=>{
     if(navNew)navNew.textContent=simple?'Novo mês':'Fechamento';
     if(navHome)navHome.textContent=simple?'Início':'Carteira';
@@ -316,6 +320,10 @@ const LETRAO_SCRIPT = `
     button.setAttribute('aria-pressed',String(active));
     button.title=active?'Sair do Modo Letrão':'Abrir versão simplificada';
     setLabels(active);
+    if(contributionButton){
+      if(active&&homeActions){homeActions.append(contributionButton)}
+      else if(contributionWrap&&contributionButton.parentElement!==contributionWrap){contributionWrap.insertBefore(contributionButton,contributionWrap.firstChild)}
+    }
     if(active&&['settings','projections'].includes(document.body.dataset.view||''))homeNav?.click();
   };
   let stored=false;
