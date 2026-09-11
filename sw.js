@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v25';
+const CACHE_NAME = 'meu-patrimonio-pwa-v26';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -282,6 +282,8 @@ const LETRAO_SIMPLE_STYLE = `
   body.letrao-mode #home #homeHistoryButton{min-height:48px;padding-inline:16px;font-size:.9rem}
 
   body.letrao-mode #new{max-width:880px}
+  body.letrao-mode #new .letrao-original-month-field{display:none!important}
+  body.letrao-mode #new #letraoClosingDateField{display:grid}
   body.letrao-mode #new .card{padding:30px}
   body.letrao-mode #new label{font-size:1rem;color:#35433b}
   body.letrao-mode #new input,
@@ -354,6 +356,8 @@ const LETRAO_SCRIPT = `
   const contributionWrap=document.getElementById('contributionWrap');
   const homeActions=document.querySelector('#home .home-balance .actions');
   const printInput=document.getElementById('files');
+  const monthInput=document.getElementById('month');
+  const monthField=monthInput?.closest('.field');
   const manualButton=document.getElementById('manual');
   const sheetManualButton=document.getElementById('sheetManual');
   const cats=document.getElementById('cats');
@@ -362,6 +366,18 @@ const LETRAO_SCRIPT = `
   const newTopButton=document.getElementById('newTop');
   const capitalAddedLabel=document.querySelector('#home .metric-block:nth-child(2) small');
   const allocationCurrentLabel=document.querySelector('#home .allocation-panel .section-heading>.small');
+  const reviewDateCaption=document.querySelector('#review .monthline span');
+  const reviewDateValue=document.getElementById('reviewMonth');
+  let closingDateField=document.getElementById('letraoClosingDateField');
+  if(!closingDateField&&monthField){closingDateField=document.createElement('div');closingDateField.id='letraoClosingDateField';closingDateField.className='field';const dateLabel=document.createElement('label');dateLabel.htmlFor='letraoClosingDate';dateLabel.textContent='Dia do fechamento';const dateInput=document.createElement('input');dateInput.id='letraoClosingDate';dateInput.type='date';closingDateField.append(dateLabel,dateInput);monthField.after(closingDateField)}
+  const closingDateInput=document.getElementById('letraoClosingDate');
+  if(closingDateField)closingDateField.hidden=true;
+  const formatClosingDate=value=>{const parts=String(value||'').split('-');return parts.length===3?`${parts[2]}/${parts[1]}/${parts[0]}`:''};
+  const syncReviewDate=()=>{if(document.body.classList.contains('letrao-mode')&&closingDateInput?.value&&reviewDateValue){const formatted=formatClosingDate(closingDateInput.value);if(formatted&&reviewDateValue.textContent!==formatted)reviewDateValue.textContent=formatted}};
+  const updateManualReady=()=>{if(!manualButton)return;if(document.body.classList.contains('letrao-mode'))manualButton.disabled=!closingDateInput?.value;else manualButton.disabled=false};
+  closingDateInput?.addEventListener('change',()=>{if(closingDateInput.value&&monthInput){monthInput.value=closingDateInput.value.slice(0,7);monthInput.dispatchEvent(new Event('change',{bubbles:true}))}updateManualReady();syncReviewDate()});
+  if(reviewDateValue)new MutationObserver(syncReviewDate).observe(reviewDateValue,{childList:true,characterData:true,subtree:true});
+  document.addEventListener('click',event=>{if(!document.body.classList.contains('letrao-mode'))return;if(event.target.closest?.('#homeNew,#newTop,#homeFirstClosing')){if(closingDateInput)closingDateInput.value='';updateManualReady()}},true);
   const titleElement=document.getElementById('title');
   const mainElement=document.querySelector('main');
   let helpView=document.getElementById('letraoHelp');
@@ -378,6 +394,7 @@ const LETRAO_SCRIPT = `
     if(newTopButton)newTopButton.setAttribute('aria-label',simple?'Atualizar investimentos':'Adicionar fechamento');
     if(capitalAddedLabel)capitalAddedLabel.textContent=simple?'Valores adicionados':'Capital adicionado';
     if(allocationCurrentLabel)allocationCurrentLabel.textContent=simple?'Divisão atual':'Participação atual';
+    if(reviewDateCaption)reviewDateCaption.textContent=simple?'Dia do fechamento':'Mês do fechamento';
   };
   const apply=enabled=>{
     const active=!!enabled&&desktop.matches;
@@ -390,6 +407,10 @@ const LETRAO_SCRIPT = `
       else if(contributionWrap&&contributionButton.parentElement!==contributionWrap){contributionWrap.insertBefore(contributionButton,contributionWrap.firstChild)}
     }
     if(printInput)printInput.disabled=active;
+    if(monthField)monthField.classList.toggle('letrao-original-month-field',active);
+    if(closingDateField)closingDateField.hidden=!active;
+    updateManualReady();
+    syncReviewDate();
     if(manualButton)manualButton.textContent=active?'Inserir valores':'Adicionar valor manualmente';
     if(sheetManualButton)sheetManualButton.textContent=active?'Atualizar valor':'Inserir manualmente';
     if(active&&['settings','new'].includes(document.body.dataset.view||''))homeNav?.click();
@@ -430,6 +451,16 @@ function enhanceAppHtml(html) {
   updated = updated.replace(
     'function setContributionPanel(open){el.contributionPanel.classList.toggle("hidden",!open);if(open){renderContributionControls();setTimeout(()=>el.contributionValue.focus(),30)}}',
     'function setContributionPanel(open){const mobile=matchMedia("(max-width:760px)").matches;if(open&&mobile&&el.contributionPanel.parentElement!==document.body)document.body.append(el.contributionPanel);if(!open&&el.contributionPanel.parentElement!==el.contributionWrap)el.contributionWrap.append(el.contributionPanel);el.contributionPanel.classList.toggle("hidden",!open);document.body.classList.toggle("contribution-open",open&&mobile);if(open){renderContributionControls();if(!mobile)setTimeout(()=>el.contributionValue.focus(),30)}}'
+  );
+
+  updated = updated.replace(
+    'retirementCdb,updatedAt:Number.isFinite(Number(c.updatedAt))?Number(c.updatedAt):Date.now()}}',
+    'retirementCdb,closingDate:typeof c.closingDate==="string"&&/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/.test(c.closingDate)&&c.closingDate.slice(0,7)===c.month?c.closingDate:"",updatedAt:Number.isFinite(Number(c.updatedAt))?Number(c.updatedAt):Date.now()}}'
+  );
+
+  updated = updated.replace(
+    'c={id:editing||mid(),month,total,entries,contributions,retirementCdb,updatedAt:Date.now()};',
+    'c={id:editing||mid(),month,total,entries,contributions,retirementCdb,closingDate:(document.body.classList.contains("letrao-mode")&&document.getElementById("letraoClosingDate")?.value)||original?.closingDate||dup?.closingDate||"",updatedAt:Date.now()};'
   );
 
   if (!updated.includes('id="contribution-placement-fix-v7"')) {
