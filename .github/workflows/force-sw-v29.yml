@@ -1,0 +1,43 @@
+name: Force service worker v29
+on:
+  push:
+    paths:
+      - '.github/workflows/force-sw-v29.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Version service worker registration and cache
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          sw=Path('sw.js')
+          s=sw.read_text(encoding='utf-8')
+          if "meu-patrimonio-pwa-v28" not in s:
+              raise SystemExit('Expected cache v28 not found')
+          s=s.replace("meu-patrimonio-pwa-v28","meu-patrimonio-pwa-v29",1)
+          sw.write_text(s,encoding='utf-8')
+
+          idx=Path('index.html')
+          html=idx.read_text(encoding='utf-8')
+          pattern=r"navigator\.serviceWorker\.register\((['\"])\./sw\.js\1\)"
+          replacement="navigator.serviceWorker.register('./sw.js?v=29',{updateViaCache:'none'})"
+          new_html,n=re.subn(pattern,replacement,html)
+          if n<1:
+              if "./sw.js?v=29" not in html:
+                  raise SystemExit('Service worker registration pattern not found')
+              new_html=html
+          idx.write_text(new_html,encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html sw.js
+          git commit -m "Force service worker v29 refresh"
+          git push
