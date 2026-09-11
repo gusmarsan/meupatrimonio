@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v32';
+const CACHE_NAME = 'meu-patrimonio-pwa-v33';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -342,7 +342,7 @@ const LETRAO_SIMPLE_STYLE = `
 </style>`;
 
 const LETRAO_SCRIPT = `
-<script id="letrao-script-v12">
+<script id="letrao-script-v13">
 (()=>{
   const key='patrimonio-letrao-mode';
   const button=document.getElementById('letraoToggle');
@@ -370,7 +370,7 @@ const LETRAO_SCRIPT = `
   const reviewDateCaption=document.querySelector('#review .monthline span');
   const reviewDateValue=document.getElementById('reviewMonth');
   let closingDateField=document.getElementById('letraoClosingDateField');
-  if(!closingDateField&&monthField){closingDateField=document.createElement('div');closingDateField.id='letraoClosingDateField';closingDateField.className='field';const dateLabel=document.createElement('label');dateLabel.htmlFor='letraoClosingDate';dateLabel.textContent='Dia do fechamento';const dateInput=document.createElement('input');dateInput.id='letraoClosingDate';dateInput.type='date';closingDateField.append(dateLabel,dateInput);monthField.after(closingDateField)}
+  if(!closingDateField&&monthField){closingDateField=document.createElement('div');closingDateField.id='letraoClosingDateField';closingDateField.className='field';const dateLabel=document.createElement('label');dateLabel.htmlFor='letraoClosingDate';dateLabel.textContent='Data do fechamento';const dateInput=document.createElement('input');dateInput.id='letraoClosingDate';dateInput.type='date';closingDateField.append(dateLabel,dateInput);monthField.after(closingDateField)}
   const closingDateInput=document.getElementById('letraoClosingDate');
   if(closingDateField)closingDateField.hidden=true;
   const formatClosingDate=value=>{const parts=String(value||'').split('-');return parts.length===3?`${parts[2]}/${parts[1]}/${parts[0]}`:''};
@@ -394,7 +394,7 @@ const LETRAO_SCRIPT = `
     if(newTopButton)newTopButton.setAttribute('aria-label',simple?'Atualizar investimentos':'Adicionar fechamento');
     if(capitalAddedLabel)capitalAddedLabel.textContent=simple?'Valores adicionados':'Capital adicionado';
     if(allocationCurrentLabel)allocationCurrentLabel.textContent=simple?'Divisão atual':'Participação atual';
-    if(reviewDateCaption)reviewDateCaption.textContent=simple?'Dia do fechamento':'Mês do fechamento';
+    if(reviewDateCaption)reviewDateCaption.textContent=simple?'Data do fechamento':'Mês do fechamento';
   };
   const apply=enabled=>{
     const active=!!enabled&&desktop.matches;
@@ -487,9 +487,9 @@ function enhanceAppHtml(html) {
     updated = updated.replace('</head>', `${LETRAO_SIMPLE_STYLE}\n</head>`);
   }
 
-  updated = updated.replace(/<script id="letrao-script-v(?:8|11)">[\s\S]*?<\/script>/g, '');
+  updated = updated.replace(/<script id="letrao-script-v(?:8|11|12)">[\s\S]*?<\/script>/g, '');
 
-  if (!updated.includes('id="letrao-script-v12"')) {
+  if (!updated.includes('id="letrao-script-v13"')) {
     updated = updated.replace('</body>', `${LETRAO_SCRIPT}\n</body>`);
   }
 
