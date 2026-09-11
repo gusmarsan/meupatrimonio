@@ -1,0 +1,57 @@
+name: Letrao Duvidas page
+on:
+  push:
+    paths:
+      - '.github/workflows/letrao-duvidas-page.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Turn sidebar update item into Duvidas page
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('sw.js')
+          s = p.read_text(encoding='utf-8')
+
+          if "meu-patrimonio-pwa-v23" not in s:
+              raise SystemExit('Expected cache v23 not found')
+          s = s.replace("meu-patrimonio-pwa-v23", "meu-patrimonio-pwa-v24", 1)
+
+          old_ref = "  const navNew=document.querySelector('.nav[data-view=\"new\"] small');\n"
+          new_ref = old_ref + "  const navNewButton=document.querySelector('.nav[data-view=\"new\"]');\n"
+          if old_ref not in s:
+              raise SystemExit('Expected navNew reference not found')
+          s = s.replace(old_ref, new_ref, 1)
+
+          old_refs = "  const newTopButton=document.getElementById('newTop');\n"
+          new_refs = old_refs + "  const titleElement=document.getElementById('title');\n  const mainElement=document.querySelector('main');\n  let helpView=document.getElementById('letraoHelp');\n  if(!helpView&&mainElement){helpView=document.createElement('section');helpView.id='letraoHelp';helpView.className='view';helpView.setAttribute('aria-label','Dúvidas');mainElement.append(helpView)}\n  const openHelp=()=>{if(!helpView||!navNewButton)return;document.body.dataset.view='letrao-help';document.querySelectorAll('.view').forEach(view=>view.classList.toggle('active',view===helpView));document.querySelectorAll('.nav').forEach(nav=>nav.classList.toggle('active',nav===navNewButton));if(titleElement)titleElement.textContent='Dúvidas';scrollTo({top:0,behavior:'instant'})};\n  const originalNavNewClick=navNewButton?.onclick;\n  if(navNewButton)navNewButton.onclick=event=>{if(document.body.classList.contains('letrao-mode')){event?.preventDefault();openHelp();return}originalNavNewClick?.call(navNewButton,event)};\n"
+          if old_refs not in s:
+              raise SystemExit('Expected newTopButton reference not found')
+          s = s.replace(old_refs, new_refs, 1)
+
+          old_label = "    if(navNew)navNew.textContent=simple?'Atualizar investimentos':'Fechamento';\n"
+          new_label = "    if(navNew)navNew.textContent=simple?'Dúvidas':'Fechamento';\n"
+          if old_label not in s:
+              raise SystemExit('Expected Letrao nav label not found')
+          s = s.replace(old_label, new_label, 1)
+
+          old_guard = "    if(active&&(document.body.dataset.view||'')==='settings')homeNav?.click();\n"
+          new_guard = "    if(active&&['settings','new'].includes(document.body.dataset.view||''))homeNav?.click();\n    if(!active&&(document.body.dataset.view||'')==='letrao-help')homeNav?.click();\n"
+          if old_guard not in s:
+              raise SystemExit('Expected Letrao view guard not found')
+          s = s.replace(old_guard, new_guard, 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sw.js
+          git commit -m "Add blank Duvidas page to Modo Letrao"
+          git push
