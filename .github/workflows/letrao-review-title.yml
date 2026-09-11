@@ -1,0 +1,45 @@
+name: Letrao review title
+on:
+  push:
+    paths:
+      - '.github/workflows/letrao-review-title.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rename review title in Letrao
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('sw.js')
+          s = p.read_text(encoding='utf-8')
+
+          if "meu-patrimonio-pwa-v20" not in s:
+              raise SystemExit('Expected cache v20 not found')
+          s = s.replace("meu-patrimonio-pwa-v20", "meu-patrimonio-pwa-v21", 1)
+
+          old_ref = "  const cats=document.getElementById('cats');\n"
+          new_ref = old_ref + "  const reviewTitle=document.querySelector('#review>.head h2');\n"
+          if old_ref not in s:
+              raise SystemExit('Expected cats reference not found')
+          s = s.replace(old_ref, new_ref, 1)
+
+          old_labels = "    if(navEvolution)navEvolution.textContent=simple?'Histórico':'Evolução';\n"
+          new_labels = old_labels + "    if(reviewTitle)reviewTitle.textContent=simple?'Atualização':'Montar fechamento';\n"
+          if old_labels not in s:
+              raise SystemExit('Expected label block not found')
+          s = s.replace(old_labels, new_labels, 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sw.js
+          git commit -m "Rename Letrao review title to Atualizacao"
+          git push
