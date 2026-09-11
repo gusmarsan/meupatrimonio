@@ -1,0 +1,116 @@
+from pathlib import Path
+
+idx = Path("index.html")
+html = idx.read_text(encoding="utf-8")
+
+css = '''
+/* Modo Letrao month-only picker */
+.letrao-month-trigger{display:none}
+@media(min-width:761px){
+  body.letrao-mode #new #month{display:none!important}
+  body.letrao-mode #new .letrao-month-trigger{
+    width:100%;min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:18px;
+    padding:0 20px;border:1px solid #17201b2b;border-radius:10px;background:#fff;color:#17201b;
+    font-size:1.18rem;font-weight:520;text-align:left;cursor:pointer
+  }
+  body.letrao-mode #new .letrao-month-trigger:hover{border-color:#17201b66;background:#fbfcf9}
+  body.letrao-mode #new .letrao-month-trigger:focus-visible{outline:3px solid #6ca68d;outline-offset:3px}
+  body.letrao-mode #new .letrao-month-trigger svg{width:25px;height:25px;flex:0 0 25px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  body.letrao-mode #letraoMonthSheet{align-items:center}
+  body.letrao-mode #letraoMonthSheet .sheet-card{width:min(100%,680px);padding:34px;border-radius:16px}
+  .letrao-month-year{display:grid;grid-template-columns:56px 1fr 56px;align-items:center;gap:14px;margin:24px 0}
+  .letrao-month-year strong{text-align:center;font-size:1.65rem;font-weight:650}
+  .letrao-month-year button{width:56px;height:56px;border:1px solid #17201b28;border-radius:10px;background:#f7f8f5;color:#17201b;font-size:1.8rem;cursor:pointer}
+  .letrao-month-year button:hover{background:#eef1ec}
+  .letrao-month-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  .letrao-month-option{min-height:64px;border:1px solid #17201b24;border-radius:10px;background:#fff;color:#17201b;font-size:1rem;font-weight:650;cursor:pointer}
+  .letrao-month-option:hover{border-color:#17201b66;background:#f7f8f5}
+  .letrao-month-option[aria-pressed="true"]{border-color:#17201b;background:#17201b;color:#fff}
+}
+'''
+if "/* Modo Letrao month-only picker */" not in html:
+    html = html.replace("</style>", css + "</style>", 1)
+
+old_month = '<input id="month" type="month">'
+month_trigger = '<input id="month" type="month"><button id="letraoMonthTrigger" class="letrao-month-trigger" type="button" aria-haspopup="dialog" aria-expanded="false"><span id="letraoMonthTriggerLabel">Escolher mês</span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></button>'
+if 'id="letraoMonthTrigger"' not in html:
+    if old_month not in html:
+        raise SystemExit("month input not found")
+    html = html.replace(old_month, month_trigger, 1)
+
+sheet = '<div id="letraoMonthSheet" class="sheet hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="letraoMonthSheetTitle"><div class="sheet-card"><button type="button" id="letraoMonthSheetClose" class="sheet-close" aria-label="Fechar">×</button><p class="eyebrow">Fechamento mensal</p><h2 id="letraoMonthSheetTitle">Escolha o mês</h2><div class="letrao-month-year"><button id="letraoMonthPrevYear" type="button" aria-label="Ano anterior">‹</button><strong id="letraoMonthYear"></strong><button id="letraoMonthNextYear" type="button" aria-label="Próximo ano">›</button></div><div id="letraoMonthGrid" class="letrao-month-grid"><button type="button" class="letrao-month-option" data-month="1">Janeiro</button><button type="button" class="letrao-month-option" data-month="2">Fevereiro</button><button type="button" class="letrao-month-option" data-month="3">Março</button><button type="button" class="letrao-month-option" data-month="4">Abril</button><button type="button" class="letrao-month-option" data-month="5">Maio</button><button type="button" class="letrao-month-option" data-month="6">Junho</button><button type="button" class="letrao-month-option" data-month="7">Julho</button><button type="button" class="letrao-month-option" data-month="8">Agosto</button><button type="button" class="letrao-month-option" data-month="9">Setembro</button><button type="button" class="letrao-month-option" data-month="10">Outubro</button><button type="button" class="letrao-month-option" data-month="11">Novembro</button><button type="button" class="letrao-month-option" data-month="12">Dezembro</button></div></div></div>\n'
+if 'id="letraoMonthSheet"' not in html:
+    marker = '<div id="recoverySheet"'
+    if marker not in html:
+        raise SystemExit("recovery sheet marker not found")
+    html = html.replace(marker, sheet + marker, 1)
+
+js_marker = 'const currentMonth=()=>{let d=new Date;return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")};'
+js = r'''
+let letraoMonthPickerYear=new Date().getFullYear();
+function syncLetraoMonthPicker(){
+  const trigger=$("#letraoMonthTrigger"),label=$("#letraoMonthTriggerLabel");
+  if(!trigger||!label||!el?.month)return;
+  const value=/^\d{4}-(0[1-9]|1[0-2])$/.test(el.month.value)?el.month.value:currentMonth();
+  label.textContent=mlabel(value);
+  trigger.setAttribute("aria-label",`Mês do fechamento: ${mlabel(value)}`);
+}
+function renderLetraoMonthGrid(){
+  const year=$("#letraoMonthYear"),grid=$("#letraoMonthGrid");
+  if(!year||!grid)return;
+  year.textContent=String(letraoMonthPickerYear);
+  const selected=el.month.value||currentMonth(),[selectedYear,selectedMonth]=selected.split("-").map(Number);
+  grid.querySelectorAll(".letrao-month-option").forEach(button=>button.setAttribute("aria-pressed",String(selectedYear===letraoMonthPickerYear&&Number(button.dataset.month)===selectedMonth)));
+}
+function openLetraoMonthPicker(){
+  if(!document.body.classList.contains("letrao-mode"))return;
+  const value=/^\d{4}-(0[1-9]|1[0-2])$/.test(el.month.value)?el.month.value:currentMonth();
+  letraoMonthPickerYear=Number(value.slice(0,4));
+  renderLetraoMonthGrid();
+  $("#letraoMonthSheet").classList.remove("hidden");
+  $("#letraoMonthSheet").setAttribute("aria-hidden","false");
+  $("#letraoMonthTrigger").setAttribute("aria-expanded","true");
+  document.body.style.overflow="hidden";
+  requestAnimationFrame(()=>$("#letraoMonthGrid .letrao-month-option[aria-pressed='true']")?.focus()||$("#letraoMonthGrid .letrao-month-option")?.focus());
+}
+function closeLetraoMonthPicker(){
+  const sheet=$("#letraoMonthSheet");if(!sheet)return;
+  sheet.classList.add("hidden");sheet.setAttribute("aria-hidden","true");
+  $("#letraoMonthTrigger")?.setAttribute("aria-expanded","false");
+  document.body.style.overflow="";
+}
+'''
+if "function syncLetraoMonthPicker()" not in html:
+    if js_marker not in html:
+        raise SystemExit("currentMonth marker not found")
+    html = html.replace(js_marker, js_marker + js, 1)
+
+view_old = 'if(id==="projections")renderProjections();scrollTo({top:0,behavior:"instant"})}'
+view_new = 'if(id==="projections")renderProjections();if(id==="new")syncLetraoMonthPicker();scrollTo({top:0,behavior:"instant"})}'
+if view_old in html:
+    html = html.replace(view_old, view_new, 1)
+elif view_new not in html:
+    raise SystemExit("view hook marker not found")
+
+handlers_old = 'el.month.onchange=summary;$$(".nav").forEach(n=>n.onclick=()=>view(n.dataset.view));'
+handlers_new = r'''el.month.onchange=()=>{summary();syncLetraoMonthPicker()};$("#letraoMonthTrigger").onclick=openLetraoMonthPicker;$("#letraoMonthSheetClose").onclick=closeLetraoMonthPicker;$("#letraoMonthPrevYear").onclick=()=>{letraoMonthPickerYear--;renderLetraoMonthGrid()};$("#letraoMonthNextYear").onclick=()=>{letraoMonthPickerYear++;renderLetraoMonthGrid()};$("#letraoMonthGrid").onclick=event=>{let button=event.target.closest(".letrao-month-option");if(!button)return;el.month.value=`${letraoMonthPickerYear}-${String(Number(button.dataset.month)).padStart(2,"0")}`;el.month.dispatchEvent(new Event("change",{bubbles:true}));closeLetraoMonthPicker();$("#letraoMonthTrigger").focus()};$("#letraoMonthSheet").onclick=event=>{if(event.target===$("#letraoMonthSheet"))closeLetraoMonthPicker()};document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!$("#letraoMonthSheet").classList.contains("hidden")){closeLetraoMonthPicker();$("#letraoMonthTrigger").focus()}});$$(".nav").forEach(n=>n.onclick=()=>view(n.dataset.view));'''
+if handlers_old in html:
+    html = html.replace(handlers_old, handlers_new, 1)
+elif '$("#letraoMonthTrigger").onclick=openLetraoMonthPicker' not in html:
+    raise SystemExit("month handlers marker not found")
+
+init_old = 'el.month.value=currentMonth();renderAll();renderReview();appInitialized=true}'
+init_new = 'el.month.value=currentMonth();syncLetraoMonthPicker();renderAll();renderReview();appInitialized=true}'
+if init_old in html:
+    html = html.replace(init_old, init_new, 1)
+
+html = html.replace("./sw.js?v=30","./sw.js?v=31")
+idx.write_text(html, encoding="utf-8")
+
+sw = Path("sw.js")
+s = sw.read_text(encoding="utf-8")
+if "meu-patrimonio-pwa-v30" in s:
+    s = s.replace("meu-patrimonio-pwa-v30","meu-patrimonio-pwa-v31",1)
+elif "meu-patrimonio-pwa-v31" not in s:
+    raise SystemExit("cache v30 not found")
+sw.write_text(s, encoding="utf-8")
