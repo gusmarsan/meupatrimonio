@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v17';
+const CACHE_NAME = 'meu-patrimonio-pwa-v18';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -207,8 +207,6 @@ const LETRAO_SIMPLE_STYLE = `
   body.letrao-mode #new .note,
   body.letrao-mode #review #more,
   body.letrao-mode #projections .projection-current,
-  body.letrao-mode #projections .projection-grid,
-  body.letrao-mode #projections .projection-note,
   body.letrao-mode #projections .projection-target:has(+ .wealth-split),
   body.letrao-mode #projections .wealth-split,
   body.letrao-mode #projections .wealth-check,
@@ -308,6 +306,15 @@ const LETRAO_SIMPLE_STYLE = `
   body.letrao-mode #projections .projection-target{margin:0;font-size:2rem;line-height:1.2}
   body.letrao-mode #projections .projection-target-edit{width:48px;height:48px;flex:0 0 48px}
   body.letrao-mode #projections .projection-target-edit svg{width:22px;height:22px}
+  body.letrao-mode #projections .projection-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:22px}
+  body.letrao-mode #projections .projection-case{padding:28px 22px;min-height:220px}
+  body.letrao-mode #projections .projection-case h3{font-size:1.05rem;line-height:1.35}
+  body.letrao-mode #projections .projection-rate{font-size:.9rem;margin-top:10px}
+  body.letrao-mode #projections .projection-case small{font-size:.88rem}
+  body.letrao-mode #projections .projection-date{font-size:1.55rem;margin-top:8px}
+  body.letrao-mode #projections .projection-previous{font-size:.86rem;line-height:1.45}
+  body.letrao-mode #projections .projection-previous b{font-size:.95rem}
+  body.letrao-mode #projections .projection-note{font-size:.92rem;line-height:1.55;color:#435149}
   body.letrao-mode #evolution{max-width:1050px}
   body.letrao-mode #evolution>.head h2{font-size:2.55rem}
   body.letrao-mode #evolution .chart-header span,
