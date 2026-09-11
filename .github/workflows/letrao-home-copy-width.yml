@@ -1,0 +1,54 @@
+name: Letrao home copy and width
+on:
+  push:
+    paths:
+      - '.github/workflows/letrao-home-copy-width.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Adjust Letrao home button and labels
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('sw.js')
+          s = p.read_text(encoding='utf-8')
+
+          if "meu-patrimonio-pwa-v24" not in s:
+              raise SystemExit('Expected cache v24 not found')
+          s = s.replace("meu-patrimonio-pwa-v24", "meu-patrimonio-pwa-v25", 1)
+
+          anchor = '  body.letrao-mode #home .home-balance .actions .contribution-toggle{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 20px;border:1px solid #17201b2b;border-radius:14px;background:#fff;color:#365d4b;font-size:.8rem;font-weight:700;cursor:pointer}\n'
+          addition = '  body.letrao-mode #home .home-balance .actions #homeNew{min-width:230px;flex:0 0 auto;white-space:nowrap}\n'
+          if anchor not in s:
+              raise SystemExit('Expected home actions anchor not found')
+          if addition not in s:
+              s = s.replace(anchor, anchor + addition, 1)
+
+          ref_anchor = "  const newTopButton=document.getElementById('newTop');\n"
+          ref_add = "  const capitalAddedLabel=document.querySelector('#home .metric-block:nth-child(2) small');\n  const allocationCurrentLabel=document.querySelector('#home .allocation-panel .section-heading>.small');\n"
+          if ref_anchor not in s:
+              raise SystemExit('Expected newTopButton reference not found')
+          if "const capitalAddedLabel=" not in s:
+              s = s.replace(ref_anchor, ref_anchor + ref_add, 1)
+
+          labels_anchor = "    if(newTopButton)newTopButton.setAttribute('aria-label',simple?'Atualizar investimentos':'Adicionar fechamento');\n"
+          labels_add = "    if(capitalAddedLabel)capitalAddedLabel.textContent=simple?'Valores adicionados':'Capital adicionado';\n    if(allocationCurrentLabel)allocationCurrentLabel.textContent=simple?'Divisão atual':'Participação atual';\n"
+          if labels_anchor not in s:
+              raise SystemExit('Expected label anchor not found')
+          if "capitalAddedLabel.textContent" not in s:
+              s = s.replace(labels_anchor, labels_anchor + labels_add, 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sw.js
+          git commit -m "Refine Modo Letrao home button and labels"
+          git push
