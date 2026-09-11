@@ -1,0 +1,21 @@
+name: Add Letrao return date
+on:
+  push:
+    paths:
+      - '.github/workflows/add-letrao-return-date.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply patch
+        run: python .github/scripts/add_letrao_return_date.py
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html sw.js
+          git commit -m "Show closing date below Letrao return pill"
+          git push
