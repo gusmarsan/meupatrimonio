@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v27';
+const CACHE_NAME = 'meu-patrimonio-pwa-v28';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -342,7 +342,7 @@ const LETRAO_SIMPLE_STYLE = `
 </style>`;
 
 const LETRAO_SCRIPT = `
-<script id="letrao-script-v11">
+<script id="letrao-script-v12">
 (()=>{
   const key='patrimonio-letrao-mode';
   const button=document.getElementById('letraoToggle');
@@ -487,11 +487,9 @@ function enhanceAppHtml(html) {
     updated = updated.replace('</head>', `${LETRAO_SIMPLE_STYLE}\n</head>`);
   }
 
-  if (!updated.includes('id="letrao-script-v8"')) {
-    updated = updated.replace('</body>', `${LETRAO_SCRIPT}\n</body>`);
-  }
+  updated = updated.replace(/<script id="letrao-script-v(?:8|11)">[\s\S]*?<\/script>/g, '');
 
-  if (!updated.includes('id="letrao-script-v11"')) {
+  if (!updated.includes('id="letrao-script-v12"')) {
     updated = updated.replace('</body>', `${LETRAO_SCRIPT}\n</body>`);
   }
 
