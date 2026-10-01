@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v8';
+const CACHE_NAME = 'meu-patrimonio-pwa-v9';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -437,7 +437,7 @@ const PROJECTION_RUNTIME = `
   const boost = document.querySelector('.retirement-simulation-boost');
   const grid = document.querySelector('.retirement-simulation-grid');
   if (boost && grid && boost.parentElement === grid.parentElement) {
-    grid.parentElement.insertBefore(boost, grid);
+    grid.parentElement.insertBefore(boost, grid); boost.style.margin='0 0 14px';
   }
 })();
 <\\/script>`;
@@ -468,6 +468,23 @@ function enhanceAppHtml(html) {
   updated = updated.replace(
     'function setContributionPanel(open){el.contributionPanel.classList.toggle("hidden",!open);if(open){renderContributionControls();setTimeout(()=>el.contributionValue.focus(),30)}}',
     'function setContributionPanel(open){const mobile=matchMedia("(max-width:760px)").matches;if(open&&mobile&&el.contributionPanel.parentElement!==document.body)document.body.append(el.contributionPanel);if(!open&&el.contributionPanel.parentElement!==el.contributionWrap)el.contributionWrap.append(el.contributionPanel);el.contributionPanel.classList.toggle("hidden",!open);document.body.classList.toggle("contribution-open",open&&mobile);if(open){renderContributionControls();if(!mobile)setTimeout(()=>el.contributionValue.focus(),30)}}'
+  );
+
+
+  /* home-real-return-v9 */
+  updated = updated.replace(
+    'let monthReturn=prev?performanceDelta(last,prev):0,monthRate=prev?performancePct(last,prev):0,monthContributions=contributionValue(last),netChange=prev?last.total-prev.total:0;',
+    'let monthReturn=prev?performanceDelta(last,prev):0,monthRate=prev?performancePct(last,prev):0,monthContributions=contributionValue(last),netChange=prev?last.total-prev.total:0,realRate=prev&&prev.total>0?netChange/prev.total*100:0;'
+  );
+
+  updated = updated.replace(
+    '$("#homeReturnBadge").textContent=prev?signedPct(monthRate):"Primeiro fechamento";$("#homeReturnBadge").className="home-return-badge "+(prev?changeClass(monthRate):"");',
+    '$("#homeReturnBadge").textContent=prev?signedPct(realRate):"Primeiro fechamento";$("#homeReturnBadge").className="home-return-badge "+(prev?changeClass(realRate):"");'
+  );
+
+  updated = updated.replace(
+    'el.latestDelta.textContent=matchMedia(\'(max-width:760px)\').matches?`${money} de rendimento${aporteText}`:`${money} · ${signedPct(rate)} de rendimento${aporteText}`;',
+    'el.latestDelta.textContent=`${signedPct(rate)} de rendimento sem aportes`;'
   );
 
   updated = updated.replace(
