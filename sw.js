@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v35';
+const CACHE_NAME = 'meu-patrimonio-pwa-v8';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -430,6 +430,18 @@ const LETRAO_SCRIPT = `
 })();
 </script>`;
 
+
+const PROJECTION_RUNTIME = `
+<script id="projection-boost-order-v8">
+(() => {
+  const boost = document.querySelector('.retirement-simulation-boost');
+  const grid = document.querySelector('.retirement-simulation-grid');
+  if (boost && grid && boost.parentElement === grid.parentElement) {
+    grid.parentElement.insertBefore(boost, grid);
+  }
+})();
+<\\/script>`;
+
 function enhanceAppHtml(html) {
   if (!html.includes('mobile-contribution-slot')) return html;
 
@@ -441,6 +453,11 @@ function enhanceAppHtml(html) {
   updated = updated.replace(
     'homeContent.after(contributionWrap)',
     'mobileContributionSlot.append(contributionWrap)'
+  );
+
+  updated = updated.replace(
+    'Turbina com aportes mensais',
+    'Turbinando com aportes mensais...'
   );
 
   updated = updated.replace(
@@ -491,6 +508,10 @@ function enhanceAppHtml(html) {
 
   if (!updated.includes('id="letrao-script-v13"')) {
     updated = updated.replace('</body>', `${LETRAO_SCRIPT}\n</body>`);
+  }
+
+  if (!updated.includes('id="projection-boost-order-v8"')) {
+    updated = updated.replace('</body>', `${PROJECTION_RUNTIME}\n</body>`);
   }
 
   return updated;
