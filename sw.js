@@ -1,10 +1,11 @@
-const CACHE_NAME = 'meu-patrimonio-pwa-v39';
+const CACHE_NAME = 'meu-patrimonio-pwa-v40';
 const CORE_ASSETS = [
   './',
   './index.html',
   './install.html',
   './manifest.webmanifest',
-  './icon.svg?v=3'
+  './icon.svg?v=3',
+  './ipca-data.json'
 ];
 
 const CONTRIBUTION_STYLE = `
@@ -373,7 +374,7 @@ const LETRAO_SCRIPT = `
   if(!closingDateField&&monthField){closingDateField=document.createElement('div');closingDateField.id='letraoClosingDateField';closingDateField.className='field';const dateLabel=document.createElement('label');dateLabel.htmlFor='letraoClosingDate';dateLabel.textContent='Data do fechamento';const dateInput=document.createElement('input');dateInput.id='letraoClosingDate';dateInput.type='date';closingDateField.append(dateLabel,dateInput);monthField.after(closingDateField)}
   const closingDateInput=document.getElementById('letraoClosingDate');
   if(closingDateField)closingDateField.hidden=true;
-  const formatClosingDate=value=>{const parts=String(value||'').split('-');return parts.length===3?`${parts[2]}/${parts[1]}/${parts[0]}`:''};
+  const formatClosingDate=value=>{const parts=String(value||'').split('-');return parts.length===3?[parts[2],parts[1],parts[0]].join('/'):''};
   const syncReviewDate=()=>{if(document.body.classList.contains('letrao-mode')&&closingDateInput?.value&&reviewDateValue){const formatted=formatClosingDate(closingDateInput.value);if(formatted&&reviewDateValue.textContent!==formatted)reviewDateValue.textContent=formatted}};
   const updateManualReady=()=>{if(!manualButton)return;if(document.body.classList.contains('letrao-mode'))manualButton.disabled=!closingDateInput?.value;else manualButton.disabled=false};
   closingDateInput?.addEventListener('change',()=>{if(closingDateInput.value&&monthInput){monthInput.value=closingDateInput.value.slice(0,7);monthInput.dispatchEvent(new Event('change',{bubbles:true}))}updateManualReady();syncReviewDate()});
@@ -564,6 +565,25 @@ self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
+
+  // IPCA must be network-first so the daily official index update is visible.
+  if (url.pathname.endsWith('/ipca-data.json')) {
+    event.respondWith((async () => {
+      try {
+        const response = await fetch(event.request, { cache: 'no-store' });
+        if (response.ok) {
+          const store = await caches.open(CACHE_NAME);
+          await store.put('./ipca-data.json', response.clone());
+        }
+        return response;
+      } catch (error) {
+        const cached = await caches.match('./ipca-data.json');
+        if (cached) return cached;
+        throw error;
+      }
+    })());
+    return;
+  }
 
   if (event.request.mode === 'navigate') {
     event.respondWith((async () => {
