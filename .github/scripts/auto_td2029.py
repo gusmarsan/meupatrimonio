@@ -54,6 +54,7 @@ index.write_text(s,encoding='utf-8')
 
 swfile=Path('sw.js')
 sw=swfile.read_text(encoding='utf-8')
+sw=sw.replace("return parts.length===3?`${parts[2]}/${parts[1]}/${parts[0]}`:''", "return parts.length===3?[parts[2],parts[1],parts[0]].join('/'):''")
 sw=re.sub(r'meu-patrimonio-pwa-v\d+','meu-patrimonio-pwa-v40',sw,count=1)
 old_sw="  if (url.origin !== self.location.origin) return;\n\n  if (event.request.mode === 'navigate') {"
 new_sw="""  if (url.origin !== self.location.origin) return;
