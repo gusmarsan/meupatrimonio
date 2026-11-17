@@ -33,3 +33,5 @@ jobs:
           git add index.html sw.js
           git commit -m "Calculate TD 2029 theoretical net value on app open"
           git push
+
+# Retry with service worker syntax fix
